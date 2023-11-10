@@ -1,0 +1,32 @@
+body {
+  color: white;
+  background-color: black;
+}
+
+.main {
+  display: grid;
+
+  height: 100dvh;
+  padding: 0 20px;
+
+  place-items: center;
+
+  div {
+    text-align: center;
+
+    a {
+      text-decoration: none;
+
+      color: white;
+
+      font-size: 1rem;
+    }
+  }
+  p {
+    align-self: self-end;
+
+    font-size: 2rem;
+
+    justify-self: self-start;
+  }
+}
