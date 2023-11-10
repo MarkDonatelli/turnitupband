@@ -17,11 +17,16 @@ body {
     text-align: center;
 
     a {
+      transition: 200ms all linear;
       text-decoration: none;
 
       color: white;
 
       font-size: 1rem;
+
+      &:hover {
+        color: rgb(239, 239, 2);
+      }
     }
   }
   p {
