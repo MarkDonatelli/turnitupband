@@ -19,6 +19,7 @@
       data-netlify="true"
       data-netlify-honeypot="bot-field"
     >
+      <input type="hidden" name="contact" value="contact" />
       <input type="text" v-model="form.name" placeholder="Name" />
 
       <button type="submit">Send</button>
