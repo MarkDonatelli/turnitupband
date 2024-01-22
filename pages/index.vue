@@ -14,7 +14,7 @@
     </div>
     <p>Coming Soon...&#129304;</p>
 
-    <div>
+    <!-- <div>
       <form
         action="/"
         method="POST"
@@ -47,7 +47,7 @@
         ></textarea>
         <button type="submit">Send</button>
       </form>
-    </div>
+    </div> -->
   </div>
 </template>
 
