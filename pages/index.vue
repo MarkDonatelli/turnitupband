@@ -15,7 +15,13 @@
     <p>Coming Soon...&#129304;</p>
 
     <div>
-      <form action="/" method="POST" data-netlify="true" name="contact-form">
+      <form
+        action="/"
+        method="POST"
+        data-netlify="true"
+        name="contact-form"
+        netlify-honeypot="bot-field"
+      >
         <input
           type="text"
           name="name"
@@ -23,6 +29,7 @@
           placeholder="Name"
           required
         />
+        <input type="hidden" name="contact-form" value="contact-form" />
         <input
           type="email"
           name="email"
