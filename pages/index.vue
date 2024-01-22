@@ -20,8 +20,14 @@
         method="POST"
         name="contact-form"
         netlify
-        data-netlify-recaptcha="true"
+        netlify-honeypot="bot-field"
       >
+        <p class="hidden">
+          <label>
+            Don’t fill this out if you’re human:
+            <input name="bot-field" />
+          </label>
+        </p>
         <input type="hidden" name="form-name" value="contact-form" />
         <input
           type="text"
@@ -44,7 +50,6 @@
           name="message"
           required
         ></textarea>
-        <div data-netlify-recaptcha="true"></div>
         <button type="submit">Send</button>
       </form>
     </div>
