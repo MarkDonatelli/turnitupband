@@ -1,4 +1,10 @@
-<script setup></script>
+<script setup>
+  const form = ref({
+    name: '',
+    email: '',
+    message: ''
+  });
+</script>
 
 <template>
   <Head><Title>Turn It Up | Boston, MA</Title></Head>
@@ -7,6 +13,24 @@
       <h1>Turn It Up!</h1>
     </div>
     <p>Coming Soon...&#129304;</p>
+
+    <div>
+      <form
+        action="/success"
+        method="POST"
+        data-netlify="true"
+        name="contact-form"
+      >
+        <input type="text" v-model="form.name" placeholder="Name" required />
+        <input type="email" v-model="form.email" placeholder="Email" required />
+        <textarea
+          v-model="form.message"
+          placeholder="Message"
+          required
+        ></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </div>
   </div>
 </template>
 
