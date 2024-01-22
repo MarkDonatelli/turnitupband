@@ -15,13 +15,8 @@
     <p>Coming Soon...&#129304;</p>
 
     <div>
-      <form
-        action="/"
-        method="POST"
-        data-netlify="true"
-        name="contact-form"
-        netlify-honeypot="bot-field"
-      >
+      <form action="/" method="POST" name="contact-form" netlify>
+        <input type="hidden" name="form-name" value="contact-form" />
         <input
           type="text"
           name="name"
