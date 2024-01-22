@@ -44,6 +44,7 @@
           name="message"
           required
         ></textarea>
+        <div data-netlify-recaptcha="true"></div>
         <button type="submit">Send</button>
       </form>
     </div>
