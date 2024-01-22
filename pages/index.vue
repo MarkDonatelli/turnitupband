@@ -1,5 +1,34 @@
 <script setup>
-  const contact_name = ref(null);
+  const form = ref({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  async function handleSubmit() {
+    const formData = new FormData();
+    for (let key in form.value) {
+      formData.append(key, form.value[key]);
+    }
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams(formData).toString()
+      });
+
+      if (response.ok) {
+        // Form submission successful
+      } else {
+        // Handle error
+      }
+    } catch (error) {
+      // Handle error
+    }
+  }
 </script>
 
 <template>
@@ -10,15 +39,18 @@
     </div>
     <p>Coming Soon...&#129304;</p>
 
-    <form name="contactForm" method="post" netlify-honeypot="bot-field" netlify>
-      <input type="hidden" name="form-name" value="contactForm" />
-      <input
-        v-model="contact_name"
-        name="name"
-        type="text"
-        placeholder="Name"
-      />
-      <button type="submit" class="btn btn-primary">Send Message</button>
+    <form
+      @submit.prevent="handleSubmit"
+      name="contact"
+      action=""
+      method="POST"
+      data-netlify="true"
+      data-netlify-honeypot="bot-field"
+    >
+      <input type="text" v-model="form.name" placeholder="Name" />
+      <input type="email" v-model="form.email" placeholder="Email" />
+      <textarea v-model="form.message" placeholder="Message"></textarea>
+      <button type="submit">Send</button>
     </form>
   </div>
 </template>
