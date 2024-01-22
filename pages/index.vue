@@ -20,12 +20,8 @@
         method="POST"
         name="contact-form"
         netlify
-        netlify-honeypot="bot-field"
+        data-netlify-recaptcha="true"
       >
-        <label>
-          <input name="bot-field" hidden />
-        </label>
-
         <input type="hidden" name="form-name" value="contact-form" />
         <input
           type="text"
