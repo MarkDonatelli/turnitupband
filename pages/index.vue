@@ -15,17 +15,25 @@
     <p>Coming Soon...&#129304;</p>
 
     <div>
-      <form
-        action="/success"
-        method="POST"
-        data-netlify="true"
-        name="contact-form"
-      >
-        <input type="text" v-model="form.name" placeholder="Name" required />
-        <input type="email" v-model="form.email" placeholder="Email" required />
+      <form action="/" method="POST" data-netlify="true" name="contact-form">
+        <input
+          type="text"
+          name="name"
+          v-model="form.name"
+          placeholder="Name"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          v-model="form.email"
+          placeholder="Email"
+          required
+        />
         <textarea
           v-model="form.message"
           placeholder="Message"
+          name="message"
           required
         ></textarea>
         <button type="submit">Send</button>
