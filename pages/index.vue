@@ -22,11 +22,7 @@
         netlify
         netlify-honeypot="bot-field"
       >
-        <p class="hidden">
-          <label>
-            <input name="bot-field" />
-          </label>
-        </p>
+        <input name="bot-field" type="hidden" />
         <input type="hidden" name="form-name" value="contact-form" />
         <input
           type="text"
