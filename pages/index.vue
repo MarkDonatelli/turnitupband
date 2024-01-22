@@ -29,7 +29,7 @@
           placeholder="Name"
           required
         />
-        <input type="hidden" name="contact-form" value="contact-form" />
+
         <input
           type="email"
           name="email"
