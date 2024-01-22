@@ -44,8 +44,7 @@
       name="contact"
       action=""
       method="POST"
-      data-netlify="true"
-      data-netlify-honeypot="bot-field"
+      netlify
     >
       <input type="text" v-model="form.name" placeholder="Name" />
       <input type="email" v-model="form.email" placeholder="Email" />
