@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <main class="relative grid h-screen px-4 text-white place-items-center">
+  <main class="relative grid px-4 text-white h-dvh place-items-center">
     <div>
       <NuxtImg
         class="mx-auto md:w-1/2"
