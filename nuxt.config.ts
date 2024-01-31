@@ -1,17 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  css: ['~/assets/scss/main.scss'],
-
-  vite: {
-    css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: '@use "@/assets/scss/_colors.scss" as *;'
-        }
-      }
-    }
-  },
-
+  css: ['~/assets/css/main.css'],
   devtools: { enabled: false },
-  modules: ["@nuxt/image"]
+  modules: ['@nuxt/image', '@nuxtjs/tailwindcss', '@nuxtjs/google-fonts'],
+  googleFonts: {
+    display: 'swap',
+    families: {
+      Montserrat: [100, 200, 300, 400, 500, 600, 700, 800, 900]
+    }
+  }
 });

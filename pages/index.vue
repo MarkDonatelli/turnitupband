@@ -1,54 +1,24 @@
 <script setup>
-  const form = ref({
-    name: '',
-    email: '',
-    message: ''
+  useHead({
+    title: 'Turn It Up! | Boston, MA'
   });
 </script>
 
 <template>
-  <Head><Title>Turn It Up | Boston, MA</Title></Head>
-  <div class="main">
+  <main class="relative grid h-screen px-4 text-white place-items-center">
     <div>
-      <h1>Turn It Up!</h1>
+      <NuxtImg
+        class="mx-auto md:w-1/2"
+        src="/images/logo.png"
+        width=""
+        height=""
+        alt="Turn It Up Logo"
+      />
     </div>
-    <p>Coming Soon...&#129304;</p>
-
-    <!-- <div>
-      <form
-        action="/"
-        method="POST"
-        name="contact-form"
-        netlify
-        netlify-honeypot="bot-field"
-      >
-        <input name="bot-field" type="hidden" />
-        <input type="hidden" name="form-name" value="contact-form" />
-        <input
-          type="text"
-          name="name"
-          v-model="form.name"
-          placeholder="Name"
-          required
-        />
-
-        <input
-          type="email"
-          name="email"
-          v-model="form.email"
-          placeholder="Email"
-          required
-        />
-        <textarea
-          v-model="form.message"
-          placeholder="Message"
-          name="message"
-          required
-        ></textarea>
-        <button type="submit">Send</button>
-      </form>
-    </div> -->
-  </div>
+    <p
+      class="absolute text-2xl font-semibold uppercase md:text-3xl left-4 bottom-4"
+    >
+      Coming Soon...&#129304;
+    </p>
+  </main>
 </template>
-
-<style scoped lang="scss"></style>
