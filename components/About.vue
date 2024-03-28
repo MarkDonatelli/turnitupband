@@ -39,11 +39,11 @@
         class="flex flex-col w-full text-center"
       >
         <NuxtImg
-          class=""
+          class="w-full"
           :src="person.img"
           format="webp"
-          width=""
-          height=""
+          width="196"
+          height="196"
           :alt="`image of ${person.name}`"
         />
 

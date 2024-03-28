@@ -66,7 +66,8 @@
             loading="lazy"
             width=""
             height=""
-            alt=""
+            quality="60"
+            alt="IG post"
           />
           <div
             class="absolute top-0 z-10 w-full h-full bg-black opacity-0 group-hover:opacity-75"

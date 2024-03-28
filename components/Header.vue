@@ -43,9 +43,9 @@
         <NuxtImg
           @click="scrollToElement('#home')"
           class="w-[100px] cursor-pointer"
-          alt=""
-          height=""
-          width=""
+          alt="Band Logo"
+          height="84"
+          width="100"
           src="/images/logo.png"
           format="webp"
         />
