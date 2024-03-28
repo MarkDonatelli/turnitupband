@@ -61,15 +61,24 @@
   /*
     form submit
     */
-  const handleValidation = (event) => {
-    v$.value.$validate();
+  const handleValidation = async (event) => {
+    event.preventDefault();
+    await v$.value.$validate();
 
-    if (v$.value.$error) {
-      event.preventDefault();
-    } else {
-      setTimeout(() => {
-        isSubmitted.value = true;
-      }, 2000);
+    if (!v$.value.$error) {
+      const formData = new FormData(event.target);
+
+      fetch('/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams(formData).toString()
+      })
+        .then(() => {
+          isSubmitted.value = true; // Show success message
+        })
+        .catch((error) => console.error(error));
     }
   };
 </script>
