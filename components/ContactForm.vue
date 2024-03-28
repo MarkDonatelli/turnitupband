@@ -103,7 +103,7 @@
       netlify-honeypot="bot-field"
     >
       <input name="bot-field" type="hidden" />
-      <input type="hidden" name="form-name" value="contact-form" />
+      <input type="hidden" name="contact-form" value="contact-form" />
 
       <div class="flex flex-col mb-4">
         <label
