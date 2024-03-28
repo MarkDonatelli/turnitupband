@@ -62,7 +62,6 @@
     form submit
     */
   const handleValidation = (event) => {
-    event.preventDefault();
     v$.value.$validate();
 
     if (v$.value.$error) {
