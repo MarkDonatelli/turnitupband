@@ -59,48 +59,30 @@
   /*
     form submit
     */
-  const handleSubmit = async () => {
+  const handleValidation = (event) => {
+    event.preventDefault();
     v$.value.$validate();
 
-    if (!v$.value.$error) {
-      const formData = new FormData();
-
-      Object.keys(formState).forEach((key) => {
-        formData.append(key, formState[key]);
-      });
-
-      try {
-        const response = await fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(formData).toString()
-        });
-
-        console.log(response);
-
-        if (response.ok) {
-          // Handle success
-          console.log('Form submitted successfully!');
-        } else {
-          // Handle error
-          console.error('Form submission failed!');
-        }
-      } catch (error) {
-        console.error('Form submission error:', error);
-      }
+    if (v$.value.$error) {
+      // Prevent form submission
+      event.preventDefault();
+      // Optionally, focus the first invalid input, display error messages, etc.
     }
+    console.log('success');
   };
 </script>
 
 <template>
   <div class="relative md:max-w-[700px] w-full mx-auto">
     <form
-      @submit.prevent="handleSubmit"
+      @submit="handleValidation"
       method="POST"
+      data-netlify="true"
       name="contact-form"
       netlify
       netlify-honeypot="bot-field"
     >
+      <input name="bot-field" type="hidden" />
       <input type="hidden" name="form-name" value="contact-form" />
 
       <div class="flex flex-col mb-4">
