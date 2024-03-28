@@ -36,7 +36,7 @@
       <div
         v-for="person in band"
         :key="person.name"
-        class="flex flex-col text-center"
+        class="flex flex-col w-full text-center"
       >
         <NuxtImg class="" :src="person.img" />
 
