@@ -67,8 +67,10 @@
     if (v$.value.$error) {
       event.preventDefault();
     }
-    console.log('success', formState.value);
-    isSubmitted.value = true;
+
+    setTimeout(() => {
+      isSubmitted.value = true;
+    }, 2000);
   };
 </script>
 
