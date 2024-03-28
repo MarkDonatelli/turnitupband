@@ -50,10 +50,16 @@
       <NuxtImg
         class="absolute top-4 w-[150px] md:w-[200px] right-5 md:right-10 lg:w-[275px] lg:right-16"
         src="/images/bolt-pink--group.svg"
+        width=""
+        height=""
+        alt=""
       />
       <NuxtImg
         class="object-cover w-full h-full overflow-hidden"
         src="/images/hero.jpg"
+        width=""
+        height=""
+        alt=""
       />
     </div>
   </div>
@@ -63,14 +69,22 @@
       <div class="container">
         <div class="relative mb-10 text-center">
           <NuxtImg
+            loading="lazy"
             class="hidden md:block absolute w-full max-w-[250px] left-5 z-0"
             src="images/crosses.svg"
+            width=""
+            height=""
+            alt=""
           />
 
           <div class="relative inline-block">
             <NuxtImg
+              loading="lazy"
               class="absolute block md:hidden max-w-[30px] top-0 w-full -left-6"
               src="images/cross-pink.svg"
+              width=""
+              height=""
+              alt=""
             />
             <h2
               class="relative z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl"
@@ -96,14 +110,22 @@
       <div class="container">
         <div class="mb-10 text-center md:relative">
           <NuxtImg
+            loading="lazy"
             class="hidden md:block absolute w-[250px] right-5 z-0"
             src="images/hearts-pink--group.svg"
+            width=""
+            height=""
+            alt=""
           />
 
           <div class="relative inline-block">
             <NuxtImg
+              loading="lazy"
               class="md:hidden block absolute w-[65px] -right-[70px] -top-4 z-0"
               src="images/heart-pink.svg"
+              width=""
+              height=""
+              alt=""
             />
             <h2
               class="z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl"
@@ -140,6 +162,11 @@
             <NuxtImg
               class="max-w-[275px] w-full mb-2"
               src="/images/logo-black--white.png"
+              height=""
+              width=""
+              alt=""
+              loading="lazy"
+              format="webp"
             />
           </div>
           <div
@@ -180,14 +207,22 @@
       <div class="container">
         <div class="mb-10 text-center md:relative">
           <NuxtImg
+            loading="lazy"
             class="hidden md:block absolute w-[250px] right-5 z-0"
             src="images/hearts-pink--group.svg"
+            width=""
+            height=""
+            alt=""
           />
 
           <div class="relative inline-block">
             <NuxtImg
+              loading="lazy"
               class="md:hidden block absolute w-[65px] -right-[70px] -top-4 z-0"
               src="images/heart-pink.svg"
+              width=""
+              height=""
+              alt=""
             />
             <h2
               class="z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl"
@@ -215,14 +250,22 @@
       <div class="container">
         <div class="text-center md:relative">
           <NuxtImg
+            loading="lazy"
             class="hidden md:block absolute w-[250px] left-5 z-0"
             src="images/asterisk-pink--group.svg"
+            width=""
+            height=""
+            alt=""
           />
 
           <div class="relative inline-block">
             <NuxtImg
+              loading="lazy"
               class="md:hidden block absolute w-[65px] -left-[70px] -top-4 z-0"
               src="images/asterisk-pink.svg"
+              width=""
+              height=""
+              alt=""
             />
             <h2
               class="z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl"

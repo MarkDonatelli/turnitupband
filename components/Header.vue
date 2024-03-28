@@ -47,6 +47,7 @@
           height=""
           width=""
           src="/images/logo.png"
+          format="webp"
         />
         <Hamburger />
       </div>

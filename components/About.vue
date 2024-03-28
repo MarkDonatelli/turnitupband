@@ -38,7 +38,14 @@
         :key="person.name"
         class="flex flex-col w-full text-center"
       >
-        <NuxtImg class="" :src="person.img" />
+        <NuxtImg
+          class=""
+          :src="person.img"
+          format="webp"
+          width=""
+          height=""
+          :alt="`image of ${person.name}`"
+        />
 
         <div class="mt-3 border-t-[2px] border-b-[2px] border-pink py-2">
           <p class="font-extrabold text-white uppercase font-mont">

@@ -60,9 +60,13 @@
           v-if="item.media_type === 'IMAGE'"
           class="relative overflow-hidden bg-black cursor-pointer group"
         >
-          <img
+          <NuxtImg
             class="object-cover w-full h-full transition-all duration-500 group-hover:scale-110"
             :src="item.media_url"
+            loading="lazy"
+            width=""
+            height=""
+            alt=""
           />
           <div
             class="absolute top-0 z-10 w-full h-full bg-black opacity-0 group-hover:opacity-75"
