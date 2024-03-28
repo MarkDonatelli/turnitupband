@@ -68,7 +68,7 @@
       event.preventDefault();
       // Optionally, focus the first invalid input, display error messages, etc.
     }
-    console.log('success');
+    console.log('success', formState.value);
   };
 </script>
 
@@ -76,8 +76,8 @@
   <div class="relative md:max-w-[700px] w-full mx-auto">
     <form
       @submit="handleValidation"
+      action="/"
       method="POST"
-      data-netlify="true"
       name="contact-form"
       netlify
       netlify-honeypot="bot-field"
