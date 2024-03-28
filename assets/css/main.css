@@ -3,9 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  .test {
-    @apply bg-green-500;
-  }
 }
 
 /* GLOBAL */

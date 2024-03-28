@@ -24,6 +24,7 @@ export default defineNuxtConfig({
   },
   googleFonts: {
     display: 'swap',
+    preload: true,
     families: {
       'Big+Shoulders+Display': [100, 200, 300, 400, 500, 600, 700, 800, 900],
       Montserrat: [100, 200, 300, 400, 500, 600, 700, 800, 900],
