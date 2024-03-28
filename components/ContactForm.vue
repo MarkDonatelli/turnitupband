@@ -66,11 +66,11 @@
 
     if (v$.value.$error) {
       event.preventDefault();
+    } else {
+      setTimeout(() => {
+        isSubmitted.value = true;
+      }, 2000);
     }
-
-    setTimeout(() => {
-      isSubmitted.value = true;
-    }, 2000);
   };
 </script>
 
