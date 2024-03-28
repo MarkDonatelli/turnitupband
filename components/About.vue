@@ -54,9 +54,8 @@
     <div class="text-lg text-white mt-9 font-mont">
       <p>
         TURN IT UP! is a Boston area high energy band, covering all of you
-        favorite hits from 90's to now (and then some), compromised of
-        experienced musicians/performers all with one goal: TO BRING THE
-        PARTY!!!
+        favorite hits from 90's to now (and then some), comprised of experienced
+        musicians/performers all with one goal: TO BRING THE PARTY!!!
       </p>
       <p>
         From bars/clubs to corporate events, weddings, house parties, casinos
