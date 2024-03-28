@@ -7,7 +7,7 @@
   });
 
   async function fetchInstagramData() {
-    const url = `https://graph.instagram.com/me?fields=id,username,media.limit(16){media_count,media_type,permalink,caption,media_url}&access_token=${config.public.igKey}`;
+    const url = `https://graph.instagram.com/me?fields=id,username,media.limit(16){media_count,media_type,permalink,caption,media_url}&access_token=IGQWROSVBpTklZAdmRwdGMzWkNEOUp5TlA1eFltaGZAmRlVUaWFsZAnA0bk41S0ZAoeE05ZAzctNDV5OWFEX09udlcxcV9KU1dYS2J6bGE0QThPVlhEc09nSEpwT3pZAd3VZAMjVMTjE5R25sUXp0dHBGY2tnNDBVRllzY0EZD`;
 
     try {
       const response = await fetch(url);
