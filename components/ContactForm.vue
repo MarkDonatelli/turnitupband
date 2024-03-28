@@ -59,12 +59,32 @@
   /*
     form submit
     */
-  const handleSubmit = () => {
-    //check validations
+  const handleSubmit = async () => {
     v$.value.$validate();
 
     if (!v$.value.$error) {
-      console.log(formState);
+      const formData = new FormData();
+      Object.keys(formState).forEach((key) => {
+        formData.append(key, formState[key]);
+      });
+
+      try {
+        const response = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(formData).toString()
+        });
+
+        if (response.ok) {
+          // Handle success
+          console.log('Form submitted successfully!');
+        } else {
+          // Handle error
+          console.error('Form submission failed!');
+        }
+      } catch (error) {
+        console.error('Form submission error:', error);
+      }
     }
   };
 </script>
@@ -75,7 +95,7 @@
       action="/"
       @submit.prevent="handleSubmit"
       method="POST"
-      id-="contact-form"
+      id="contact-form"
       name="contact-form"
       netlify
       netlify-honeypot="bot-field"
