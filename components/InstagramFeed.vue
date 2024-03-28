@@ -35,6 +35,9 @@
         <NuxtImg
           class="hidden md:block absolute w-full max-w-[250px] -top-2 left-5 z-0"
           src="images/ig-group.svg"
+          width=""
+          height=""
+          alt="ig grouping design"
         />
         <div class="relative inline-block">
           <h2 class="z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl">
