@@ -14,7 +14,7 @@
   /*
     form state
     */
-  const formState = reactive({
+  const formState = ref({
     name: '',
     email: '',
     phone: '',
@@ -64,6 +64,7 @@
 
     if (!v$.value.$error) {
       const formData = new FormData();
+
       Object.keys(formState).forEach((key) => {
         formData.append(key, formState[key]);
       });
@@ -74,6 +75,8 @@
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams(formData).toString()
         });
+
+        console.log(response);
 
         if (response.ok) {
           // Handle success
@@ -92,8 +95,9 @@
 <template>
   <div class="relative md:max-w-[700px] w-full mx-auto">
     <form
-      @submit.prevent="handleSubmit()"
-      method="post"
+      @submit.prevent="handleSubmit"
+      method="POST"
+      data-netlify="true"
       name="contact-form"
       netlify
       netlify-honeypot="bot-field"
