@@ -230,7 +230,7 @@
 
     <div v-else>
       <div class="mt-5 text-center">
-        <h2 class="z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl">
+        <h2 class="z-10 mb-3 text-2xl font-extrabold text-white md:text-3xl">
           Thank you!
           <br />
           We will reach out to you as soon as possible!
