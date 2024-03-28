@@ -7,6 +7,7 @@
         target="_blank"
         class="transition-all duration-200 hover:text-pink"
         href="https://www.instagram.com/turnitupband/"
+        aria-label="Link to Turn It Up! Instagram Account"
       >
         <Icon class="text-2xl" name="uil:instagram" />
       </a>
@@ -15,7 +16,8 @@
       <a
         target="_blank"
         class="transition-all duration-200 hover:text-pink"
-        href="https://www.instagram.com/turnitupband/"
+        href="https://www.facebook.com/turnitupcoverband"
+        aria-label="Link to Turn It Up! Facebook Account"
       >
         <Icon class="text-2xl" name="uil:facebook" />
       </a>
