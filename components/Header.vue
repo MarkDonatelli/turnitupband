@@ -1,4 +1,20 @@
 <script setup>
+  /*
+  imports
+  */
+  import useScrollIntoView from '~/composables/useScrollIntoView';
+  import { useMobileMenuStore } from '~/store/mobileMenu';
+  const mobileMenuStore = useMobileMenuStore();
+  const { toggleMobileMenu } = useMobileMenuStore();
+
+  /*
+  composables
+   */
+  const { scrollToElement } = useScrollIntoView();
+
+  /*
+  refs
+  */
   const header = ref(null);
 
   onMounted(() => {
@@ -21,45 +37,36 @@
 <template>
   <header ref="header" class="flex header">
     <nav
-      class="relative z-20 flex items-center mx-auto justify-between w-full max-w-[1536px] px-4"
+      class="relative z-50 flex items-center mx-auto justify-between w-full max-w-[1536px] px-4"
     >
-      <div class="text-6xl text-white">
+      <div class="flex items-center justify-between w-full md:w-auto">
         <NuxtImg
-          class="w-[100px]"
+          @click="scrollToElement('#home')"
+          class="w-[100px] cursor-pointer"
           alt=""
           height=""
           width=""
           src="/images/logo.png"
         />
+        <Hamburger />
       </div>
-      <ul class="flex gap-5">
-        <li class="text-white">Home</li>
-        <li class="text-white">Shows</li>
-        <li class="text-white">About</li>
-        <li class="text-white">Gallery</li>
-      </ul>
+      <NavList class="hidden gap-10 md:flex lg:gap-14" />
 
-      <ul class="flex gap-5">
-        <li class="text-white">Instagram</li>
-        <li class="text-white">Facebook</li>
-      </ul>
+      <SocialList class="hidden md:flex" />
     </nav>
+
+    <MobileMenu />
   </header>
 </template>
 
 <style scoped>
   .header {
-    background-color: rgba(0, 0, 0, 0.75);
-    box-shadow: 0 0 20px 1px rgba(255, 255, 255, 0.05);
+    background-color: rgba(0, 0, 0, 1);
     height: 100px;
     width: 100%;
     position: fixed;
     top: 0;
-    z-index: 10;
+    z-index: 20;
     transition: background-color 0.5s;
-  }
-
-  .header.scrolled {
-    background-color: rgba(0, 0, 0, 1);
   }
 </style>
