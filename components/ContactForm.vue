@@ -92,9 +92,7 @@
 <template>
   <div class="relative md:max-w-[700px] w-full mx-auto">
     <form
-      action="/"
       @submit.prevent="handleSubmit"
-      method="POST"
       id="contact-form"
       name="contact-form"
       netlify
