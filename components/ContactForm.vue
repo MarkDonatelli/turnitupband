@@ -92,14 +92,14 @@
 <template>
   <div class="relative md:max-w-[700px] w-full mx-auto">
     <form
-      @submit.prevent="handleSubmit"
-      id="contact-form"
+      @submit.prevent="handleSubmit()"
+      method="post"
       name="contact-form"
       netlify
       netlify-honeypot="bot-field"
     >
       <input name="bot-field" type="hidden" />
-      <input type="hidden" name="contact-form" value="contact-form" />
+      <input type="hidden" name="form-name" value="contact-form" />
 
       <div class="flex flex-col mb-4">
         <label
@@ -235,7 +235,7 @@
       </div>
 
       <button
-        class="relative w-full p-5 mt-5 text-sm font-bold text-white uppercase transition-all duration-200 border uppercasep-3 border-pink font-mont hover:bg-pink hover:text-white"
+        class="relative w-full p-5 mt-5 text-sm font-bold text-white uppercase transition-all duration-200 border border-pink font-mont hover:bg-pink hover:text-white"
         type="submit"
       >
         Submit Message
