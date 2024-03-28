@@ -21,7 +21,7 @@
       );
       instagramData.value = filteredData;
 
-      console.log(filteredData);
+      // console.log(filteredData);
     } catch (error) {
       console.error('Error fetching Instagram data:', error);
     }
