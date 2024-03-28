@@ -22,6 +22,8 @@
     message: ''
   });
 
+  const isSubmitted = ref(false);
+
   /*
     validation rules
     */
@@ -64,166 +66,177 @@
     v$.value.$validate();
 
     if (v$.value.$error) {
-      // Prevent form submission
       event.preventDefault();
-      // Optionally, focus the first invalid input, display error messages, etc.
     }
     console.log('success', formState.value);
+    isSubmitted.value = true;
   };
 </script>
 
 <template>
   <div class="relative md:max-w-[700px] w-full mx-auto">
-    <form
-      @submit="handleValidation"
-      action="/"
-      method="POST"
-      name="contact-form"
-      netlify
-      netlify-honeypot="bot-field"
-    >
-      <input name="bot-field" type="hidden" />
-      <input type="hidden" name="form-name" value="contact-form" />
-
-      <div class="flex flex-col mb-4">
-        <label
-          class="pb-1 text-sm font-bold text-white md:text-base font-mont"
-          for="name"
-        >
-          Name
-          <span class="text-pink">*</span>
-        </label>
-        <input
-          class="p-2 text-white border border-transparent rounded-none outline-none focus:border-pink bg-lightGray font-barlow"
-          type="text"
-          name="name"
-          id="name"
-          v-model="formState.name"
-        />
-
-        <div>
-          <p
-            class="mt-1 text-xs text-red-500"
-            v-for="error of v$.name.$errors"
-            :key="error.$uid"
-          >
-            {{ error.$message }}
-          </p>
-        </div>
-      </div>
-
-      <div class="flex flex-col mb-4">
-        <label
-          class="pb-1 text-sm font-bold text-white md:text-base font-mont"
-          for="email"
-        >
-          Email
-          <span class="text-pink">*</span>
-        </label>
-        <input
-          class="p-2 text-white border border-transparent rounded-none outline-none focus:border-pink bg-lightGray font-barlow"
-          type="text"
-          name="email"
-          id="email"
-          v-model="formState.email"
-        />
-        <div>
-          <p
-            class="mt-1 text-xs text-red-500"
-            v-for="error of v$.email.$errors"
-            :key="error.$uid"
-          >
-            {{ error.$message }}
-          </p>
-        </div>
-      </div>
-
-      <div class="flex flex-col mb-4">
-        <label
-          class="pb-1 text-sm font-bold text-white md:text-base font-mont"
-          for="phone"
-        >
-          Phone
-          <span class="text-pink">*</span>
-        </label>
-        <input
-          class="p-2 text-white border border-transparent rounded-none outline-none focus:border-pink bg-lightGray font-barlow"
-          type="text"
-          name="phone"
-          id="phone"
-          v-model="formState.phone"
-        />
-        <div>
-          <p
-            class="mt-1 text-xs text-red-500"
-            v-for="error of v$.phone.$errors"
-            :key="error.$uid"
-          >
-            {{ error.$message }}
-          </p>
-        </div>
-      </div>
-
-      <div class="flex flex-col mb-4">
-        <label
-          class="pb-1 text-sm font-bold text-white md:text-base font-mont"
-          for="subject"
-        >
-          Subject
-          <span class="text-pink">*</span>
-        </label>
-        <input
-          class="p-2 text-white border border-transparent rounded-none outline-none focus:border-pink bg-lightGray font-barlow"
-          type="text"
-          name="subject"
-          id="subject"
-          v-model="formState.subject"
-        />
-        <div>
-          <p
-            class="mt-1 text-xs text-red-500"
-            v-for="error of v$.subject.$errors"
-            :key="error.$uid"
-          >
-            {{ error.$message }}
-          </p>
-        </div>
-      </div>
-
-      <div class="flex flex-col mb-4">
-        <label
-          class="pb-1 text-sm font-bold text-white md:text-base font-mont"
-          for="message"
-        >
-          Message
-          <span class="text-pink">*</span>
-        </label>
-        <textarea
-          class="p-2 text-white border border-transparent rounded-none outline-none focus:border-pink bg-lightGray font-barlow"
-          v-model="formState.message"
-          rows="5"
-          id="message"
-          placeholder="Message..."
-          name="message"
-        ></textarea>
-
-        <div>
-          <p
-            class="mt-1 text-xs text-red-500"
-            v-for="error of v$.message.$errors"
-            :key="error.$uid"
-          >
-            {{ error.$message }}
-          </p>
-        </div>
-      </div>
-
-      <button
-        class="relative w-full p-5 mt-5 text-sm font-bold text-white uppercase transition-all duration-200 border border-pink font-mont hover:bg-pink hover:text-white"
-        type="submit"
+    <div v-if="!isSubmitted">
+      <form
+        @submit="handleValidation"
+        action="/"
+        method="POST"
+        name="contact-form"
+        netlify
+        netlify-honeypot="bot-field"
       >
-        Submit Message
-      </button>
-    </form>
+        <input name="bot-field" type="hidden" />
+        <input type="hidden" name="form-name" value="contact-form" />
+
+        <div class="flex flex-col mb-4">
+          <label
+            class="pb-1 text-sm font-bold text-white md:text-base font-mont"
+            for="name"
+          >
+            Name
+            <span class="text-pink">*</span>
+          </label>
+          <input
+            class="p-2 text-white border border-transparent rounded-none outline-none focus:border-pink bg-lightGray font-barlow"
+            type="text"
+            name="name"
+            id="name"
+            v-model="formState.name"
+          />
+
+          <div>
+            <p
+              class="mt-1 text-xs text-red-500"
+              v-for="error of v$.name.$errors"
+              :key="error.$uid"
+            >
+              {{ error.$message }}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col mb-4">
+          <label
+            class="pb-1 text-sm font-bold text-white md:text-base font-mont"
+            for="email"
+          >
+            Email
+            <span class="text-pink">*</span>
+          </label>
+          <input
+            class="p-2 text-white border border-transparent rounded-none outline-none focus:border-pink bg-lightGray font-barlow"
+            type="text"
+            name="email"
+            id="email"
+            v-model="formState.email"
+          />
+          <div>
+            <p
+              class="mt-1 text-xs text-red-500"
+              v-for="error of v$.email.$errors"
+              :key="error.$uid"
+            >
+              {{ error.$message }}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col mb-4">
+          <label
+            class="pb-1 text-sm font-bold text-white md:text-base font-mont"
+            for="phone"
+          >
+            Phone
+            <span class="text-pink">*</span>
+          </label>
+          <input
+            class="p-2 text-white border border-transparent rounded-none outline-none focus:border-pink bg-lightGray font-barlow"
+            type="text"
+            name="phone"
+            id="phone"
+            v-model="formState.phone"
+          />
+          <div>
+            <p
+              class="mt-1 text-xs text-red-500"
+              v-for="error of v$.phone.$errors"
+              :key="error.$uid"
+            >
+              {{ error.$message }}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col mb-4">
+          <label
+            class="pb-1 text-sm font-bold text-white md:text-base font-mont"
+            for="subject"
+          >
+            Subject
+            <span class="text-pink">*</span>
+          </label>
+          <input
+            class="p-2 text-white border border-transparent rounded-none outline-none focus:border-pink bg-lightGray font-barlow"
+            type="text"
+            name="subject"
+            id="subject"
+            v-model="formState.subject"
+          />
+          <div>
+            <p
+              class="mt-1 text-xs text-red-500"
+              v-for="error of v$.subject.$errors"
+              :key="error.$uid"
+            >
+              {{ error.$message }}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col mb-4">
+          <label
+            class="pb-1 text-sm font-bold text-white md:text-base font-mont"
+            for="message"
+          >
+            Message
+            <span class="text-pink">*</span>
+          </label>
+          <textarea
+            class="p-2 text-white border border-transparent rounded-none outline-none focus:border-pink bg-lightGray font-barlow"
+            v-model="formState.message"
+            rows="5"
+            id="message"
+            placeholder="Message..."
+            name="message"
+          ></textarea>
+
+          <div>
+            <p
+              class="mt-1 text-xs text-red-500"
+              v-for="error of v$.message.$errors"
+              :key="error.$uid"
+            >
+              {{ error.$message }}
+            </p>
+          </div>
+        </div>
+
+        <button
+          class="relative w-full p-5 mt-5 text-sm font-bold text-white uppercase transition-all duration-200 border border-pink font-mont hover:bg-pink hover:text-white"
+          type="submit"
+        >
+          Submit Message
+        </button>
+      </form>
+    </div>
+
+    <div v-else>
+      <div class="mt-5 text-center">
+        <h2 class="z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl">
+          Thank you!
+          <br />
+          We will reach out to you as soon as possible!
+        </h2>
+      </div>
+    </div>
   </div>
 </template>
