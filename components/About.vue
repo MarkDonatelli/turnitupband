@@ -3,7 +3,7 @@
     {
       name: 'Kelcey',
       position: 'Lead Vocals',
-      img: '/images/kelcey.jpeg'
+      img: '/images/kelcey.jpg'
     },
     {
       name: 'Bob',
