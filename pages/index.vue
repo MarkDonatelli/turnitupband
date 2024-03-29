@@ -16,16 +16,20 @@
   const TIU = ref();
 
   onMounted(() => {
-    gsap.to('.parallax', {
-      scrollTrigger: {
-        trigger: '.parallax',
-        start: 'top bottom',
-        end: 'top top',
-        scrub: true
-      },
-      y: -100,
-      ease: 'none'
-    });
+    const parallax = document.querySelector('.parallax');
+
+    if (parallax) {
+      gsap.to(parallax, {
+        scrollTrigger: {
+          trigger: '.parallax',
+          start: 'top bottom',
+          end: 'top top',
+          scrub: true
+        },
+        y: -100,
+        ease: 'none'
+      });
+    }
 
     // gsap.fromTo(
     //   TIU.value,
