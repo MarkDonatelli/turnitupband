@@ -61,13 +61,14 @@
       <div v-for="item in instagramData" :key="item.id" class="flex">
         <div
           v-if="item.media_type === 'IMAGE'"
-          class="relative overflow-hidden bg-black cursor-pointer group"
+          class="relative w-full overflow-hidden bg-black cursor-pointer group"
         >
           <NuxtImg
             class="object-cover w-full h-full transition-all duration-500 group-hover:scale-110"
             :src="item.media_url"
             loading="lazy"
             width=""
+            format="webp"
             height=""
             quality="60"
             alt="IG post"
@@ -94,15 +95,35 @@
 
         <div
           v-else
-          class="relative overflow-hidden bg-black cursor-pointer group"
+          class="relative w-full overflow-hidden bg-black cursor-pointer group"
         >
-          <video
-            width="320"
-            height="240"
-            class="object-cover w-full h-full transition-all duration-500 group-hover:scale-110"
+          <div
+            class="flex items-center justify-center h-full md:h-auto md:justify-start md:items-start"
           >
-            <source :src="item.media_url" type="video/mp4" />
-          </video>
+            <div class="flex flex-col items-center md:hidden">
+              <NuxtImg
+                class="w-3/4 transition-all duration-500 group-hover:scale-110"
+                src="/images/logo.png"
+                format="webp"
+                loading="lazy"
+                width=""
+                height=""
+                quality="60"
+                alt="IG post"
+              />
+              <p class="text-sm font-bold text-center text-white font-mont">
+                Click IG link to watch the Reel!
+              </p>
+            </div>
+
+            <video
+              width="320"
+              height="240"
+              class="hidden object-cover transition-all duration-500 md:block h-1/2 group-hover:scale-110"
+            >
+              <source :src="item.media_url" type="video/mp4" />
+            </video>
+          </div>
 
           <div
             class="absolute top-0 z-10 w-full h-full bg-black opacity-0 group-hover:opacity-75"
