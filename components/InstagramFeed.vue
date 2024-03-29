@@ -101,17 +101,17 @@
             class="flex items-center justify-center h-full md:h-auto md:justify-start md:items-start"
           >
             <div class="flex flex-col items-center md:hidden">
-              <NuxtImg
+              <img
                 class="w-3/4 transition-all duration-500 group-hover:scale-110"
                 src="/images/logo.png"
-                format="webp"
                 loading="lazy"
                 width=""
                 height=""
-                quality="60"
-                alt="IG post"
+                alt="IG Reel post"
               />
-              <p class="text-sm font-bold text-center text-white font-mont">
+              <p
+                class="px-4 text-sm font-bold text-center text-white font-mont"
+              >
                 Click IG link to watch the Reel!
               </p>
             </div>
