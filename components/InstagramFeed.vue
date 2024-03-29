@@ -19,7 +19,7 @@
       const filteredData = data.media.data.filter(
         (item) => item.media_type !== 'CAROUSEL_ALBUM'
       );
-      instagramData.value = filteredData;
+      instagramData.value = data.media.data;
 
       // console.log(filteredData);
     } catch (error) {
@@ -60,8 +60,10 @@
     <div class="relative grid gap-3 grid--ig">
       <div v-for="item in instagramData" :key="item.id" class="flex">
         <div
-          v-if="item.media_type === 'IMAGE'"
-          class="relative w-full overflow-hidden bg-black cursor-pointer group"
+          v-if="
+            item.media_type === 'IMAGE' || item.media_type === 'CAROUSEL_ALBUM'
+          "
+          class="relative w-full overflow-hidden bg-black cursor-pointer aspect-square group"
         >
           <NuxtImg
             class="object-cover w-full h-full transition-all duration-500 group-hover:scale-110"
@@ -119,7 +121,7 @@
             <video
               width="320"
               height="240"
-              class="hidden object-cover transition-all duration-500 md:block h-1/2 group-hover:scale-110"
+              class="hidden object-cover transition-all duration-500 aspect-square md:block h-1/2 group-hover:scale-110"
             >
               <source :src="item.media_url" type="video/mp4" />
             </video>
