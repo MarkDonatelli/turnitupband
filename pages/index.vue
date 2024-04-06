@@ -66,7 +66,7 @@
         <span class="relative font-extrabold text-pink">Turn It Up!?</span>
       </h1>
     </div>
-    <div class="relative overflow-hidden hero-fade-in">
+    <div class="relative overflow-hidden">
       <NuxtImg
         class="absolute top-4 w-[150px] md:w-[200px] right-5 md:right-10 lg:w-[275px] lg:right-16"
         src="/images/bolt-pink--group.svg"
@@ -319,7 +319,7 @@
 </template>
 
 <style>
-  .title,
+  /* .title, */
   .hero-fade-in {
     animation: fadeIn 2s ease-in forwards;
   }
