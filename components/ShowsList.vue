@@ -206,7 +206,7 @@
   <div class="shows">
     <div
       class="show-item"
-      v-for="show in upcomingShows"
+      v-for="show in allUpcomingShows"
       :key="show.dateString.trim()"
     >
       <div
@@ -272,7 +272,7 @@
       </div>
     </div>
 
-    <div class="flex justify-center mt-5 button">
+    <!-- <div class="flex justify-center mt-5 button">
       <button
         @click="loadMore"
         v-if="displayCount < allUpcomingShows.length"
@@ -280,6 +280,6 @@
       >
         See All Shows!
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
