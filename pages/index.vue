@@ -2,22 +2,19 @@
   import useScrollIntoView from '~/composables/useScrollIntoView';
 
   /*
-  meta
-  */
+    meta
+    */
   useHead({
     title: 'Turn It Up! | Boston, MA'
   });
 
   /*
-  composable
-  */
+    composable
+    */
   const { scrollToElement } = useScrollIntoView();
-
-  const TIU = ref();
 
   onMounted(() => {
     const parallax = document.querySelector('.parallax');
-
     if (parallax) {
       gsap.to(parallax, {
         scrollTrigger: {
@@ -31,17 +28,36 @@
       });
     }
 
-    // gsap.fromTo(
-    //   TIU.value,
-    //   { opacity: 0, y: 20 },
-    //   { opacity: 1, y: 0, duration: 1 }
-    // );
+    //shows
+    // const animateShows = gsap.utils.toArray('.animate-shows');
+    // animateShows.forEach((container) => {
+    //   const tl = gsap.timeline({
+    //     scrollTrigger: {
+    //       trigger: container,
+    //       start: 'top 80%',
+    //       toggleActions: 'play none none none'
+    //     }
+    //   });
+    //   tl.fromTo(
+    //     container.querySelectorAll('h2, p'),
+    //     {
+    //       autoAlpha: 0,
+    //       y: 50
+    //     },
+    //     {
+    //       autoAlpha: 1,
+    //       y: 0,
+    //       duration: 0.7,
+    //       stagger: 0.2
+    //     }
+    //   );
+    // });
   });
 </script>
 
 <template>
   <div id="home" class="grid md:h-screen md:pt-[57px] scroll-mt-[95px]">
-    <div ref="TIU">
+    <div>
       <h1
         class="title md:pt-[35px] lg:pt-0 md:pb-0 font-bold text-center text-5xl md:text-[105px] text-white uppercase lg:text-[140px] leading-normal xl:text-[175px] whitespace-nowrap font-display tracking-tight"
       >
@@ -50,7 +66,7 @@
         <span class="relative font-extrabold text-pink">Turn It Up!?</span>
       </h1>
     </div>
-    <div class="relative overflow-hidden">
+    <div class="relative overflow-hidden hero-fade-in">
       <NuxtImg
         class="absolute top-4 w-[150px] md:w-[200px] right-5 md:right-10 lg:w-[275px] lg:right-16"
         src="/images/bolt-pink--group.svg"
@@ -90,16 +106,19 @@
               height=""
               alt=""
             />
-            <h2
-              class="relative z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl"
-            >
-              Upcoming Shows
-            </h2>
-          </div>
 
-          <p class="text-lg font-semibold md:text-xl text-pink font-barlow">
-            COME SEE US LIVE, IT'LL BE A GOOD TIME
-          </p>
+            <div class="animate-shows">
+              <h2
+                class="relative z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl"
+              >
+                Upcoming Shows
+              </h2>
+
+              <p class="text-lg font-semibold md:text-xl text-pink font-barlow">
+                COME SEE US LIVE, IT'LL BE A GOOD TIME
+              </p>
+            </div>
+          </div>
         </div>
 
         <!--shows list -->
@@ -125,24 +144,27 @@
           <div class="relative inline-block">
             <NuxtImg
               loading="lazy"
-              class="md:hidden block absolute w-[65px] -right-[70px] -top-4 z-0"
+              class="md:hidden block absolute w-[65px] -right-[60px] -top-4 z-0"
               src="images/heart-pink.svg"
               width=""
               height=""
               alt=""
             />
-            <h2
-              class="z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl"
-            >
-              About
-            </h2>
+            <div class="">
+              <h2
+                class="z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl"
+              >
+                About
+              </h2>
+
+              <p
+                class="mb-10 text-lg font-semibold uppercase md:text-xl text-pink font-barlow"
+              >
+                THIS IS TURN IT UP!
+              </p>
+            </div>
           </div>
 
-          <p
-            class="mb-10 text-lg font-semibold uppercase md:text-xl text-pink font-barlow"
-          >
-            THIS IS TURN IT UP!
-          </p>
           <About />
         </div>
       </div>
@@ -222,24 +244,26 @@
           <div class="relative inline-block">
             <NuxtImg
               loading="lazy"
-              class="md:hidden block absolute w-[65px] -right-[70px] -top-4 z-0"
+              class="md:hidden block absolute w-[65px] right-[30px] -top-4 z-0"
               src="images/heart-pink.svg"
               width=""
               height=""
               alt=""
             />
-            <h2
-              class="z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl"
-            >
-              Song List
-            </h2>
-          </div>
 
-          <p
-            class="text-lg font-semibold uppercase md:text-xl text-pink font-barlow"
-          >
-            Top 40, Dance, Pop/Rock anthems, 80's, and 90's hits!
-          </p>
+            <div class="">
+              <h2
+                class="relative z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl trigger"
+              >
+                Song List
+              </h2>
+              <p
+                class="text-lg font-semibold uppercase md:text-xl text-pink font-barlow"
+              >
+                Top 40, Dance, Pop/Rock anthems, 80's, and 90's hits!
+              </p>
+            </div>
+          </div>
 
           <!-- songs list -->
           <SongsList />
@@ -265,24 +289,27 @@
           <div class="relative inline-block">
             <NuxtImg
               loading="lazy"
-              class="md:hidden block absolute w-[65px] -left-[70px] -top-4 z-0"
+              class="md:hidden block absolute w-[65px] -left-[60px] -top-4 z-0"
               src="images/asterisk-pink.svg"
               width=""
               height=""
               alt=""
             />
-            <h2
-              class="z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl"
-            >
-              Contact
-            </h2>
-          </div>
 
-          <p
-            class="text-lg font-semibold uppercase md:text-xl text-pink font-barlow"
-          >
-            book us
-          </p>
+            <div class="">
+              <h2
+                class="z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl"
+              >
+                Contact
+              </h2>
+
+              <p
+                class="text-lg font-semibold uppercase md:text-xl text-pink font-barlow"
+              >
+                Contact us for Booking
+              </p>
+            </div>
+          </div>
         </div>
 
         <ContactForm />
@@ -292,6 +319,20 @@
 </template>
 
 <style>
+  .title,
+  .hero-fade-in {
+    animation: fadeIn 2s ease-in forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
   @media (max-width: 767px) {
     .title {
       font-size: 75px;
@@ -307,21 +348,12 @@
     }
   }
 
-  @media (max-width: 435px) {
+  @media (max-width: 475px) {
     .title {
       font-size: 50px;
       padding-top: 100px;
     }
-  }
 
-  @media (max-width: 374px) {
-    .title {
-      font-size: 40px;
-      padding-top: 100px;
-    }
-  }
-
-  @media (max-width: 475px) {
     .mobile-text {
       font-size: 20px;
       line-height: 26px;
@@ -329,6 +361,11 @@
   }
 
   @media (max-width: 375px) {
+    .title {
+      font-size: 40px;
+      padding-top: 100px;
+    }
+
     .mobile-text {
       font-size: 16px;
       line-height: 21px;

@@ -9,7 +9,7 @@
     },
     {
       dateString: 'Fri, Jan 12 2024 @ 9:30pm',
-      dateCheckString: '2024-01-012',
+      dateCheckString: '2024-01-12',
       venue: 'The Goat',
       location: 'Manchester, NH',
       link: 'https://goatnh.com/manchester/'
@@ -180,12 +180,16 @@
   const currentDate = ref(new Date());
   currentDate.value.setHours(0, 0, 0, 0);
 
-  const displayCount = ref(5); // Initial display count
+  const displayCount = ref(5);
 
   const allUpcomingShows = computed(() => {
     return shows.filter((show) => {
       const showDate = new Date(show.dateCheckString);
-      return showDate >= currentDate.value;
+
+      const comparisonDate = new Date(currentDate.value);
+      comparisonDate.setDate(comparisonDate.getDate() - 1);
+
+      return showDate >= comparisonDate;
     });
   });
 
@@ -196,11 +200,40 @@
   function loadMore() {
     displayCount.value = allUpcomingShows.value.length;
   }
+
+  onMounted(() => {
+    // const staggerAnimate = gsap.utils.toArray('.shows');
+    // staggerAnimate.forEach((container) => {
+    //   const tl = gsap.timeline({
+    //     scrollTrigger: {
+    //       trigger: container,
+    //       start: 'top 80%',
+    //       toggleActions: 'play none none none'
+    //     }
+    //   });
+    //   // Animate show items
+    //   tl.fromTo(
+    //     container.querySelectorAll('.show-item'),
+    //     { autoAlpha: 0, y: 50 },
+    //     { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.2 }
+    //   );
+    //   tl.fromTo(
+    //     container.querySelector('.button'),
+    //     { autoAlpha: 0, y: 30 },
+    //     { autoAlpha: 1, y: 0, duration: 0.7 },
+    //     '-=.5'
+    //   );
+    // });
+  });
 </script>
 
 <template>
-  <div>
-    <div v-for="show in upcomingShows" :key="show.dateString.trim()">
+  <div class="shows">
+    <div
+      class="show-item"
+      v-for="show in upcomingShows"
+      :key="show.dateString.trim()"
+    >
       <div
         class="relative z-10 justify-center hidden w-full gap-5 mt-5 text-white md:flex"
       >
@@ -264,11 +297,11 @@
       </div>
     </div>
 
-    <div class="flex justify-center mt-5">
+    <div class="flex justify-center mt-5 button">
       <button
         @click="loadMore"
         v-if="displayCount < allUpcomingShows.length"
-        class="relative p-5 mt-5 text-sm font-bold text-white uppercase transition-all duration-200 border uppercasep-3 border-pink font-mont hover:bg-pink hover:text-white"
+        class="relative p-5 mt-5 text-sm font-bold text-white uppercase transition-all duration-200 border border-pink font-mont hover:bg-pink hover:text-white"
       >
         See All Shows!
       </button>

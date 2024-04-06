@@ -29,7 +29,7 @@
     <li
       v-for="item in navItems"
       :key="item.name"
-      class="p-5 border-b md:p-0 border-gray md:border-none"
+      class="p-5 border-b md:p-0 border-gray md:border-none initial-timeline-item"
     >
       <button
         @click="scrollToElement(`#${item.scrollTo}`), closeMobileMenu()"
