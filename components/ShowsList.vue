@@ -183,14 +183,14 @@
   const displayCount = ref(5);
 
   const allUpcomingShows = computed(() => {
-    return shows.filter((show) => {
+    const filteredShows = shows.filter((show) => {
       const showDate = new Date(show.dateCheckString);
-
       const comparisonDate = new Date(currentDate.value);
       comparisonDate.setDate(comparisonDate.getDate() - 1);
-
       return showDate >= comparisonDate;
     });
+    console.log(filteredShows);
+    return filteredShows;
   });
 
   // const allUpcomingShows = computed(() => {
@@ -199,6 +199,10 @@
   //     return showDate >= currentDate.value;
   //   });
   // });
+
+  function getVenueLink(show) {
+    return show.link; // You can add additional logging or checks here
+  }
 
   const upcomingShows = computed(() => {
     return allUpcomingShows.value.slice(0, displayCount.value);
@@ -211,7 +215,11 @@
 
 <template>
   <div class="shows">
-    <div class="show-item" v-for="show in upcomingShows" :key="show.venue">
+    <div
+      class="show-item"
+      v-for="show in upcomingShows"
+      :key="`${show.venue}-${show.dateCheckString}`"
+    >
       <div
         class="relative z-10 justify-center hidden w-full gap-5 mt-5 text-white md:flex"
       >
@@ -234,7 +242,7 @@
         </div>
 
         <a
-          :href="show.link"
+          :href="getVenueLink(show)"
           target="_blank"
           class="p-3 text-xs font-bold uppercase transition-all duration-200 border lg:text-sm lg:p-5 border-pink font-mont hover:bg-pink hover:text-white"
         >
