@@ -1,47 +1,47 @@
 <script setup>
   const shows = [
-    {
-      dateString: 'Fri, Jan 5 2024 @ 10:00pm',
-      dateCheckString: '2024-01-05',
-      venue: 'Nashbar',
-      location: 'Boston, MA',
-      link: 'https://www.nashbarboston.com/'
-    },
-    {
-      dateString: 'Fri, Jan 12 2024 @ 9:30pm',
-      dateCheckString: '2024-01-12',
-      venue: 'The Goat',
-      location: 'Manchester, NH',
-      link: 'https://goatnh.com/manchester/'
-    },
-    {
-      dateString: 'Sat, Mar 2 2024 @ 10:30pm',
-      dateCheckString: '2024-03-02',
-      venue: 'Lansdowne Pub',
-      location: 'Boston, MA',
-      link: 'https://www.lansdownepubboston.com/'
-    },
-    {
-      dateString: 'Fri, Mar 8 2024 @ 10:00pm',
-      dateCheckString: '2024-03-08',
-      venue: 'Nashbar',
-      location: 'Boston, MA',
-      link: 'https://www.nashbarboston.com/'
-    },
-    {
-      dateString: 'Fri, Mar 22 2024 @ 9:30pm',
-      dateCheckString: '2024-03-22',
-      venue: `Wally's`,
-      location: 'Hampton Beach, NH',
-      link: 'https://wallysnh.com/'
-    },
-    {
-      dateString: 'Fri, Apr 5 2024 @ 9:45pm',
-      dateCheckString: '2024-04-05',
-      venue: 'Six String',
-      location: 'Foxborough, MA',
-      link: 'https://www.sixstringfoxborough.com/'
-    },
+    // {
+    //   dateString: 'Fri, Jan 5 2024 @ 10:00pm',
+    //   dateCheckString: '2024-01-05',
+    //   venue: 'Nashbar',
+    //   location: 'Boston, MA',
+    //   link: 'https://www.nashbarboston.com/'
+    // },
+    // {
+    //   dateString: 'Fri, Jan 12 2024 @ 9:30pm',
+    //   dateCheckString: '2024-01-12',
+    //   venue: 'The Goat',
+    //   location: 'Manchester, NH',
+    //   link: 'https://goatnh.com/manchester/'
+    // },
+    // {
+    //   dateString: 'Sat, Mar 2 2024 @ 10:30pm',
+    //   dateCheckString: '2024-03-02',
+    //   venue: 'Lansdowne Pub',
+    //   location: 'Boston, MA',
+    //   link: 'https://www.lansdownepubboston.com/'
+    // },
+    // {
+    //   dateString: 'Fri, Mar 8 2024 @ 10:00pm',
+    //   dateCheckString: '2024-03-08',
+    //   venue: 'Nashbar',
+    //   location: 'Boston, MA',
+    //   link: 'https://www.nashbarboston.com/'
+    // },
+    // {
+    //   dateString: 'Fri, Mar 22 2024 @ 9:30pm',
+    //   dateCheckString: '2024-03-22',
+    //   venue: `Wally's`,
+    //   location: 'Hampton Beach, NH',
+    //   link: 'https://wallysnh.com/'
+    // },
+    // {
+    //   dateString: 'Fri, Apr 5 2024 @ 9:45pm',
+    //   dateCheckString: '2024-04-05',
+    //   venue: 'Six String',
+    //   location: 'Foxborough, MA',
+    //   link: 'https://www.sixstringfoxborough.com/'
+    // },
     {
       dateString: 'Sat, Apr 6 2024 @ 9:30pm',
       dateCheckString: '2024-04-06',
@@ -189,20 +189,13 @@
       comparisonDate.setDate(comparisonDate.getDate() - 1);
       return showDate >= comparisonDate;
     });
-    console.log(filteredShows);
+
     return filteredShows;
   });
 
-  // const allUpcomingShows = computed(() => {
-  //   return shows.filter((show) => {
-  //     const showDate = new Date(show.dateCheckString);
-  //     return showDate >= currentDate.value;
-  //   });
-  // });
-
-  function getVenueLink(show) {
-    return show.link; // You can add additional logging or checks here
-  }
+  const getVenueLink = (show) => {
+    return show.link;
+  };
 
   const upcomingShows = computed(() => {
     return allUpcomingShows.value.slice(0, displayCount.value);
@@ -217,7 +210,7 @@
   <div class="shows">
     <div
       class="show-item"
-      v-for="show in upcomingShows"
+      v-for="show in shows"
       :key="`${show.venue}-${show.dateCheckString}`"
     >
       <div
@@ -283,7 +276,7 @@
       </div>
     </div>
 
-    <div class="flex justify-center mt-5 button">
+    <!-- <div class="flex justify-center mt-5 button">
       <button
         @click="loadMore"
         v-if="displayCount < allUpcomingShows.length"
@@ -291,6 +284,6 @@
       >
         See All Shows!
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
