@@ -27,31 +27,6 @@
         ease: 'none'
       });
     }
-
-    //shows
-    // const animateShows = gsap.utils.toArray('.animate-shows');
-    // animateShows.forEach((container) => {
-    //   const tl = gsap.timeline({
-    //     scrollTrigger: {
-    //       trigger: container,
-    //       start: 'top 80%',
-    //       toggleActions: 'play none none none'
-    //     }
-    //   });
-    //   tl.fromTo(
-    //     container.querySelectorAll('h2, p'),
-    //     {
-    //       autoAlpha: 0,
-    //       y: 50
-    //     },
-    //     {
-    //       autoAlpha: 1,
-    //       y: 0,
-    //       duration: 0.7,
-    //       stagger: 0.2
-    //     }
-    //   );
-    // });
   });
 </script>
 

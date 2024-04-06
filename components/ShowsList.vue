@@ -200,31 +200,6 @@
   function loadMore() {
     displayCount.value = allUpcomingShows.value.length;
   }
-
-  onMounted(() => {
-    // const staggerAnimate = gsap.utils.toArray('.shows');
-    // staggerAnimate.forEach((container) => {
-    //   const tl = gsap.timeline({
-    //     scrollTrigger: {
-    //       trigger: container,
-    //       start: 'top 80%',
-    //       toggleActions: 'play none none none'
-    //     }
-    //   });
-    //   // Animate show items
-    //   tl.fromTo(
-    //     container.querySelectorAll('.show-item'),
-    //     { autoAlpha: 0, y: 50 },
-    //     { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.2 }
-    //   );
-    //   tl.fromTo(
-    //     container.querySelector('.button'),
-    //     { autoAlpha: 0, y: 30 },
-    //     { autoAlpha: 1, y: 0, duration: 0.7 },
-    //     '-=.5'
-    //   );
-    // });
-  });
 </script>
 
 <template>
