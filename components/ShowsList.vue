@@ -306,6 +306,5 @@
         See All Shows!
       </button>
     </div>
-    ]
   </div>
 </template>
