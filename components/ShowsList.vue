@@ -182,23 +182,23 @@
 
   const displayCount = ref(5);
 
-  // const allUpcomingShows = computed(() => {
-  //   return shows.filter((show) => {
-  //     const showDate = new Date(show.dateCheckString);
-
-  //     const comparisonDate = new Date(currentDate.value);
-  //     comparisonDate.setDate(comparisonDate.getDate() - 1);
-
-  //     return showDate >= comparisonDate;
-  //   });
-  // });
-
   const allUpcomingShows = computed(() => {
     return shows.filter((show) => {
       const showDate = new Date(show.dateCheckString);
-      return showDate >= currentDate.value;
+
+      const comparisonDate = new Date(currentDate.value);
+      comparisonDate.setDate(comparisonDate.getDate() - 1);
+
+      return showDate >= comparisonDate;
     });
   });
+
+  // const allUpcomingShows = computed(() => {
+  //   return shows.filter((show) => {
+  //     const showDate = new Date(show.dateCheckString);
+  //     return showDate >= currentDate.value;
+  //   });
+  // });
 
   const upcomingShows = computed(() => {
     return allUpcomingShows.value.slice(0, displayCount.value);
