@@ -42,13 +42,13 @@
     //   location: 'Foxborough, MA',
     //   link: 'https://www.sixstringfoxborough.com/'
     // },
-    {
-      dateString: 'Sat, Apr 6 2024 @ 9:30pm',
-      dateCheckString: '2024-04-06',
-      venue: 'The Goat',
-      location: 'Manchester, NH',
-      link: 'https://goatnh.com/manchester/'
-    },
+    // {
+    //   dateString: 'Sat, Apr 6 2024 @ 9:30pm',
+    //   dateCheckString: '2024-04-06',
+    //   venue: 'The Goat',
+    //   location: 'Manchester, NH',
+    //   link: 'https://goatnh.com/manchester/'
+    // },
     {
       dateString: 'Sun, May 5 2024 @ TBD',
       dateCheckString: '2024-05-05',
@@ -210,7 +210,7 @@
   <div class="shows">
     <div
       class="show-item"
-      v-for="show in upcomingShows"
+      v-for="show in shows"
       :key="`${show.venue}-${show.dateCheckString}`"
     >
       <div
@@ -276,7 +276,7 @@
       </div>
     </div>
 
-    <div class="flex justify-center mt-5 button">
+    <!-- <div class="flex justify-center mt-5 button">
       <button
         @click="loadMore"
         v-if="displayCount < allUpcomingShows.length"
@@ -284,6 +284,6 @@
       >
         See All Shows!
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
