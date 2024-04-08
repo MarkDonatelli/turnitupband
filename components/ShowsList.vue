@@ -1,54 +1,54 @@
 <script setup>
   const shows = [
-    // {
-    //   dateString: 'Fri, Jan 5 2024 @ 10:00pm',
-    //   dateCheckString: '2024-01-05',
-    //   venue: 'Nashbar',
-    //   location: 'Boston, MA',
-    //   link: 'https://www.nashbarboston.com/'
-    // },
-    // {
-    //   dateString: 'Fri, Jan 12 2024 @ 9:30pm',
-    //   dateCheckString: '2024-01-12',
-    //   venue: 'The Goat',
-    //   location: 'Manchester, NH',
-    //   link: 'https://goatnh.com/manchester/'
-    // },
-    // {
-    //   dateString: 'Sat, Mar 2 2024 @ 10:30pm',
-    //   dateCheckString: '2024-03-02',
-    //   venue: 'Lansdowne Pub',
-    //   location: 'Boston, MA',
-    //   link: 'https://www.lansdownepubboston.com/'
-    // },
-    // {
-    //   dateString: 'Fri, Mar 8 2024 @ 10:00pm',
-    //   dateCheckString: '2024-03-08',
-    //   venue: 'Nashbar',
-    //   location: 'Boston, MA',
-    //   link: 'https://www.nashbarboston.com/'
-    // },
-    // {
-    //   dateString: 'Fri, Mar 22 2024 @ 9:30pm',
-    //   dateCheckString: '2024-03-22',
-    //   venue: `Wally's`,
-    //   location: 'Hampton Beach, NH',
-    //   link: 'https://wallysnh.com/'
-    // },
-    // {
-    //   dateString: 'Fri, Apr 5 2024 @ 9:45pm',
-    //   dateCheckString: '2024-04-05',
-    //   venue: 'Six String',
-    //   location: 'Foxborough, MA',
-    //   link: 'https://www.sixstringfoxborough.com/'
-    // },
-    // {
-    //   dateString: 'Sat, Apr 6 2024 @ 9:30pm',
-    //   dateCheckString: '2024-04-06',
-    //   venue: 'The Goat',
-    //   location: 'Manchester, NH',
-    //   link: 'https://goatnh.com/manchester/'
-    // },
+    {
+      dateString: 'Fri, Jan 5 2024 @ 10:00pm',
+      dateCheckString: '2024-01-05',
+      venue: 'Nashbar',
+      location: 'Boston, MA',
+      link: 'https://www.nashbarboston.com/'
+    },
+    {
+      dateString: 'Fri, Jan 12 2024 @ 9:30pm',
+      dateCheckString: '2024-01-12',
+      venue: 'The Goat',
+      location: 'Manchester, NH',
+      link: 'https://goatnh.com/manchester/'
+    },
+    {
+      dateString: 'Sat, Mar 2 2024 @ 10:30pm',
+      dateCheckString: '2024-03-02',
+      venue: 'Lansdowne Pub',
+      location: 'Boston, MA',
+      link: 'https://www.lansdownepubboston.com/'
+    },
+    {
+      dateString: 'Fri, Mar 8 2024 @ 10:00pm',
+      dateCheckString: '2024-03-08',
+      venue: 'Nashbar',
+      location: 'Boston, MA',
+      link: 'https://www.nashbarboston.com/'
+    },
+    {
+      dateString: 'Fri, Mar 22 2024 @ 9:30pm',
+      dateCheckString: '2024-03-22',
+      venue: `Wally's`,
+      location: 'Hampton Beach, NH',
+      link: 'https://wallysnh.com/'
+    },
+    {
+      dateString: 'Fri, Apr 5 2024 @ 9:45pm',
+      dateCheckString: '2024-04-05',
+      venue: 'Six String',
+      location: 'Foxborough, MA',
+      link: 'https://www.sixstringfoxborough.com/'
+    },
+    {
+      dateString: 'Sat, Apr 6 2024 @ 9:30pm',
+      dateCheckString: '2024-04-06',
+      venue: 'The Goat',
+      location: 'Manchester, NH',
+      link: 'https://goatnh.com/manchester/'
+    },
     {
       dateString: 'Sun, May 5 2024 @ TBD',
       dateCheckString: '2024-05-05',
@@ -177,40 +177,37 @@
     }
   ];
 
-  const currentDate = ref(new Date());
-  currentDate.value.setHours(0, 0, 0, 0);
-
-  const displayCount = ref(5);
-
-  const allUpcomingShows = computed(() => {
-    const filteredShows = shows.filter((show) => {
-      const showDate = new Date(show.dateCheckString);
-      const comparisonDate = new Date(currentDate.value);
-      comparisonDate.setDate(comparisonDate.getDate() - 1);
-      return showDate >= comparisonDate;
-    });
-
-    return filteredShows;
-  });
-
   const getVenueLink = (show) => {
     return show.link;
   };
 
-  const upcomingShows = computed(() => {
-    return allUpcomingShows.value.slice(0, displayCount.value);
+  const displayCount = ref(5);
+
+  const filteredShows = shows.filter((show) => {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    const [year, month, day] = show.dateCheckString.split('-').map(Number);
+
+    const showDate = new Date(year, month - 1, day);
+
+    return currentDate <= showDate;
   });
 
-  function loadMore() {
-    displayCount.value = allUpcomingShows.value.length;
-  }
+  const upcomingShows = computed(() => {
+    return filteredShows.slice(0, displayCount.value);
+  });
+
+  const loadMore = () => {
+    displayCount.value = filteredShows.length;
+  };
 </script>
 
 <template>
   <div class="shows">
     <div
       class="show-item"
-      v-for="show in shows"
+      v-for="show in upcomingShows"
       :key="`${show.venue}-${show.dateCheckString}`"
     >
       <div
@@ -276,14 +273,14 @@
       </div>
     </div>
 
-    <!-- <div class="flex justify-center mt-5 button">
+    <div class="flex justify-center mt-5 button">
       <button
         @click="loadMore"
-        v-if="displayCount < allUpcomingShows.length"
+        v-if="displayCount < filteredShows.length"
         class="relative p-5 mt-5 text-sm font-bold text-white uppercase transition-all duration-200 border border-pink font-mont hover:bg-pink hover:text-white"
       >
         See All Shows!
       </button>
-    </div> -->
+    </div>
   </div>
 </template>
