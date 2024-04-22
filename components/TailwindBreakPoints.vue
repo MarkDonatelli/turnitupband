@@ -32,6 +32,6 @@
     <span class="ml-1 md:hidden lg:hidden xl:hidden">default</span>
     <span class="hidden ml-1 font-extrabold md:inline lg:hidden">md</span>
     <span class="hidden ml-1 font-extrabold lg:inline xl:hidden">lg</span>
-    <span class="hidden ml-1 font-extrabold xl:inline">xl</span>
+    <span class="hidden ml-1 font-extrabold xl:inline">xl BREAK</span>
   </div>
 </template>
