@@ -89,8 +89,10 @@
                 Upcoming Shows
               </h2>
 
-              <p class="text-lg font-semibold md:text-xl text-pink font-barlow">
-                COME SEE US LIVE, IT'LL BE A GOOD TIME
+              <p
+                class="text-lg font-semibold uppercase md:text-xl text-pink font-barlow"
+              >
+                We bring the party, you bring the noise!
               </p>
             </div>
           </div>
