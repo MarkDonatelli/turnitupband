@@ -155,6 +155,13 @@
       link: 'https://goatnh.com/manchester/'
     },
     {
+      dateString: 'Sat, Oct 5 2024 @ 1pm',
+      dateCheckString: '2024-10-05',
+      venue: 'Harpoon Brewery',
+      location: 'Boston, MA',
+      link: 'https://www.harpoonbrewery.com/event/harpoon-octoberfest-3/'
+    },
+    {
       dateString: 'Sat, Nov 9 2024 @ 9:30pm',
       dateCheckString: '2024-11-09',
       venue: `Wally's`,
