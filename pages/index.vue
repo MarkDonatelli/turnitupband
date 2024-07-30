@@ -1,6 +1,8 @@
 <script setup>
   import useScrollIntoView from '~/composables/useScrollIntoView';
-  import { YoutubeIframe } from '@vue-youtube/component';
+  import LiteYouTubeEmbed from 'vue-lite-youtube-embed';
+  import 'vue-lite-youtube-embed/style.css';
+
   /*
     meta
     */
@@ -76,11 +78,7 @@
           Experience the energy and excitement of our shows!
         </p>
       </div>
-      <div class="relative flex justify-center">
-        <ClientOnly>
-          <youtube-iframe video-id="1gXD0OiyILY" />
-        </ClientOnly>
-      </div>
+      <LiteYouTubeEmbed id="1gXD0OiyILY" title="Turn It Up! Promo 2024" />
     </div>
   </section>
 
@@ -321,6 +319,25 @@
 </template>
 
 <style>
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: #000;
+  }
+
+  .video-container iframe,
+  .video-container object,
+  .video-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
   /* .title, */
   .hero-fade-in {
     animation: fadeIn 2s ease-in forwards;
