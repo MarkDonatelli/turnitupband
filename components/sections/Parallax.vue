@@ -1,4 +1,5 @@
 <script setup>
+  import useScrollIntoView from '~/composables/useScrollIntoView';
   /*
     composable
     */
