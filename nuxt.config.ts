@@ -26,7 +26,12 @@ export default defineNuxtConfig({
   image: {
     provider: 'ipx'
   },
-
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false
+    }
+  ],
   googleFonts: {
     display: 'swap',
     preload: true,
