@@ -21,7 +21,7 @@
           Experience the energy and excitement of our shows!
         </p>
       </div>
-      <LiteYouTubeEmbed id="1gXD0OiyILY" title="Turn It Up! Promo 2024" />
+      <LiteYouTubeEmbed id="JNdmXQs0MIM" title="Turn It Up! Promo 2024" />
     </div>
   </section>
 </template>
