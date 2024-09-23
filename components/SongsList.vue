@@ -64,7 +64,8 @@
     `Jesse's Girl`,
     'Livin On A Prayer',
     'You Shook Me All Night Long',
-    'Closer'
+    'Closer',
+    'I Had Some Help'
   ];
 
   const listSorted = songlist.sort();

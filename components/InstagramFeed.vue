@@ -102,7 +102,7 @@
           <div
             class="flex items-center justify-center h-full md:h-auto md:justify-start md:items-start"
           >
-            <div class="flex flex-col items-center md:hidden">
+            <div class="flex flex-col items-center">
               <img
                 class="w-3/4 transition-all duration-500 group-hover:scale-110"
                 src="/images/logo.png"
@@ -118,13 +118,13 @@
               </p>
             </div>
 
-            <video
+            <!-- <video
               width="320"
               height="240"
               class="hidden object-cover transition-all duration-500 aspect-square md:block h-1/2 group-hover:scale-110"
             >
               <source :src="item.media_url" type="video/mp4" />
-            </video>
+            </video> -->
           </div>
 
           <div
