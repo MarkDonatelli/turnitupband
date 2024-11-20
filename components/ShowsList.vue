@@ -176,11 +176,24 @@
       link: 'https://goatnh.com/manchester/'
     },
     {
-      dateString: 'Thu, Dec 12 2024 @ 9:30pm',
-      dateCheckString: '2024-12-12',
+      dateString: 'Thu, Dec 5 2024 @ 9:00pm',
+      dateCheckString: '2024-12-5',
       venue: 'The Goat',
       location: 'Manchester, NH',
       link: 'https://goatnh.com/manchester/'
+    },
+    {
+      dateString: 'Fri, Dec 6 2024 @ 9:00pm',
+      dateCheckString: '2024-12-6',
+      venue: 'The Goat',
+      location: 'Manchester, NH',
+      link: 'https://goatnh.com/manchester/'
+    },
+    {
+      dateString: 'Sat, Dec 14 2024 @ 9:00pm',
+      dateCheckString: '2024-12-6',
+      venue: 'Private Event',
+      location: 'Hampton, NH'
     }
   ];
 
@@ -241,7 +254,11 @@
         <a
           :href="getVenueLink(show)"
           target="_blank"
-          class="p-3 text-xs font-bold uppercase transition-all duration-200 border lg:text-sm lg:p-5 border-pink font-mont hover:bg-pink hover:text-white"
+          :class="{
+            'disabled bg-slate-400 text-slate-300 border-none hover:bg-slate-400 hover:text-slate-300 cursor-not-allowed':
+              !show.link
+          }"
+          class="p-3 text-xs font-bold uppercase transition-all duration-200 border lg:text-sm lg:p-5 border-pink font-mont hover:bg-pink"
         >
           Venue Information
         </a>
@@ -263,7 +280,7 @@
                 {{ show.venue }}
               </p>
 
-              <p class="text-lg font-semibold font-mont justify-self-end">
+              <p class="text-lg font-semibold font-mont justify-self-center">
                 {{ show.location }}
               </p>
             </div>
@@ -271,7 +288,11 @@
             <a
               :href="show.link"
               target="_blank"
-              class="p-3 text-sm font-bold uppercase transition-all duration-200 border border-pink font-mont hover:bg-pink hover:text-white"
+              :class="{
+                'disabled bg-slate-400 text-slate-300 border-none hover:bg-slate-400 hover:text-slate-300 cursor-not-allowed':
+                  !show.link
+              }"
+              class="p-3 text-sm font-bold uppercase transition-all duration-200 border border-pink font-mont hover:bg-pink"
             >
               Venue Information
             </a>
