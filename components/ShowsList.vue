@@ -191,9 +191,30 @@
     },
     {
       dateString: 'Sat, Dec 14 2024 @ 9:00pm',
-      dateCheckString: '2024-12-6',
+      dateCheckString: '2024-12-14',
       venue: 'Private Event',
       location: 'Hampton, NH'
+    },
+    {
+      dateString: 'Thu, Dec 26 2024 @ 9:00pm',
+      dateCheckString: '2024-12-26',
+      venue: 'Pickle Barrel',
+      location: 'Killington, VT',
+      link: 'https://www.picklebarrelnightclub.com/'
+    },
+    {
+      dateString: 'Sat, Jan 11 2025 @ 9:00pm',
+      dateCheckString: '2025-01-11',
+      venue: 'Snow Barn',
+      location: 'West Dover, VT',
+      link: 'https://www.mountsnow.com/explore-the-resort/during-your-stay/dining/snow-barn.aspx'
+    },
+    {
+      dateString: 'Fri, Jan 31 2025 @ 9:15pm',
+      dateCheckString: '2025-01-11',
+      venue: `Bill's Bar`,
+      location: 'Boston, MA',
+      link: 'https://www.billsbarboston.com/'
     }
   ];
 

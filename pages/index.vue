@@ -45,9 +45,6 @@
   <!-- about section -->
   <About />
 
-  <!-- social media (IG FEED) section -->
-  <Social />
-
   <!--parallax section -->
   <Parallax />
 
