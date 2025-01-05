@@ -218,29 +218,25 @@
     }
   ];
 
-  const getVenueLink = (show) => {
-    return show.link;
+  const isUpcomingOrToday = (dateCheckString) => {
+    const now = new Date();
+    const showDate = new Date(dateCheckString);
+
+    return now <= showDate.setHours(23, 59, 59, 999);
   };
 
   const displayCount = ref(5);
 
-  const filteredShows = shows.filter((show) => {
-    const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
+  const filteredShows = computed(() =>
+    shows.filter((show) => isUpcomingOrToday(show.dateCheckString))
+  );
 
-    const [year, month, day] = show.dateCheckString.split('-').map(Number);
-
-    const showDate = new Date(year, month - 1, day);
-
-    return currentDate <= showDate;
-  });
-
-  const upcomingShows = computed(() => {
-    return filteredShows.slice(0, displayCount.value);
-  });
+  const upcomingShows = computed(() =>
+    filteredShows.value.slice(0, displayCount.value)
+  );
 
   const loadMore = () => {
-    displayCount.value = filteredShows.length;
+    displayCount.value = filteredShows.value.length;
   };
 </script>
 
@@ -266,14 +262,13 @@
           <p class="font-semibold truncate lg:text-xl font-mont">
             {{ show.venue }}
           </p>
-
           <p class="font-semibold lg:text-xl font-mont justify-self-end">
             {{ show.location }}
           </p>
         </div>
 
         <a
-          :href="getVenueLink(show)"
+          :href="show.link"
           target="_blank"
           :class="{
             'disabled bg-slate-400 text-slate-300 border-none hover:bg-slate-400 hover:text-slate-300 cursor-not-allowed':
@@ -284,48 +279,12 @@
           Venue Information
         </a>
       </div>
-
-      <div class="relative z-10 md:hidden">
-        <div class="flex flex-col mt-10">
-          <div
-            class="flex items-center justify-center w-full p-5 text-lg font-semibold text-white bg-gray font-mont"
-          >
-            <p>{{ show.dateString }}</p>
-          </div>
-
-          <div
-            class="flex flex-col justify-center text-center text-white bg-darkerGray"
-          >
-            <div class="p-7">
-              <p class="text-lg font-semibold truncate font-mont">
-                {{ show.venue }}
-              </p>
-
-              <p class="text-lg font-semibold font-mont justify-self-center">
-                {{ show.location }}
-              </p>
-            </div>
-
-            <a
-              :href="show.link"
-              target="_blank"
-              :class="{
-                'disabled bg-slate-400 text-slate-300 border-none hover:bg-slate-400 hover:text-slate-300 cursor-not-allowed':
-                  !show.link
-              }"
-              class="p-3 text-sm font-bold uppercase transition-all duration-200 border border-pink font-mont hover:bg-pink"
-            >
-              Venue Information
-            </a>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="flex justify-center mt-5 button">
       <button
-        @click="loadMore"
         v-if="displayCount < filteredShows.length"
+        @click="loadMore"
         class="relative p-5 mt-5 text-sm font-bold text-white uppercase transition-all duration-200 border border-pink font-mont hover:bg-pink hover:text-white"
       >
         See All Shows!
