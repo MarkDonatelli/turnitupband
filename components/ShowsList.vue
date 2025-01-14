@@ -211,36 +211,51 @@
     },
     {
       dateString: 'Fri, Jan 31 2025 @ 9:15pm',
-      dateCheckString: '2025-01-11',
+      dateCheckString: '2025-01-31',
+      venue: `Bill's Bar`,
+      location: 'Boston, MA',
+      link: 'https://www.billsbarboston.com/'
+    },
+    {
+      dateString: 'Fri, Mar 21 2025 @ 10:30pm',
+      dateCheckString: '2025-03-21',
+      venue: 'Lansdowne Pub',
+      location: 'Boston, MA',
+      link: 'https://www.lansdownepubboston.com/'
+    },
+    {
+      dateString: 'Sat, Apr 26 2025 @ 9:15pm',
+      dateCheckString: '2025-04-26',
       venue: `Bill's Bar`,
       location: 'Boston, MA',
       link: 'https://www.billsbarboston.com/'
     }
   ];
 
-  const getVenueLink = (show) => {
-    return show.link;
-  };
-
   const displayCount = ref(5);
 
-  const filteredShows = shows.filter((show) => {
+  const filteredShows = computed(() => {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
 
-    const [year, month, day] = show.dateCheckString.split('-').map(Number);
+    return shows.filter((show) => {
+      const [year, month, day] = show.dateCheckString.split('-').map(Number);
+      const showDate = new Date(year, month - 1, day);
 
-    const showDate = new Date(year, month - 1, day);
-
-    return currentDate <= showDate;
+      return currentDate <= showDate;
+    });
   });
 
   const upcomingShows = computed(() => {
-    return filteredShows.slice(0, displayCount.value);
+    return filteredShows.value.slice(0, displayCount.value);
   });
 
   const loadMore = () => {
-    displayCount.value = filteredShows.length;
+    displayCount.value = filteredShows.value.length;
+  };
+
+  const getVenueLink = (show) => {
+    return show.link || '#';
   };
 </script>
 
