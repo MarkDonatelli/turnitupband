@@ -298,7 +298,7 @@
       dateCheckString: '2025-08-01',
       venue: 'Cisco Brewery',
       location: 'New Bedford, MA',
-      link: 'https://www.ciscobrewersnewbedford.com/'
+      link: 'https://www.ciscokitchenbar.com/'
     },
     {
       dateString: 'Fri, Aug 23 2025 @ 9:00pm',
