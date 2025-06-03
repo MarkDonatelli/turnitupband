@@ -245,7 +245,7 @@
       link: 'https://www.billsbarboston.com/'
     },
     {
-      dateString: 'Fri, Jun 14 2025 @ 8:00pm',
+      dateString: 'Sat, Jun 14 2025 @ 8:00pm',
       dateCheckString: '2025-06-14',
       venue: "Bernie's",
       location: 'Hampton Beach, NH',
