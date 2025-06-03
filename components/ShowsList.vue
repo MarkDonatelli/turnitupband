@@ -245,6 +245,13 @@
       link: 'https://www.billsbarboston.com/'
     },
     {
+      dateString: 'Sat, Jun 7 2025 @ 9:00pm',
+      dateCheckString: '2025-06-07',
+      venue: 'Lansdowne Pub',
+      location: 'Boston, MA',
+      link: 'https://www.lansdownepubboston.com/'
+    },
+    {
       dateString: 'Sat, Jun 14 2025 @ 8:00pm',
       dateCheckString: '2025-06-14',
       venue: "Bernie's",
