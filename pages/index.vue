@@ -8,12 +8,14 @@
 </script>
 
 <template>
-  <div
-    id="home"
-    class="grid md:h-screen place-content-center md:pt-[57px] scroll-mt-[95px]"
-  >
-    <h1 class="text-white">NEW HOME</h1>
-  </div>
+  <!-- hero section -->
+  <HeroVideo />
+
+  <!--scrolling marquee -->
+  <ScrollingMarquee />
+
+  <!-- 2 cols band logo - image -->
+  <LogoBand />
 
   <!-- videos section -->
   <Videos />
@@ -23,9 +25,6 @@
 
   <!-- about section -->
   <About />
-
-  <!-- social media (IG FEED) section -->
-  <Social />
 
   <!--parallax section -->
   <Parallax />
@@ -92,5 +91,18 @@
       font-size: 16px;
       line-height: 21px;
     }
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
   }
 </style>
