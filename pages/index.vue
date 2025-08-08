@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <!-- hero section -->
+  <!-- hero section video -->
   <HeroVideo />
 
   <!--scrolling marquee -->
