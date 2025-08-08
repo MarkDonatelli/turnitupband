@@ -9,7 +9,10 @@
       loop
       playsinline
     >
-      <source src="/videos/tiu-bernies.mp4" type="video/mp4" />
+      <source
+        src="https://res.cloudinary.com/dpqslxpd6/video/upload/v1754691159/tiu-bernies_pgaoqn.mp4"
+        type="video/mp4"
+      />
       Your browser does not support the video tag.
     </video>
   </div>
