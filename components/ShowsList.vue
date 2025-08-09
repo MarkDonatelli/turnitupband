@@ -1,199 +1,190 @@
 <script setup>
   const shows = [
     {
-      dateString: 'Fri, Jan 5 2024 @ 10:00pm',
-      dateCheckString: '2024-01-05',
-      venue: 'Nashbar',
-      location: 'Boston, MA',
-      link: 'https://www.nashbarboston.com/'
+      dateString: 'Sat, Jan 11 2025 @ 9:00pm',
+      dateCheckString: '2025-01-11',
+      venue: 'Snow Barn',
+      location: 'Mount Snow, VT',
+      link: 'https://www.mountsnow.com/explore-the-resort/during-your-stay/dining/snow-barn.aspx'
     },
     {
-      dateString: 'Fri, Jan 12 2024 @ 9:30pm',
-      dateCheckString: '2024-01-12',
+      dateString: 'Fri, Jan 31 2025 @ 9:00pm',
+      dateCheckString: '2025-01-31',
+      venue: "Bill's Bar",
+      location: 'Boston, MA',
+      link: 'https://www.billsbarboston.com/'
+    },
+    {
+      dateString: 'Fri, Mar 7 2025 @ 9:00pm',
+      dateCheckString: '2025-03-07',
       venue: 'The Goat',
       location: 'Manchester, NH',
       link: 'https://goatnh.com/manchester/'
     },
     {
-      dateString: 'Sat, Mar 2 2024 @ 10:30pm',
-      dateCheckString: '2024-03-02',
+      dateString: 'Fri, Mar 21 2025 @ 9:00pm',
+      dateCheckString: '2025-03-21',
       venue: 'Lansdowne Pub',
       location: 'Boston, MA',
       link: 'https://www.lansdownepubboston.com/'
     },
     {
-      dateString: 'Fri, Mar 8 2024 @ 10:00pm',
-      dateCheckString: '2024-03-08',
-      venue: 'Nashbar',
-      location: 'Boston, MA',
-      link: 'https://www.nashbarboston.com/'
-    },
-    {
-      dateString: 'Fri, Mar 22 2024 @ 9:30pm',
-      dateCheckString: '2024-03-22',
-      venue: `Wally's`,
-      location: 'Hampton Beach, NH',
-      link: 'https://wallysnh.com/'
-    },
-    {
-      dateString: 'Fri, Apr 5 2024 @ 9:45pm',
-      dateCheckString: '2024-04-05',
-      venue: 'Six String',
-      location: 'Foxborough, MA',
-      link: 'https://www.sixstringfoxborough.com/'
-    },
-    {
-      dateString: 'Sat, Apr 6 2024 @ 9:30pm',
-      dateCheckString: '2024-04-06',
+      dateString: 'Fri, Apr 25 2025 @ 9:00pm',
+      dateCheckString: '2025-04-25',
       venue: 'The Goat',
       location: 'Manchester, NH',
       link: 'https://goatnh.com/manchester/'
     },
     {
-      dateString: 'Sun, May 5 2024 @ TBD',
-      dateCheckString: '2024-05-05',
-      venue: 'Veterans Memorial Stadium',
-      location: 'Quincy, MA',
-      link: 'https://discoverquincy.com/sports_and_rec/veterans-memorial-stadium/'
+      dateString: 'Sat, Apr 26 2025 @ 9:00pm',
+      dateCheckString: '2025-04-26',
+      venue: "Bill's Bar",
+      location: 'Boston, MA',
+      link: 'https://www.billsbarboston.com/'
     },
     {
-      dateString: 'Fri, May 17 2024 @ 10:30pm',
-      dateCheckString: '2024-05-17',
+      dateString: 'Sat, Jun 7 2025 @ 9:00pm',
+      dateCheckString: '2025-06-07',
       venue: 'Lansdowne Pub',
       location: 'Boston, MA',
       link: 'https://www.lansdownepubboston.com/'
     },
     {
-      dateString: 'Fri, Jun 7 2024 @ 9:45pm',
-      dateCheckString: '2024-06-07',
-      venue: 'Six String',
-      location: 'Foxborough, MA',
-      link: 'https://www.sixstringfoxborough.com/'
-    },
-    {
-      dateString: 'Sat, Jun 8 2024 @ 10:00pm',
-      dateCheckString: '2024-06-08',
-      venue: 'Nashbar',
-      location: 'Boston, MA',
-      link: 'https://www.nashbarboston.com/'
-    },
-    {
-      dateString: 'Sat, Jun 15 2024 @ 9:30pm',
-      dateCheckString: '2024-06-15',
-      venue: `Wally's`,
-      location: 'Hampton Beach, NH',
-      link: 'https://wallysnh.com/'
-    },
-    {
-      dateString: 'Fri, Jul 12 2024 @ 9:30pm',
-      dateCheckString: '2024-07-12',
-      venue: `Wally's`,
-      location: 'Hampton Beach, NH',
-      link: 'https://wallysnh.com/'
-    },
-    {
-      dateString: 'Fri, Jul 19 2024 @ 9:30pm',
-      dateCheckString: '2024-07-19',
-      venue: `Bernie's`,
+      dateString: 'Sat, Jun 14 2025 @ 8:00pm',
+      dateCheckString: '2025-06-14',
+      venue: "Bernie's",
       location: 'Hampton Beach, NH',
       link: 'https://berniesnh.com/'
     },
     {
-      dateString: 'Sat, Jul 20 2024 @ 10:00pm',
-      dateCheckString: '2024-07-20',
-      venue: 'Nashbar',
-      location: 'Boston, MA',
-      link: 'https://www.nashbarboston.com/'
-    },
-    {
-      dateString: 'Fri, Aug 9 2024 @ 9:30pm',
-      dateCheckString: '2024-08-09',
-      venue: `Bernie's`,
-      location: 'Hampton Beach, NH',
-      link: 'https://berniesnh.com/'
-    },
-    {
-      dateString: 'Sat, Aug 31 2024 @ 9:30pm',
-      dateCheckString: '2024-08-31',
-      venue: `Wally's`,
-      location: 'Hampton Beach, NH',
-      link: 'https://wallysnh.com/'
-    },
-    {
-      dateString: 'Fri, Sep 6 2024 @ 9:30pm',
-      dateCheckString: '2024-09-06',
-      venue: `Bernie's`,
-      location: 'Hampton Beach, NH',
-      link: 'https://berniesnh.com/'
-    },
-    {
-      dateString: 'Sat, Sep 14 2024 @ 9:30pm',
-      dateCheckString: '2024-09-14',
-      venue: 'The Goat',
-      location: 'Manchester, NH',
-      link: 'https://goatnh.com/manchester/'
-    },
-    {
-      dateString: 'Fri, Sep 20 2024 @ 9:30pm',
-      dateCheckString: '2024-09-20',
-      venue: 'The Chicken Box',
+      dateString: 'Thu, Jun 19 2025 @ 9:00pm',
+      dateCheckString: '2025-06-19',
+      venue: 'Chicken Box',
       location: 'Nantucket, MA',
       link: 'https://thechickenbox.com/'
     },
     {
-      dateString: 'Sat, Sep 21 2024 @ 9:30pm',
-      dateCheckString: '2024-09-21',
-      venue: 'The Chicken Box',
+      dateString: 'Fri, Jun 20 2025 @ 9:00pm',
+      dateCheckString: '2025-06-20',
+      venue: 'Chicken Box',
       location: 'Nantucket, MA',
       link: 'https://thechickenbox.com/'
     },
     {
-      dateString: 'Thu, Oct 3 2024 @ 9:30pm',
-      dateCheckString: '2024-10-03',
-      venue: 'The Goat',
-      location: 'Manchester, NH',
-      link: 'https://goatnh.com/manchester/'
+      dateString: 'Sat, Jun 21 2025 @ 9:00pm',
+      dateCheckString: '2025-06-21',
+      venue: 'Chicken Box',
+      location: 'Nantucket, MA',
+      link: 'https://thechickenbox.com/'
     },
     {
-      dateString: 'Sat, Oct 5 2024 @ 1pm',
-      dateCheckString: '2024-10-05',
-      venue: 'Harpoon Brewery',
-      location: 'Boston, MA',
-      link: 'https://www.harpoonbrewery.com/event/harpoon-octoberfest-3/'
-    },
-    {
-      dateString: 'Sat, Nov 9 2024 @ 9:30pm',
-      dateCheckString: '2024-11-09',
-      venue: `Wally's`,
+      dateString: 'Fri, Jul 11 2025 @ 8:00pm',
+      dateCheckString: '2025-07-11',
+      venue: "Bernie's",
       location: 'Hampton Beach, NH',
-      link: 'https://wallysnh.com/'
+      link: 'https://berniesnh.com/'
     },
     {
-      dateString: 'Wed, Nov 27 2024 @ 9:30pm',
-      dateCheckString: '2024-11-27',
+      dateString: 'Fri, Jul 25 2025 @ 9:00pm',
+      dateCheckString: '2025-07-25',
       venue: 'The Goat',
       location: 'Manchester, NH',
       link: 'https://goatnh.com/manchester/'
     },
     {
-      dateString: 'Thu, Dec 12 2024 @ 9:30pm',
-      dateCheckString: '2025-12-12',
+      dateString: 'Sat, Jul 26 2025 @ 9:00pm',
+      dateCheckString: '2025-07-26',
+      venue: 'Lansdowne Pub',
+      location: 'Boston, MA',
+      link: 'https://www.lansdownepubboston.com/'
+    },
+    {
+      dateString: 'Fri, Aug 1 2025 @ 6:00pm',
+      dateCheckString: '2025-08-01',
+      venue: 'Cisco Brewery',
+      location: 'New Bedford, MA',
+      link: 'https://www.ciscokitchenbar.com/'
+    },
+    {
+      dateString: 'Fri, Aug 23 2025 @ 9:00pm',
+      dateCheckString: '2025-08-23',
+      venue: 'Lansdowne Pub',
+      location: 'Boston, MA',
+      link: 'https://www.lansdownepubboston.com/'
+    },
+    {
+      dateString: 'Fri, Aug 29 2025 @ 9:00pm',
+      dateCheckString: '2025-08-29',
+      venue: 'Tipsy Seagull',
+      location: 'Fall River, MA',
+      link: 'https://www.tipsyseagull.com/'
+    },
+    {
+      dateString: 'Sat, Aug 30 2025 @ 8:00pm',
+      dateCheckString: '2025-08-30',
+      venue: "Bernie's",
+      location: 'Hampton Beach, NH',
+      link: 'https://berniesnh.com/'
+    },
+    {
+      dateString: 'Thu, Sep 5 2025 @ 9:00pm',
+      dateCheckString: '2025-09-05',
+      venue: 'Chicken Box',
+      location: 'Nantucket, MA',
+      link: 'https://thechickenbox.com/'
+    },
+    {
+      dateString: 'Fri, Sep 6 2025 @ 9:00pm',
+      dateCheckString: '2025-09-06',
+      venue: 'Chicken Box',
+      location: 'Nantucket, MA',
+      link: 'https://thechickenbox.com/'
+    },
+    {
+      dateString: 'Sat, Sep 13 2025 @ 9:00pm',
+      dateCheckString: '2025-09-13',
       venue: 'The Goat',
       location: 'Manchester, NH',
       link: 'https://goatnh.com/manchester/'
     },
-
     {
-      dateString: 'Thu, Dec 12 2024 @ 9:30pm',
-      dateCheckString: '2025-12-12',
+      dateString: 'Sat, Sep 27 2025 @ 9:00pm',
+      dateCheckString: '2025-09-27',
+      venue: 'Yellow Kittens',
+      location: 'Block Island, RI',
+      link: 'https://www.yellowkittens.com/'
+    },
+    {
+      dateString: 'Sat, Oct 4 2025 @ 9:00pm',
+      dateCheckString: '2025-10-04',
+      venue: "McGonagle's",
+      location: 'Dorchester, MA',
+      link: 'https://www.mcgonagles.com/'
+    },
+    {
+      dateString: 'Fri, Oct 24 2025 @ 9:00pm',
+      dateCheckString: '2025-10-24',
       venue: 'The Goat',
       location: 'Manchester, NH',
       link: 'https://goatnh.com/manchester/'
     },
-
     {
-      dateString: 'Thu, Dec 12 2024 @ 9:30pm',
-      dateCheckString: '2025-12-12',
+      dateString: 'Wed, Nov 26 2025 @ 9:00pm',
+      dateCheckString: '2025-11-26',
+      venue: 'The Goat',
+      location: 'Manchester, NH',
+      link: 'https://goatnh.com/manchester/'
+    },
+    {
+      dateString: 'Sat, Dec 13 2025 @ 9:00pm',
+      dateCheckString: '2025-12-13',
+      venue: "McGonagle's",
+      location: 'Dorchester, MA',
+      link: 'https://www.mcgonagles.com/'
+    },
+    {
+      dateString: 'Fri, Dec 19 2025 @ 9:00pm',
+      dateCheckString: '2025-12-19',
       venue: 'The Goat',
       location: 'Manchester, NH',
       link: 'https://goatnh.com/manchester/'
