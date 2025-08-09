@@ -58,9 +58,19 @@
             </h2>
             <button
               @click="scrollToElement('#contact')"
-              class="relative p-5 mt-5 text-sm font-bold text-white uppercase transition-all duration-200 border lg:w-full hover:bg-white hover:text-pink font-mont"
+              class="group inline-flex items-center mt-5 justify-center gap-2 w-full sm:w-auto px-6 py-3 rounded-full bg-[#F63D7A] text-black font-semibold uppercase tracking-wide shadow-md hover:bg-black hover:text-white transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F63D7A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               Book Us Now!
+              <svg
+                class="size-4 transition-transform group-hover:translate-x-0.5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12.293 4.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 11-1.414-1.414L14.586 10H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                />
+              </svg>
             </button>
           </div>
         </div>

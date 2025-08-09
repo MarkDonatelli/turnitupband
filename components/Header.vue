@@ -14,15 +14,15 @@
   */
   const header = ref(null);
 
-  onMounted(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 150) {
-        header.value.classList.add('scrolled');
-      } else {
-        header.value.classList.remove('scrolled');
-      }
-    };
+  const handleScroll = () => {
+    if (window.scrollY > 150) {
+      header.value.classList.add('scrolled');
+    } else {
+      header.value.classList.remove('scrolled');
+    }
+  };
 
+  onMounted(() => {
     window.addEventListener('scroll', handleScroll);
   });
 
@@ -59,12 +59,16 @@
 
 <style scoped>
   .header {
-    background-color: rgba(0, 0, 0, 1);
+    background-color: rgba(0, 0, 0, 0.5);
     height: 100px;
     width: 100%;
     position: fixed;
     top: 0;
-    z-index: 20;
-    transition: background-color 0.5s;
+    z-index: 60;
+    transition: background-color 0.3s ease;
+  }
+
+  .header.scrolled {
+    background-color: rgba(0, 0, 0, 1);
   }
 </style>

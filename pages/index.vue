@@ -8,39 +8,20 @@
 </script>
 
 <template>
-  <div id="home" class="grid md:h-screen md:pt-[57px] scroll-mt-[95px]">
-    <div>
-      <h1
-        class="title md:pt-[35px] lg:pt-0 md:pb-0 font-bold text-center text-5xl md:text-[105px] text-white uppercase lg:text-[140px] leading-normal xl:text-[175px] whitespace-nowrap font-display tracking-tight"
-      >
-        Ready to
+  <!-- hero section video -->
+  <HeroVideo />
 
-        <span class="relative font-extrabold text-pink">Turn It Up!?</span>
-      </h1>
-    </div>
-    <div class="relative overflow-hidden">
-      <NuxtImg
-        class="absolute top-4 w-[150px] md:w-[200px] right-5 md:right-10 lg:w-[275px] lg:right-16"
-        src="/images/bolt-pink--group.svg"
-        width=""
-        height=""
-        alt=""
-      />
-      <NuxtImg
-        class="object-cover w-full h-full overflow-hidden"
-        src="/images/hero.jpg"
-        width=""
-        height=""
-        alt=""
-      />
-    </div>
-  </div>
+  <!--scrolling marquee -->
+  <ScrollingMarquee />
 
-  <!-- videos section -->
-  <Videos />
+  <!-- 2 cols band logo - image -->
+  <LogoBand />
 
   <!-- shows section -->
   <Shows />
+
+  <!-- videos section -->
+  <Videos />
 
   <!-- about section -->
   <About />
@@ -110,5 +91,18 @@
       font-size: 16px;
       line-height: 21px;
     }
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
   }
 </style>
