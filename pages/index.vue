@@ -17,11 +17,11 @@
   <!-- 2 cols band logo - image -->
   <LogoBand />
 
-  <!-- videos section -->
-  <Videos />
-
   <!-- shows section -->
   <Shows />
+
+  <!-- videos section -->
+  <Videos />
 
   <!-- about section -->
   <About />

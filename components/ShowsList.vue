@@ -177,117 +177,131 @@
     },
     {
       dateString: 'Thu, Dec 12 2024 @ 9:30pm',
-      dateCheckString: '2024-12-12',
+      dateCheckString: '2025-12-12',
+      venue: 'The Goat',
+      location: 'Manchester, NH',
+      link: 'https://goatnh.com/manchester/'
+    },
+
+    {
+      dateString: 'Thu, Dec 12 2024 @ 9:30pm',
+      dateCheckString: '2025-12-12',
+      venue: 'The Goat',
+      location: 'Manchester, NH',
+      link: 'https://goatnh.com/manchester/'
+    },
+
+    {
+      dateString: 'Thu, Dec 12 2024 @ 9:30pm',
+      dateCheckString: '2025-12-12',
       venue: 'The Goat',
       location: 'Manchester, NH',
       link: 'https://goatnh.com/manchester/'
     }
   ];
 
-  const getVenueLink = (show) => {
-    return show.link;
-  };
+  const showsSorted = computed(() =>
+    [...shows].sort((a, b) =>
+      a.dateCheckString.localeCompare(b.dateCheckString)
+    )
+  );
 
-  const displayCount = ref(5);
+  const PAGE = 15;
+  const displayCount = ref(PAGE);
 
-  const filteredShows = shows.filter((show) => {
-    const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
-
-    const [year, month, day] = show.dateCheckString.split('-').map(Number);
-
-    const showDate = new Date(year, month - 1, day);
-
-    return currentDate <= showDate;
-  });
-
-  const upcomingShows = computed(() => {
-    return filteredShows.slice(0, displayCount.value);
-  });
+  const visibleShows = computed(() =>
+    showsSorted.value.slice(0, displayCount.value)
+  );
 
   const loadMore = () => {
-    displayCount.value = filteredShows.length;
+    displayCount.value = Math.min(
+      displayCount.value + PAGE,
+      showsSorted.value.length
+    );
   };
+
+  const showAll = () => (displayCount.value = showsSorted.value.length);
+
+  const getVenueLink = (show) => show.link;
 </script>
 
 <template>
-  <div class="shows">
-    <div
-      class="show-item"
-      v-for="show in upcomingShows"
-      :key="`${show.venue}-${show.dateCheckString}`"
-    >
-      <div
-        class="relative z-10 justify-center hidden w-full gap-5 mt-5 text-white md:flex"
-      >
-        <div
-          class="bg-gray px-3 md:max-w-[220px] lg:max-w-[245px] flex items-center font-mont w-full text-sm lg:text-base font-semibold"
-        >
-          <p>{{ show.dateString }}</p>
-        </div>
-
-        <div
-          class="w-full md:max-w-[347px] lg:max-w-[490px] bg-darkerGray grid grid-cols-[minmax(100px,1fr)_auto_auto] px-5 items-center"
-        >
-          <p class="font-semibold truncate lg:text-xl font-mont">
-            {{ show.venue }}
-          </p>
-
-          <p class="font-semibold lg:text-xl font-mont justify-self-end">
-            {{ show.location }}
-          </p>
-        </div>
-
-        <a
-          :href="getVenueLink(show)"
-          target="_blank"
-          class="p-3 text-xs font-bold uppercase transition-all duration-200 border lg:text-sm lg:p-5 border-pink font-mont hover:bg-pink hover:text-white"
-        >
-          Venue Information
-        </a>
+  <section id="shows" class="py-16 bg-black md:py-24 overflow-x-clip">
+    <div class="container">
+      <!-- Header -->
+      <div class="text-center">
+        <h2 class="text-4xl font-extrabold text-white md:text-5xl">
+          Upcoming Shows
+        </h2>
+        <p class="mt-2 text-[#F63D7A] uppercase tracking-widest font-semibold">
+          We bring the party, you bring the noise!
+        </p>
       </div>
 
-      <div class="relative z-10 md:hidden">
-        <div class="flex flex-col mt-10">
+      <!-- List -->
+      <ul class="mt-8 space-y-3">
+        <li
+          v-for="show in visibleShows"
+          :key="`${show.venue}-${show.dateCheckString}-${show.dateString}`"
+          class="p-4 overflow-hidden border rounded-2xl border-white/10 bg-white/5 backdrop-blur-sm md:p-5"
+        >
           <div
-            class="flex items-center justify-center w-full p-5 text-lg font-semibold text-white bg-gray font-mont"
+            class="grid gap-3 items-stretch md:grid-cols-[minmax(200px,1fr)_minmax(260px,1.2fr)] lg:grid-cols-[minmax(220px,1fr)_minmax(260px,1.2fr)_auto] xl:grid-cols-[280px_1fr_240px_auto]"
           >
-            <p>{{ show.dateString }}</p>
-          </div>
-
-          <div
-            class="flex flex-col justify-center text-center text-white bg-darkerGray"
-          >
-            <div class="p-7">
-              <p class="text-lg font-semibold truncate font-mont">
-                {{ show.venue }}
-              </p>
-
-              <p class="text-lg font-semibold font-mont justify-self-end">
-                {{ show.location }}
-              </p>
+            <!-- Date -->
+            <div
+              class="min-w-0 px-3 py-2 text-sm font-semibold text-white rounded-xl bg-black/40 md:text-base"
+            >
+              <p class="truncate">{{ show.dateString }}</p>
             </div>
 
+            <!-- Venue -->
+            <div
+              class="min-w-0 px-4 py-2 font-semibold text-white rounded-xl bg-black/40"
+            >
+              <p class="truncate md:text-lg">{{ show.venue }}</p>
+            </div>
+
+            <!-- Location -->
+            <div
+              class="min-w-0 px-4 py-2 font-semibold text-white rounded-xl bg-black/40 md:col-start-2 md:row-start-2 lg:col-start-auto lg:row-start-auto"
+            >
+              <p class="truncate md:text-lg">{{ show.location }}</p>
+            </div>
+
+            <!-- CTA -->
             <a
-              :href="show.link"
+              :href="getVenueLink(show)"
               target="_blank"
-              class="p-3 text-sm font-bold uppercase transition-all duration-200 border border-pink font-mont hover:bg-pink hover:text-white"
+              class="shrink-0 justify-self-stretch md:justify-self-start inline-flex items-center justify-center px-5 py-3 rounded-full border border-[#F63D7A] text-white font-semibold uppercase tracking-wide hover:bg-black hover:text-white hover:border-white transition-colors text-xs lg:text-sm"
             >
               Venue Information
             </a>
           </div>
-        </div>
+        </li>
+      </ul>
+
+      <!-- Load more -->
+      <div class="flex justify-center mt-8">
+        <button
+          v-if="displayCount < showsSorted.length"
+          @click="loadMore"
+          class="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#F63D7A] text-black font-semibold uppercase tracking-wide shadow-md hover:bg-black hover:text-white transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F63D7A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        >
+          Show More
+          <svg
+            class="size-4 transition-transform group-hover:translate-x-0.5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              d="M12.293 4.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 11-1.414-1.414L14.586 10H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+            />
+          </svg>
+        </button>
+        <p v-else class="text-sm text-white/60">All shows loaded</p>
       </div>
     </div>
-
-    <div class="flex justify-center mt-5 button">
-      <button
-        @click="loadMore"
-        v-if="displayCount < filteredShows.length"
-        class="relative p-5 mt-5 text-sm font-bold text-white uppercase transition-all duration-200 border border-pink font-mont hover:bg-pink hover:text-white"
-      >
-        See All Shows!
-      </button>
-    </div>
-  </div>
+  </section>
 </template>

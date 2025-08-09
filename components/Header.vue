@@ -64,7 +64,7 @@
     width: 100%;
     position: fixed;
     top: 0;
-    z-index: 20;
+    z-index: 60;
     transition: background-color 0.3s ease;
   }
 

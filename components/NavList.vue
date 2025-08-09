@@ -18,7 +18,7 @@
   const navItems = ref([
     { name: 'Home', scrollTo: 'home' },
     { name: 'Shows', scrollTo: 'shows' },
-    { name: 'About', scrollTo: 'about' },
+    { name: 'The Band', scrollTo: 'about' },
     { name: 'Songs', scrollTo: 'songs' },
     { name: 'Contact', scrollTo: 'contact' }
   ]);
