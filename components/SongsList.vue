@@ -64,7 +64,15 @@
     `Jesse's Girl`,
     'Livin On A Prayer',
     'You Shook Me All Night Long',
-    'Closer'
+    'Closer',
+    'I Had Some Help',
+    'Titanium',
+    'Somebody That I Used To Know',
+    'Somebody Told Me',
+    'Your Love',
+    'Unwrtiten',
+    'Valerie',
+    'A Thousand Miles'
   ].sort();
 
   const query = ref('');
