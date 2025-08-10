@@ -23,7 +23,7 @@
   <!-- videos section -->
   <Videos />
 
-  <!-- about section -->
+  <!-- about the band section -->
   <About />
 
   <!--parallax section -->
