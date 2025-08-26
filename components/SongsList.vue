@@ -70,7 +70,7 @@
     'Somebody That I Used To Know',
     'Somebody Told Me',
     'Your Love',
-    'Unwrtiten',
+    'Unwritten',
     'Valerie',
     'A Thousand Miles'
   ].sort();
