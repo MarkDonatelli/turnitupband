@@ -176,13 +176,6 @@
       link: 'https://goatnh.com/manchester/'
     },
     {
-      dateString: 'Sat, Dec 13 2025 @ 9:00pm',
-      dateCheckString: '2025-12-13',
-      venue: "McGonagle's",
-      location: 'Dorchester, MA',
-      link: 'https://www.mcgonagles.com/'
-    },
-    {
       dateString: 'Fri, Dec 19 2025 @ 9:00pm',
       dateCheckString: '2025-12-19',
       venue: 'The Goat',
