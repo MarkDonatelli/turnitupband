@@ -15,13 +15,6 @@
       link: 'https://thechickenbox.com/'
     },
     {
-      dateString: 'Sat, Jun 27 2026 @ 10:30pm',
-      dateCheckString: '2026-06-27',
-      venue: 'Lansdowne Pub',
-      location: 'Boston, MA',
-      link: 'https://www.lansdownepubboston.com/'
-    },
-    {
       dateString: 'Sun, Jul 5 2026 @ 2:00pm',
       dateCheckString: '2026-07-05',
       venue: 'Ballards Beach Bar',
@@ -43,10 +36,17 @@
       link: 'https://berniesnh.com/'
     },
     {
+      dateString: 'Fri, Jul 24 2026',
+      dateCheckString: '2026-07-24',
+      venue: 'Private event',
+      location: 'Danvers, MA',
+      link: ''
+    },
+    {
       dateString: 'Sat, Jul 25 2026',
       dateCheckString: '2026-07-25',
       venue: 'Private event',
-      location: '',
+      location: 'Revere, MA',
       link: ''
     },
     {
@@ -139,9 +139,8 @@
 
   const nextShowDate = computed(
     () =>
-      showsSorted.value.find(
-        (show) => show.dateCheckString >= todayString
-      )?.dateCheckString
+      showsSorted.value.find((show) => show.dateCheckString >= todayString)
+        ?.dateCheckString
   );
 
   const PAGE = 15;
@@ -196,7 +195,7 @@
         >
           <div
             v-if="isToday(show) || isNextShow(show)"
-            class="mb-3 flex flex-wrap gap-2"
+            class="flex flex-wrap gap-2 mb-3"
           >
             <span
               v-if="isToday(show)"
@@ -217,7 +216,7 @@
           >
             <!-- Date -->
             <div
-              class="min-w-0 px-3 py-2 text-sm font-semibold text-white rounded-xl border md:text-base"
+              class="min-w-0 px-3 py-2 text-sm font-semibold text-white border rounded-xl md:text-base"
               :class="
                 isToday(show) || isNextShow(show)
                   ? 'border-white/15 bg-black/80'
@@ -229,7 +228,7 @@
 
             <!-- Venue -->
             <div
-              class="min-w-0 px-4 py-2 font-semibold text-white rounded-xl border"
+              class="min-w-0 px-4 py-2 font-semibold text-white border rounded-xl"
               :class="
                 isToday(show) || isNextShow(show)
                   ? 'border-white/15 bg-black/80'
@@ -242,7 +241,7 @@
             <!-- Location -->
             <div
               v-if="show.location"
-              class="min-w-0 px-4 py-2 font-semibold text-white rounded-xl border md:col-start-2 md:row-start-2 lg:col-start-auto lg:row-start-auto"
+              class="min-w-0 px-4 py-2 font-semibold text-white border rounded-xl md:col-start-2 md:row-start-2 lg:col-start-auto lg:row-start-auto"
               :class="
                 isToday(show) || isNextShow(show)
                   ? 'border-white/15 bg-black/80'
@@ -261,6 +260,16 @@
             >
               Venue Information
             </a>
+            <button
+              v-else
+              type="button"
+              disabled
+              title="No venue information available for private events."
+              aria-label="No venue information available for private events."
+              class="shrink-0 justify-self-stretch md:justify-self-start inline-flex items-center justify-center px-5 py-3 rounded-full border border-white/20 text-white/45 font-semibold uppercase tracking-wide text-xs lg:text-sm cursor-not-allowed"
+            >
+              Venue Information
+            </button>
           </div>
         </li>
       </ul>
