@@ -127,19 +127,56 @@
     )
   );
 
-  const getLocalDateString = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+  const SHOW_TIME_ZONE = 'America/New_York';
 
-    return `${year}-${month}-${day}`;
+  const getShowDateString = (date) => {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: SHOW_TIME_ZONE,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).formatToParts(date);
+
+    const dateParts = Object.fromEntries(
+      parts
+        .filter(({ type }) => type !== 'literal')
+        .map(({ type, value }) => [type, value])
+    );
+
+    return `${dateParts.year}-${dateParts.month}-${dateParts.day}`;
   };
 
-  const todayString = getLocalDateString(new Date());
+  const todayString = ref('');
+  let todayTimer;
+
+  const setTodayString = () => {
+    todayString.value = getShowDateString(new Date());
+  };
+
+  const scheduleTodayRefresh = () => {
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 1, 0);
+
+    todayTimer = window.setTimeout(() => {
+      setTodayString();
+      scheduleTodayRefresh();
+    }, tomorrow.getTime() - now.getTime());
+  };
+
+  onMounted(() => {
+    setTodayString();
+    scheduleTodayRefresh();
+  });
+
+  onUnmounted(() => {
+    window.clearTimeout(todayTimer);
+  });
 
   const nextShowDate = computed(
     () =>
-      showsSorted.value.find((show) => show.dateCheckString >= todayString)
+      showsSorted.value.find((show) => show.dateCheckString >= todayString.value)
         ?.dateCheckString
   );
 
@@ -161,7 +198,7 @@
 
   const getVenueLink = (show) => show.link;
 
-  const isToday = (show) => show.dateCheckString === todayString;
+  const isToday = (show) => show.dateCheckString === todayString.value;
 
   const isNextShow = (show) => show.dateCheckString === nextShowDate.value;
 </script>
