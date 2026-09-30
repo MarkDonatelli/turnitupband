@@ -1,29 +1,16 @@
-<script setup></script>
-
 <template>
-  <section id="contact" class="scroll-mt-[50px]">
-    <div class="bg-black py-14 md:py-20">
-      <div class="container">
-        <div class="text-center md:relative">
-          <div class="relative inline-block">
-            <div class="">
-              <h2
-                class="z-10 mb-3 text-4xl font-extrabold text-white md:text-5xl"
-              >
-                Contact
-              </h2>
-
-              <p
-                class="text-lg font-semibold uppercase md:text-xl text-pink font-barlow"
-              >
-                Contact us for Booking
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <ContactForm />
+  <section id="contact" class="scroll-mt-[50px] px-3.5 md:px-8 pb-8">
+    <div
+      class="relative overflow-hidden rounded-lg bg-ink2 px-5 py-12 md:px-[72px] md:py-[110px] flex flex-col items-center gap-6 md:gap-[30px] text-center"
+    >
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-55 hidden md:block">
+        <EqBurst :size="900" :rays="44" :rings="9" :inner="0.28" alt="" />
       </div>
+      <p class="relative eyebrow">Booking 2026–2027</p>
+      <h2 class="relative font-serif text-[40px] md:text-[84px] leading-none">
+        Is your date <em>still open?</em>
+      </h2>
+      <ContactForm class="relative" />
     </div>
   </section>
 </template>

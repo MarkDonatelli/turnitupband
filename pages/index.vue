@@ -1,108 +1,27 @@
 <script setup>
-  /*
-    meta
-    */
   useHead({
-    title: 'Turn It Up! | Boston, MA'
+    title: 'Turn It Up! | Boston Live Cover Band for Weddings, Corporate & Private Events',
+    meta: [
+      {
+        name: 'description',
+        content:
+          'Turn It Up! is Boston’s high-energy cover band bringing 90s to now. Weddings, corporate events, casinos, clubs and private parties across New England.'
+      }
+    ]
   });
 </script>
 
 <template>
-  <!-- hero section video -->
-  <HeroVideo />
-
-  <!--scrolling marquee -->
-  <ScrollingMarquee />
-
-  <!-- 2 cols band logo - image -->
-  <LogoBand />
-
-  <!-- shows section -->
-  <Shows />
-
-  <!-- videos section -->
-  <Videos />
-
-  <!-- about the band section -->
-  <About />
-
-  <!--parallax section -->
-  <Parallax />
-
-  <!-- hero section -->
-  <Hero />
-
-  <!-- songs section -->
-  <Songs />
-
-  <!-- contact section -->
-  <Contact />
+  <main>
+    <HeroMain />
+    <Events />
+    <Songs />
+    <Videos />
+    <About />
+    <Reviews />
+    <Shows />
+    <Faq />
+    <Contact />
+  </main>
+  <Footer />
 </template>
-
-<style>
-  /* .title, */
-  .hero-fade-in {
-    animation: fadeIn 2s ease-in forwards;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @media (max-width: 767px) {
-    .title {
-      font-size: 75px;
-      padding-top: 100px;
-    }
-  }
-
-  @media (max-width: 575px) {
-    .title {
-      font-size: 55px;
-      padding-top: 100px;
-      padding-bottom: 20px;
-    }
-  }
-
-  @media (max-width: 475px) {
-    .title {
-      font-size: 50px;
-      padding-top: 100px;
-    }
-
-    .mobile-text {
-      font-size: 20px;
-      line-height: 26px;
-    }
-  }
-
-  @media (max-width: 375px) {
-    .title {
-      font-size: 40px;
-      padding-top: 100px;
-    }
-
-    .mobile-text {
-      font-size: 16px;
-      line-height: 21px;
-    }
-  }
-
-  @keyframes marquee {
-    0% {
-      transform: translateX(0%);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-
-  .animate-marquee {
-    animation: marquee 20s linear infinite;
-  }
-</style>

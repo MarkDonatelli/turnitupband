@@ -2,24 +2,28 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: '1rem',
+      padding: { DEFAULT: '1.375rem', md: '4.5rem' },
       screens: {
         sm: '100%',
-        md: '1170px'
+        xl: '1280px'
       }
     },
     extend: {
       fontFamily: {
         display: ['Big Shoulders Display', 'sans-serif'],
-        barlow: ['Barlow Condensed', 'sans-serif'],
-        mont: ['Montserrat', 'sans-serif']
+        serif: ['DM Serif Display', 'serif'],
+        sans: ['Manrope', 'sans-serif']
       },
       colors: {
-        pink: '#d91b5c',
-        darkgray: '#0e0e0e',
-        darkerGray: '#181818',
-        gray: '#272727',
-        lightGray: '#3A3A3A'
+        ink: '#0D0C10',
+        ink2: '#17161C',
+        ink3: '#1A1920',
+        ivory: '#F3EEE6',
+        pink: '#FF2E8A',
+        'pink-deep': '#E6007E',
+        muted: '#B8B1A6',
+        muted2: '#A9A39A',
+        stone: '#6E685F'
       }
     }
   },

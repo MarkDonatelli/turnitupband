@@ -5,27 +5,18 @@
 </script>
 
 <template>
-  <div
+  <button
     @click="toggleMobileMenu"
-    class="flex flex-col justify-between w-10 h-6 cursor-pointer md:hidden"
+    aria-label="Menu"
+    class="flex flex-col items-center justify-center gap-[5px] w-11 h-11 border rounded-full lg:hidden border-ivory/30"
   >
-    <div
-      :class="{
-        'translate-y-[10px] rotate-45 transform': mobileMenuStore.isOpen
-      }"
-      class="w-full h-1 transition-all rounded-sm bg-pink"
-    ></div>
-
-    <div
-      :class="{ 'opacity-0': mobileMenuStore.isOpen }"
-      class="w-full h-1 transition-all rounded-sm bg-pink"
-    ></div>
-
-    <div
-      :class="{
-        '-translate-y-[10px] -rotate-45 transform': mobileMenuStore.isOpen
-      }"
-      class="w-full h-1 transition-all rounded-sm bg-pink"
-    ></div>
-  </div>
+    <span
+      class="w-4 h-[1.5px] bg-ivory transition-transform"
+      :class="{ 'translate-y-[3.25px] rotate-45': mobileMenuStore.isOpen }"
+    ></span>
+    <span
+      class="w-4 h-[1.5px] bg-ivory transition-transform"
+      :class="{ '-translate-y-[3.25px] -rotate-45': mobileMenuStore.isOpen }"
+    ></span>
+  </button>
 </template>

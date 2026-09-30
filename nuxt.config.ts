@@ -36,9 +36,9 @@ export default defineNuxtConfig({
     display: 'swap',
     preload: true,
     families: {
-      'Big+Shoulders+Display': [100, 200, 300, 400, 500, 600, 700, 800, 900],
-      Montserrat: [100, 200, 300, 400, 500, 600, 700, 800, 900],
-      'Barlow+Condensed': [100, 200, 300, 400, 500, 600, 700, 800, 900]
+      'Big+Shoulders+Display': [700, 800, 900],
+      'DM+Serif+Display': { wght: [400], ital: [400] },
+      Manrope: [400, 500, 600, 700]
     }
   },
 

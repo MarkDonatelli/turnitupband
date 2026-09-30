@@ -1,74 +1,41 @@
 <script setup>
-  /*
-  imports
-  */
   import useScrollIntoView from '~/composables/useScrollIntoView';
+  import { useMobileMenuStore } from '~/store/mobileMenu';
 
-  /*
-  composables
-   */
   const { scrollToElement } = useScrollIntoView();
+  const mobileMenuStore = useMobileMenuStore();
 
-  /*
-  refs
-  */
-  const header = ref(null);
+  const scrolled = ref(false);
+  const handleScroll = () => (scrolled.value = window.scrollY > 150);
 
-  const handleScroll = () => {
-    if (window.scrollY > 150) {
-      header.value.classList.add('scrolled');
-    } else {
-      header.value.classList.remove('scrolled');
-    }
-  };
-
-  onMounted(() => {
-    window.addEventListener('scroll', handleScroll);
-  });
-
-  onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll);
-  });
+  onMounted(() => window.addEventListener('scroll', handleScroll));
+  onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 </script>
 
 <template>
-  <header ref="header" class="flex header">
+  <header
+    class="fixed top-0 z-[60] w-full transition-colors duration-300"
+    :class="scrolled ? 'bg-ink/95 backdrop-blur' : 'bg-transparent'"
+  >
     <nav
-      class="relative z-50 flex items-center mx-auto justify-between w-full max-w-[1536px] px-4"
+      class="relative z-50 flex items-center justify-between mx-auto max-w-[1440px] px-[22px] py-[22px] md:px-[72px] md:py-[30px]"
     >
-      <div class="flex items-center justify-between w-full md:w-auto">
-        <NuxtImg
-          @click="scrollToElement('#home')"
-          class="w-[100px] cursor-pointer"
-          alt="Band Logo"
-          height="84"
-          width="100"
-          src="/images/logo.png"
-          format="webp"
-        />
-        <Hamburger />
-      </div>
-      <NavList class="hidden gap-10 md:flex lg:gap-14" />
+      <button @click="scrollToElement('#home')" aria-label="Turn It Up! home">
+        <Wordmark size="text-[28px] md:text-[34px]" />
+      </button>
 
-      <SocialList class="hidden md:flex" />
+      <NavList class="hidden lg:flex gap-[38px]" />
+
+      <button
+        @click="scrollToElement('#contact')"
+        class="hidden lg:inline-flex px-[22px] py-[13px] text-sm font-semibold border rounded-full border-pink text-ivory hover:bg-pink hover:text-ink transition-colors"
+      >
+        Check your date
+      </button>
+
+      <Hamburger />
     </nav>
 
     <MobileMenu />
   </header>
 </template>
-
-<style scoped>
-  .header {
-    background-color: rgba(0, 0, 0, 0.5);
-    height: 100px;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    z-index: 60;
-    transition: background-color 0.3s ease;
-  }
-
-  .header.scrolled {
-    background-color: rgba(0, 0, 0, 1);
-  }
-</style>

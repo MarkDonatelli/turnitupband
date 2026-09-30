@@ -1,27 +1,17 @@
 <script setup>
-  /*
-  imports
-  */
   import useScrollIntoView from '~/composables/useScrollIntoView';
   import { useMobileMenuStore } from '~/store/mobileMenu';
-  const mobileMenuStore = useMobileMenuStore();
-  const { closeMobileMenu } = useMobileMenuStore();
 
-  /*
-  composables
-   */
+  const { closeMobileMenu } = useMobileMenuStore();
   const { scrollToElement } = useScrollIntoView();
 
-  /*
-   nav items
-    */
-  const navItems = ref([
-    { name: 'Home', scrollTo: 'home' },
+  const navItems = [
+    { name: 'Events', scrollTo: 'events' },
     { name: 'Shows', scrollTo: 'shows' },
-    { name: 'The Band', scrollTo: 'about' },
     { name: 'Songs', scrollTo: 'songs' },
-    { name: 'Contact', scrollTo: 'contact' }
-  ]);
+    { name: 'The Band', scrollTo: 'about' },
+    { name: 'FAQ', scrollTo: 'faq' }
+  ];
 </script>
 
 <template>
@@ -29,11 +19,11 @@
     <li
       v-for="item in navItems"
       :key="item.name"
-      class="p-5 border-b md:p-0 border-gray md:border-none initial-timeline-item"
+      class="border-b border-ivory/10 lg:border-none"
     >
       <button
         @click="scrollToElement(`#${item.scrollTo}`), closeMobileMenu()"
-        class="text-lg font-extrabold text-white transition-all duration-200 md:text-base hover:text-pink font-mont lg:text-lg"
+        class="w-full py-5 text-left text-lg font-medium lg:py-0 lg:text-sm text-[#D9D3C9] hover:text-pink transition-colors"
       >
         {{ item.name }}
       </button>

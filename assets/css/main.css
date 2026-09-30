@@ -2,28 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-}
-
-/* GLOBAL */
 body {
-  background-color: black;
+  background-color: #0d0c10;
+  color: #f3eee6;
+  font-family: 'Manrope', sans-serif;
 }
 
-/*
-transitions
-*/
-
-.slide-fade-enter-active {
-  transition: all 0.3s ease-out;
+a {
+  color: inherit;
 }
 
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+.eyebrow {
+  @apply text-xs font-semibold uppercase tracking-[0.22em] text-pink;
 }
 
+@keyframes tiuPulse {
+  0%, 100% { opacity: 0.12; }
+  35% { opacity: 1; }
+}
+
+@keyframes tiuFade {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+.fade-enter-active { animation: tiuFade 0.35s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .eq-sq { animation: none !important; opacity: 0.55; }
+}
+
+/* mobile menu */
+.slide-fade-enter-active { transition: all 0.3s ease-out; }
+.slide-fade-leave-active { transition: all 0.4s ease-in; }
 .slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateX(-1000px);
-  opacity: 0;
-}
+.slide-fade-leave-to { transform: translateX(100%); opacity: 0; }

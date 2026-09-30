@@ -1,122 +1,66 @@
-<script setup></script>
+<script setup>
+  const members = [
+    { name: 'Kelcey', role: 'Vocals', img: '/images/kelcey-balloons.jpg' },
+    { name: 'Bob', role: 'Vocals', img: '/images/bob.jpg' },
+    { name: 'Joey', role: 'Guitar, Vocals', img: '/images/joey.jpg' }, // TODO: add joey.jpg to /public/images
+    { name: 'Mark', role: 'Guitar', img: '/images/mark.jpg' },
+    { name: 'Tom', role: 'Bass', img: '/images/tom-balloons.jpg' },
+    { name: 'James', role: 'Drums', img: '/images/james.jpg' }
+  ];
+</script>
 
 <template>
-  <section id="about" class="scroll-mt-[95px]">
-    <div class="relative">
-      <!-- Full image -->
-      <NuxtImg
-        src="/images/TIU_Grafitti.jpg"
-        alt="Turn It Up band"
-        class="block object-cover w-full h-auto"
-      />
+  <section id="about" class="scroll-mt-[95px] pb-16 md:pb-[120px]">
+    <div class="container flex flex-col gap-6 md:gap-11">
+      <div class="grid gap-4 md:grid-cols-[1.2fr_1fr] md:gap-16 md:items-end">
+        <div class="flex flex-col gap-3 md:gap-4">
+          <p class="eyebrow">The band</p>
+          <h2 class="font-serif text-[40px] md:text-[64px] leading-[1.02]">
+            This is <em>Turn It Up!</em>
+          </h2>
+        </div>
+        <p class="hidden md:block text-[17px] leading-relaxed text-muted">
+          Six musicians, three lead voices, and years of packed club nights
+          behind every wedding and gala we play.
+        </p>
+      </div>
 
-      <div
-        class="absolute inset-x-0 bottom-0 h-24 pointer-events-none md:h-32 bg-gradient-to-t from-black/60 via-black/20 to-transparent"
-      ></div>
+      <div class="h-[220px] md:h-[560px] overflow-hidden rounded md:rounded-md">
+        <NuxtImg
+          src="/images/TIU_Grafitti.jpg"
+          alt="Turn It Up! band"
+          class="object-cover w-full h-full object-[center_30%]"
+          format="webp"
+          loading="lazy"
+        />
+      </div>
 
-      <div class="absolute inset-x-0 bottom-4 md:bottom-8">
-        <div class="mx-4 md:mx-10">
-          <div
-            class="inline-flex flex-col rounded-xl px-4 py-2 md:px-6 md:py-3 bg-black/45 backdrop-blur-sm shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
-          >
-            <h2
-              class="text-3xl font-extrabold leading-tight text-white md:text-5xl"
-            >
-              The Band
-            </h2>
-            <p
-              class="mt-1 md:mt-2 text-[#F63D7A] font-semibold uppercase tracking-widest text-xs md:text-sm"
-              style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7)"
-            >
-              THIS IS TURN IT UP!
-            </p>
+      <div class="grid grid-cols-2 gap-x-3 gap-y-[18px] md:grid-cols-3 md:gap-6">
+        <div
+          v-for="m in members"
+          :key="m.name"
+          class="flex flex-col gap-2.5 md:gap-4 transition-transform md:hover:-translate-y-1.5"
+        >
+          <div class="h-[180px] md:h-[340px] overflow-hidden rounded bg-ink3">
+            <NuxtImg
+              :src="m.img"
+              :alt="m.name"
+              class="object-cover w-full h-full object-[center_25%]"
+              format="webp"
+              loading="lazy"
+            />
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-2 gap-2 md:grid-cols-3">
-      <!-- Kelcey -->
-      <div class="relative aspect-square">
-        <NuxtImg
-          src="/images/kelcey-balloons.jpg"
-          alt="Turn It Up band"
-          class="object-cover w-full h-full"
-        />
-        <div class="absolute px-4 py-2 rounded-lg bottom-3 left-3 bg-black/70">
-          <span class="block text-lg font-bold leading-tight text-white">
-            Kelcey
-          </span>
-          <span class="block text-sm font-medium text-pink">Vocals</span>
-        </div>
-      </div>
-
-      <!-- Logo -->
-      <div class="relative aspect-square">
-        <NuxtImg
-          src="/images/logo.png"
-          alt="Turn It Up band"
-          class="object-cover w-full h-full"
-        />
-      </div>
-
-      <!-- Bob -->
-      <div class="relative aspect-square">
-        <NuxtImg
-          src="/images/bob.jpg"
-          alt="Turn It Up band"
-          class="object-cover w-full h-full"
-        />
-        <div class="absolute px-4 py-2 rounded-lg bottom-3 left-3 bg-black/70">
-          <span class="block text-lg font-bold leading-tight text-white">
-            Bob
-          </span>
-          <span class="block text-sm font-medium text-pink">Vocals</span>
-        </div>
-      </div>
-
-      <!-- Tom -->
-      <div class="relative aspect-square">
-        <NuxtImg
-          src="/images/tom-balloons.jpg"
-          alt="Turn It Up band"
-          class="object-cover w-full h-full"
-        />
-        <div class="absolute px-4 py-2 rounded-lg bottom-3 left-3 bg-black/70">
-          <span class="block text-lg font-bold leading-tight text-white">
-            Tom
-          </span>
-          <span class="block text-sm font-medium text-pink">Bass</span>
-        </div>
-      </div>
-
-      <!-- James -->
-      <div class="relative aspect-square">
-        <NuxtImg
-          src="/images/james.jpg"
-          alt="Turn It Up band"
-          class="object-cover w-full h-full"
-        />
-        <div class="absolute px-4 py-2 rounded-lg bottom-3 left-3 bg-black/70">
-          <span class="block text-lg font-bold leading-tight text-white">
-            James
-          </span>
-          <span class="block text-sm font-medium text-pink">Drums</span>
-        </div>
-      </div>
-
-      <!-- Mark -->
-      <div class="relative aspect-square">
-        <NuxtImg
-          src="/images/mark.jpg"
-          alt="Turn It Up band"
-          class="object-cover w-full h-full"
-        />
-        <div class="absolute px-4 py-2 rounded-lg bottom-3 left-3 bg-black/70">
-          <span class="block text-lg font-bold leading-tight text-white">
-            Mark
-          </span>
-          <span class="block text-sm font-medium text-pink">Guitar</span>
+          <div
+            class="flex flex-col gap-0.5 md:flex-row md:justify-between md:items-baseline md:gap-4 md:pt-3.5 md:border-t md:border-ivory/20"
+          >
+            <span class="font-serif text-[22px] md:text-[32px] leading-[1.1] md:leading-none">{{
+              m.name
+            }}</span>
+            <span
+              class="text-[11px] md:text-xs font-semibold uppercase tracking-[0.16em] md:tracking-[0.2em] text-pink"
+              >{{ m.role }}</span
+            >
+          </div>
         </div>
       </div>
     </div>

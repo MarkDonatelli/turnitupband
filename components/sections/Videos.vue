@@ -4,24 +4,19 @@
 </script>
 
 <template>
-  <section
-    id="video-section"
-    class="scroll-mt-[95px] py-14 md:py-20 bg-black border-t-8 border-pink"
-  >
-    <div class="container">
-      <div class="mb-10 text-center">
-        <h2
-          class="relative z-10 mb-4 text-3xl font-extrabold text-white uppercase md:text-5xl font-mont"
-        >
-          Videos
+  <section id="reel" class="scroll-mt-[95px] pb-16 md:pb-[120px]">
+    <div class="container flex flex-col gap-7">
+      <div class="flex items-end justify-between gap-6">
+        <h2 class="font-serif text-[36px] md:text-[52px] leading-none">
+          A whole night, <em>in three minutes.</em>
         </h2>
-        <p
-          class="max-w-xl mx-auto text-base font-semibold tracking-wide uppercase text-pink md:text-lg font-barlow"
+        <span class="hidden md:block text-[13px] uppercase tracking-[0.18em] text-muted2"
+          >The reel</span
         >
-          Experience the energy and excitement of our shows
-        </p>
       </div>
-      <LiteYouTubeEmbed id="JNdmXQs0MIM" title="Turn It Up! Promo 2024" />
+      <div class="overflow-hidden rounded-md bg-ink3">
+        <LiteYouTubeEmbed id="JNdmXQs0MIM" title="Turn It Up! Promo 2024" />
+      </div>
     </div>
   </section>
 </template>
