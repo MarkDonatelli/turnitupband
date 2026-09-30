@@ -14,6 +14,7 @@
 <template>
   <main>
     <HeroMain />
+    <HeroConcept />
     <Events />
     <Songs />
     <Videos />
