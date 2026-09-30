@@ -7,39 +7,39 @@ const tags = ['Weddings', 'Corporate', 'Casinos', 'Clubs', 'Private parties'];
 <template>
   <section
     id="home"
-    class="relative overflow-hidden h-[720px] md:h-[780px] bg-ink"
+    class="relative overflow-hidden h-[720px] lg:h-[780px] bg-ink"
   >
-    <!-- EQ burst + logo -->
-    <div
-      class="absolute left-1/2 -translate-x-1/2 top-[80px] md:left-auto md:translate-x-0 md:right-[max(0px,calc(50%-560px))] md:top-[120px]"
-    >
-      <EqBurst class="hidden md:block" :size="560" />
-      <EqBurst class="md:hidden" :size="300" :rays="28" :rings="7" alt="" />
-      <!-- SVG viewBox is centered on the burst center from the original logo art -->
-      <img
-        src="/images/tiu_newpink.svg"
-        alt="Turn It Up!"
-        class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+8px)] md:-translate-y-[calc(50%+14px)] max-w-none w-[194px] md:w-[344px] drop-shadow-[0_14px_40px_rgba(0,0,0,.55)] pointer-events-none"
-      />
-    </div>
-
     <div class="container relative h-full">
+      <!-- EQ burst + logo: stacked above the copy below lg, beside it from lg up -->
       <div
-        class="absolute left-[22px] right-[22px] bottom-10 md:left-[72px] md:right-auto md:bottom-[130px] md:max-w-[680px] flex flex-col gap-5 md:gap-7"
+        class="absolute left-1/2 -translate-x-1/2 top-[80px] lg:left-auto lg:translate-x-0 lg:right-6 lg:top-[190px] xl:right-0 xl:top-[130px]"
+      >
+        <EqBurst class="lg:hidden" :size="300" :rays="28" :rings="7" alt="" />
+        <EqBurst class="hidden lg:block xl:hidden" :size="400" :rays="32" />
+        <EqBurst class="hidden xl:block" :size="520" />
+        <img
+          src="/images/tiu_newpink.svg"
+          alt="Turn It Up!"
+          class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-none w-[185px] lg:w-[235px] xl:w-[345px] drop-shadow-[0_14px_40px_rgba(0,0,0,.55)] pointer-events-none"
+        />
+      </div>
+
+      <div
+        class="absolute left-[22px] right-[22px] md:left-[72px] md:right-[72px] bottom-10 lg:left-[72px] lg:right-auto lg:bottom-[130px] lg:max-w-[520px] xl:max-w-[680px] flex flex-col gap-5 lg:gap-7"
       >
         <p class="eyebrow">
-          <span class="md:hidden">Boston · Classics to now</span>
-          <span class="hidden md:inline"
+          <span class="lg:hidden">Boston · Classics to now</span>
+          <span class="hidden lg:inline"
             >Boston’s live cover band · Classics to today’s hits</span
           >
         </p>
         <h1
-          class="font-serif text-[54px] md:text-[96px] leading-[1] md:leading-[.98] tracking-[-0.015em] text-balance"
+          class="font-serif text-[54px] lg:text-[72px] xl:text-[96px] leading-[1] lg:leading-[.98] tracking-[-0.015em] text-balance"
         >
           Black tie polish. <em class="text-pink">Bar band</em> heart.
         </h1>
         <p
-          class="text-base md:text-[19px] leading-relaxed text-[#CFC8BD] max-w-[520px]"
+          class="text-base lg:text-[19px] leading-relaxed text-[#CFC8BD] max-w-[520px]"
         >
           A high-energy party band for weddings, corporate events, casinos and
           clubs. We read the room, then pack the dance floor.
@@ -65,7 +65,7 @@ const tags = ['Weddings', 'Corporate', 'Casinos', 'Clubs', 'Private parties'];
       </div>
 
       <div
-        class="absolute hidden md:flex left-[72px] right-[72px] bottom-10 justify-between items-center pt-[22px] border-t border-ivory/15 text-[13px] uppercase tracking-[0.14em] text-muted2"
+        class="absolute hidden lg:flex left-[72px] right-[72px] bottom-10 justify-between items-center pt-[22px] border-t border-ivory/15 text-[13px] uppercase tracking-[0.14em] text-muted2"
       >
         <div class="flex gap-10">
           <span v-for="t in tags" :key="t">{{ t }}</span>
