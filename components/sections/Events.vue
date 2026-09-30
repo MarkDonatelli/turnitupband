@@ -22,7 +22,7 @@
     {
       tag: '03 · Clubs',
       title: 'Clubs & casinos',
-      body: 'Where it started. Loud, sweaty and 90s-to-now, most weekends around New England.',
+      body: 'Where it started. Loud, sweaty, classics to today’s hits, most weekends around New England.',
       cta: 'See public shows →',
       img: '/images/group-1.jpg',
       target: '#shows',

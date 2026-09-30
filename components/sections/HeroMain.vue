@@ -1,7 +1,7 @@
 <script setup>
-  import useScrollIntoView from '~/composables/useScrollIntoView';
-  const { scrollToElement } = useScrollIntoView();
-  const tags = ['Weddings', 'Corporate', 'Casinos', 'Clubs', 'Private parties'];
+import useScrollIntoView from '~/composables/useScrollIntoView';
+const { scrollToElement } = useScrollIntoView();
+const tags = ['Weddings', 'Corporate', 'Casinos', 'Clubs', 'Private parties'];
 </script>
 
 <template>
@@ -9,47 +9,34 @@
     id="home"
     class="relative overflow-hidden h-[720px] md:h-[780px] bg-ink"
   >
-    <NuxtImg
-      src="/images/band-hero.jpg"
-      alt="Turn It Up! band"
-      class="absolute inset-0 object-cover w-full h-full object-[62%_20%] md:object-[center_20%]"
-      format="webp"
-    />
-    <div
-      class="absolute inset-0 hidden md:block bg-[linear-gradient(90deg,rgba(13,12,16,.94)_0%,rgba(13,12,16,.7)_45%,rgba(13,12,16,.15)_100%)]"
-    ></div>
-    <div
-      class="absolute inset-0 md:hidden bg-[linear-gradient(0deg,#0D0C10_18%,rgba(13,12,16,.35)_70%,rgba(13,12,16,.7)_100%)]"
-    ></div>
-    <div
-      class="absolute inset-0 hidden md:block bg-[linear-gradient(0deg,#0D0C10_0%,rgba(13,12,16,0)_30%)]"
-    ></div>
-
     <!-- EQ burst + logo -->
     <div
-      class="absolute left-1/2 -translate-x-1/2 top-[80px] md:left-auto md:translate-x-0 md:right-[max(0px,calc(50%-560px))] md:top-[120px] mix-blend-screen"
+      class="absolute left-1/2 -translate-x-1/2 top-[80px] md:left-auto md:translate-x-0 md:right-[max(0px,calc(50%-560px))] md:top-[120px]"
     >
       <EqBurst class="hidden md:block" :size="560" />
       <EqBurst class="md:hidden" :size="300" :rays="28" :rings="7" alt="" />
+      <!-- SVG viewBox is centered on the burst center from the original logo art -->
+      <img
+        src="/images/tiu_newpink.svg"
+        alt="Turn It Up!"
+        class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+8px)] md:-translate-y-[calc(50%+14px)] max-w-none w-[194px] md:w-[344px] drop-shadow-[0_14px_40px_rgba(0,0,0,.55)] pointer-events-none"
+      />
     </div>
-    <img
-      src="/images/tiu-logo-hero.svg"
-      alt="Turn It Up!"
-      class="absolute left-1/2 -translate-x-1/2 top-[151px] w-[180px] md:left-auto md:translate-x-0 md:right-[max(120px,calc(50%-440px))] md:top-[260px] md:w-[320px] drop-shadow-[0_14px_40px_rgba(0,0,0,.55)] pointer-events-none"
-    />
 
-    <div class="relative h-full container">
+    <div class="container relative h-full">
       <div
         class="absolute left-[22px] right-[22px] bottom-10 md:left-[72px] md:right-auto md:bottom-[130px] md:max-w-[680px] flex flex-col gap-5 md:gap-7"
       >
         <p class="eyebrow">
-          <span class="md:hidden">Boston · 90s to now</span>
-          <span class="hidden md:inline">Boston’s live cover band · 90s to now</span>
+          <span class="md:hidden">Boston · Classics to now</span>
+          <span class="hidden md:inline"
+            >Boston’s live cover band · Classics to today’s hits</span
+          >
         </p>
         <h1
           class="font-serif text-[54px] md:text-[96px] leading-[1] md:leading-[.98] tracking-[-0.015em] text-balance"
         >
-          Black-tie polish. <em class="text-pink">Bar band</em> heart.
+          Black tie polish. <em class="text-pink">Bar band</em> heart.
         </h1>
         <p
           class="text-base md:text-[19px] leading-relaxed text-[#CFC8BD] max-w-[520px]"
