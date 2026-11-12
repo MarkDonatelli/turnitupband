@@ -2,7 +2,6 @@
   import { shows } from '~/data/shows.mjs';
   import { getShowDateString, selectShows } from '~/utils/shows.mjs';
 
-  const props = defineProps({ past: { type: Boolean, default: false } });
   // Nuxt serializes this value so server and client use the same initial date.
   const todayString = useState('shows-today', () => getShowDateString(new Date()));
   let todayTimer;
@@ -18,15 +17,15 @@
     window.clearInterval(todayTimer);
     window.removeEventListener('focus', refreshToday);
   });
-  const showsSorted = computed(() => selectShows(shows, todayString.value, props.past));
-  const nextShowDate = computed(() => props.past ? null : showsSorted.value[0]?.dateCheckString);
+  const showsSorted = computed(() => selectShows(shows, todayString.value));
+  const nextShowDate = computed(() => showsSorted.value[0]?.dateCheckString);
   const PAGE = 15;
   const displayCount = ref(PAGE);
   const visibleShows = computed(() => showsSorted.value.slice(0, displayCount.value));
   const loadMore = () => { displayCount.value += PAGE; };
   const getVenueLink = (show) => show.link;
-  const isToday = (show) => !props.past && show.dateCheckString === todayString.value;
-  const isNextShow = (show) => !props.past && show.dateCheckString === nextShowDate.value;
+  const isToday = (show) => show.dateCheckString === todayString.value;
+  const isNextShow = (show) => show.dateCheckString === nextShowDate.value;
 </script>
 
 <template>
@@ -34,21 +33,16 @@
     <div class="container">
       <!-- Header -->
       <div class="text-center">
-        <component :is="past ? 'h1' : 'h2'" class="text-4xl font-extrabold text-white md:text-5xl">
-          {{ past ? 'Past Shows' : 'Upcoming Shows' }}
-        </component>
+        <h2 class="text-4xl font-extrabold text-white md:text-5xl">
+          Upcoming Shows
+        </h2>
         <p class="mt-2 text-[#F63D7A] uppercase tracking-widest font-semibold">
-          {{ past ? 'Thanks for being part of the party!' : 'We bring the party, you bring the noise!' }}
+          We bring the party, you bring the noise!
         </p>
       </div>
 
-      <div class="mt-6 text-center">
-        <NuxtLink :to="past ? '/#shows' : '/past-shows'" class="font-semibold text-white underline underline-offset-4 hover:text-pink">
-          {{ past ? 'View upcoming shows' : 'View past shows' }}
-        </NuxtLink>
-      </div>
       <p v-if="!showsSorted.length" class="mt-8 text-center text-white/70" role="status">
-        {{ past ? 'No past shows yet.' : 'New dates coming soon. Check back for upcoming shows!' }}
+        New dates coming soon. Check back for upcoming shows!
       </p>
       <!-- List -->
       <ul class="mt-8 space-y-3">
@@ -83,7 +77,7 @@
           </div>
 
           <div
-            class="grid gap-3 items-start md:grid-cols-[minmax(200px,1fr)_minmax(260px,1.2fr)] lg:grid-cols-[minmax(220px,1fr)_minmax(260px,1.2fr)_auto] xl:grid-cols-[280px_1fr_240px_auto]"
+            class="grid items-center gap-3 md:grid-cols-2 xl:grid-cols-[280px_minmax(0,1fr)_200px_200px]"
           >
             <!-- Date -->
             <div
@@ -94,7 +88,7 @@
                   : 'border-transparent bg-black/40'
               "
             >
-              <p class="truncate">{{ show.dateString }}</p>
+              <p>{{ show.dateString }}</p>
             </div>
 
             <!-- Venue -->
@@ -106,20 +100,19 @@
                   : 'border-transparent bg-black/40'
               "
             >
-              <p class="truncate md:text-lg">{{ show.venue }}</p>
+              <p class="break-words md:text-lg">{{ show.venue }}</p>
             </div>
 
             <!-- Location -->
             <div
-              v-if="show.location"
-              class="min-w-0 px-4 py-2 font-semibold text-white border rounded-xl md:col-start-2 md:row-start-2 lg:col-start-auto lg:row-start-auto"
+              class="min-w-0 px-4 py-2 font-semibold text-white border rounded-xl md:col-start-1 md:row-start-2 xl:col-start-3 xl:row-start-1"
               :class="
                 isToday(show) || isNextShow(show)
                   ? 'border-white/15 bg-black/80'
                   : 'border-transparent bg-black/40'
               "
             >
-              <p class="truncate md:text-lg">{{ show.location }}</p>
+              <p class="break-words md:text-lg">{{ show.location || 'Location to be announced' }}</p>
             </div>
 
             <!-- CTA -->
@@ -128,7 +121,7 @@
               :href="getVenueLink(show)"
               :class="isNextShow(show) ? 'border-cyan-300 bg-cyan-300 text-black hover:border-cyan-200 hover:bg-cyan-200' : 'border-[#F63D7A] text-white hover:bg-black hover:text-white hover:border-white'"
               target="_blank"
-              class="shrink-0 justify-self-stretch md:justify-self-start inline-flex items-center justify-center px-5 py-3 rounded-full border font-semibold uppercase tracking-wide transition-colors text-xs lg:text-sm"
+              class="w-full md:col-start-2 md:row-start-2 xl:col-start-4 xl:row-start-1 inline-flex items-center justify-center px-5 py-3 rounded-full border font-semibold uppercase tracking-wide transition-colors text-xs lg:text-sm"
             >
               Venue Information
             </a>
@@ -138,7 +131,7 @@
               disabled
               title="Venue information is not available."
               aria-label="Venue information is not available."
-              class="shrink-0 justify-self-stretch md:justify-self-start inline-flex items-center justify-center px-5 py-3 rounded-full border border-white/20 text-white/45 font-semibold uppercase tracking-wide text-xs lg:text-sm cursor-not-allowed"
+              class="w-full md:col-start-2 md:row-start-2 xl:col-start-4 xl:row-start-1 inline-flex items-center justify-center px-5 py-3 rounded-full border border-white/20 text-white/45 font-semibold uppercase tracking-wide text-xs lg:text-sm cursor-not-allowed"
             >
               Venue Information
             </button>

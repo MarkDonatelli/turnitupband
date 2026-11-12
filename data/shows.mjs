@@ -50,7 +50,7 @@ export const shows = [
       link: ''
     },
     {
-      dateString: 'Fri, Jul 31 2026 @ 10:30pm',
+      dateString: 'Fri, Jul 31 2026 @ 9:45pm',
       dateCheckString: '2026-07-31',
       venue: "Bill's Bar",
       location: 'Boston, MA',
@@ -99,14 +99,14 @@ export const shows = [
       link: 'https://thechickenbox.com/'
     },
     {
-      dateString: 'Sat, Sep 26 2026 @ 10:30pm',
+      dateString: 'Sat, Sep 26 2026 @ 10:00pm',
       dateCheckString: '2026-09-26',
       venue: 'Lansdowne Pub',
       location: 'Boston, MA',
       link: 'https://www.lansdownepubboston.com/'
     },
     {
-      dateString: 'Fri, Nov 13 2026 @ 10:30pm',
+      dateString: 'Fri, Nov 13 2026 @ 9:45pm',
       dateCheckString: '2026-11-13',
       venue: "Bill's Bar",
       location: 'Boston, MA',
@@ -116,88 +116,88 @@ export const shows = [
       dateString: 'Fri, Nov 20 2026',
       dateCheckString: '2026-11-20',
       venue: 'Private event',
-      location: '',
+      location: 'Cambridge, MA',
       link: ''
     },
     {
-      dateString: 'Fri, Dec 18 2026 @ 10:30pm',
+      dateString: 'Fri, Dec 18 2026 @ 10:00pm',
       dateCheckString: '2026-12-18',
       venue: 'Lansdowne Pub',
       location: 'Boston, MA',
       link: 'https://www.lansdownepubboston.com/'
     },
     {
-      dateString: 'Sat, Jan 16 2027',
+      dateString: 'Sat, Jan 16 2027 @ 10:00pm',
       dateCheckString: '2027-01-16',
       venue: 'Lansdowne Pub',
       location: 'Boston, MA',
       link: 'https://www.lansdownepubboston.com/'
     },
     {
-      dateString: 'Sat, Feb 20 2027',
+      dateString: 'Sat, Feb 20 2027 @ 10:00pm',
       dateCheckString: '2027-02-20',
       venue: 'The Press Room',
       location: 'Portsmouth, NH',
       link: 'https://www.pressroomnh.com/'
     },
     {
-      dateString: 'Sat, Mar 6 2027',
+      dateString: 'Sat, Mar 6 2027 @ 10:00pm',
       dateCheckString: '2027-03-06',
       venue: 'Lansdowne Pub',
       location: 'Boston, MA',
       link: 'https://www.lansdownepubboston.com/'
     },
     {
-      dateString: 'Sat, Apr 3 2027',
+      dateString: 'Sat, Apr 3 2027 @ 10:00pm',
       dateCheckString: '2027-04-03',
       venue: 'The Press Room',
       location: 'Portsmouth, NH',
       link: 'https://www.pressroomnh.com/'
     },
     {
-      dateString: 'Sat, May 29 2027',
+      dateString: 'Sat, May 29 2027 @ 10:00pm',
       dateCheckString: '2027-05-29',
       venue: 'Lansdowne Pub',
       location: 'Boston, MA',
       link: 'https://www.lansdownepubboston.com/'
     },
     {
-      dateString: 'Fri, Jun 4 2027',
+      dateString: 'Fri, Jun 4 2027 @ 10:30pm',
       dateCheckString: '2027-06-04',
       venue: 'Chicken Box',
       location: 'Nantucket, MA',
       link: 'https://thechickenbox.com/'
     },
     {
-      dateString: 'Sat, Jun 5 2027',
+      dateString: 'Sat, Jun 5 2027 @ 10:30pm',
       dateCheckString: '2027-06-05',
       venue: 'Chicken Box',
       location: 'Nantucket, MA',
       link: 'https://thechickenbox.com/'
     },
     {
-      dateString: 'Sat, Jun 12 2027',
+      dateString: 'Sat, Jun 12 2027 @ 10:00pm',
       dateCheckString: '2027-06-12',
       venue: 'The Press Room',
       location: 'Portsmouth, NH',
       link: 'https://www.pressroomnh.com/'
     },
     {
-      dateString: 'Thu, Jul 22 2027',
+      dateString: 'Thu, Jul 22 2027 @ 10:30pm',
       dateCheckString: '2027-07-22',
       venue: 'Chicken Box',
       location: 'Nantucket, MA',
       link: 'https://thechickenbox.com/'
     },
     {
-      dateString: 'Fri, Jul 23 2027',
+      dateString: 'Fri, Jul 23 2027 @ 10:30pm',
       dateCheckString: '2027-07-23',
       venue: 'Chicken Box',
       location: 'Nantucket, MA',
       link: 'https://thechickenbox.com/'
     },
     {
-      dateString: 'Sat, Jul 24 2027',
+      dateString: 'Sat, Jul 24 2027 @ 10:30pm',
       dateCheckString: '2027-07-24',
       venue: 'Chicken Box',
       location: 'Nantucket, MA',

@@ -72,7 +72,26 @@
     'Your Love',
     'Unwritten',
     'Valerie',
-    'A Thousand Miles'
+    'A Thousand Miles',
+    "Pink Pony Club",
+    "I Love It",
+    "Club Can't Handle Me",
+    "Beer Never Broke My Heart",
+    "Take Me Home, Country Roads",
+    "Fat Lip",
+    "Dancing on My Own",
+    "Midnight Sun",
+    "Teenage Dirtbag",
+    "All Night Longer",
+    "Man I Need",
+    "WHERE IS MY HUSBAND!",
+    "Revival",
+    "Lush Life",
+    "Everybody Wants to Rule the World",
+    "Choosin' Texas",
+    "In Da Club",
+    "Tennessee Whiskey",
+    "Chasing Cars"
   ].sort();
 
   const query = ref('');
