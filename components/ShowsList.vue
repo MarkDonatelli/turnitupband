@@ -52,10 +52,11 @@
     .filter(show => isUpcomingCalendarShow(show, new Date(now.value)))
     .sort((a, b) => Date.parse(a.start) - Date.parse(b.start)));
   const nextShowId = computed(() => showsSorted.value[0]?.id);
-  const PAGE = 15;
-  const displayCount = ref(PAGE);
-  const visibleShows = computed(() => showsSorted.value.slice(0, displayCount.value));
-  const loadMore = () => { displayCount.value += PAGE; };
+  const INITIAL_SHOW_COUNT = 15;
+  const showAll = ref(false);
+  const visibleShows = computed(() => showAll.value
+    ? showsSorted.value
+    : showsSorted.value.slice(0, INITIAL_SHOW_COUNT));
   const getVenueLink = (show) => show.link;
   const isToday = (show) => show.dateCheckString === todayString.value;
   const isNextShow = (show) => show.id === nextShowId.value;
@@ -178,14 +179,15 @@
         </li>
       </ul>
 
-      <!-- Load more -->
-      <div class="flex justify-center mt-8">
+      <!-- Expand the full schedule -->
+      <div v-if="showsSorted.length > INITIAL_SHOW_COUNT" class="flex justify-center mt-8">
         <button
-          v-if="displayCount < showsSorted.length"
-          @click="loadMore"
+          type="button"
+          :aria-expanded="showAll"
+          @click="showAll = !showAll"
           class="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#F63D7A] text-black font-semibold uppercase tracking-wide shadow-md hover:bg-black hover:text-white transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F63D7A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
-          Show More
+          {{ showAll ? 'Show Fewer Shows' : 'Show All Shows' }}
           <svg
             class="size-4 transition-transform group-hover:translate-x-0.5"
             viewBox="0 0 20 20"
@@ -197,7 +199,6 @@
             />
           </svg>
         </button>
-        <p v-else-if="showsSorted.length" class="text-sm text-white/60">All shows loaded</p>
       </div>
     </div>
   </section>
