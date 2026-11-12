@@ -161,3 +161,22 @@ test('expanded bookings preserve Boston nightly times through DST and year bound
     ['2026-12-31', '2027-01-01', '2027-01-02']);
   assert.equal(expandCalendarShow(publicShow(event(), now), now).length, 1);
 });
+
+
+test('calendar request includes November and December of the following year', async () => {
+  const lateShows = ['2027-11-26', '2027-12-18'].map((day, index) => event({
+    id: `late-show-${index}`,
+    start: { dateTime: `${day}T20:00:00-05:00` },
+    end: { dateTime: `${day}T23:00:00-05:00` }
+  }));
+  const rows = await readPublicShows({
+    env: { GOOGLE_CALENDAR_ID: 'private' }, now, accessToken: 'fake',
+    fetchImpl: async url => {
+      const params = new URL(url).searchParams;
+      assert.equal(params.get('timeMax'), '2028-11-12T15:00:00.000Z');
+      return Response.json({ items: lateShows.filter(show =>
+        Date.parse(show.start.dateTime) < Date.parse(params.get('timeMax'))) });
+    }
+  });
+  assert.deepEqual(rows.map(row => row.dateCheckString), ['2027-11-26', '2027-12-18']);
+});

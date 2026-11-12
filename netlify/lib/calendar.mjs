@@ -121,7 +121,7 @@ export async function readPublicShows({ env = process.env, now = new Date(), fet
     if (!accessToken) throw new CalendarFailure('AUTHENTICATION_FAILED', 'authentication', { reason: 'missing_access_token' });
   }
   const timeMax = new Date(now);
-  timeMax.setUTCFullYear(timeMax.getUTCFullYear() + 1);
+  timeMax.setUTCFullYear(timeMax.getUTCFullYear() + 2);
   const params = new URLSearchParams({
     singleEvents: 'true', showDeleted: 'false', orderBy: 'startTime',
     timeMin: now.toISOString(), timeMax: timeMax.toISOString(),

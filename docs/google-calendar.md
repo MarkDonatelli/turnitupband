@@ -83,7 +83,7 @@ website and `#confirmedshow` description marker as usual.
    the standalone function must be deployed alongside it.
 
 The function expands recurring events and follows every result page, then filters
-on the server. It requests ongoing/upcoming events through one year ahead. Events
+on the server. It requests ongoing/upcoming events through two years ahead. Events
 disappear after their actual end time; all-day bookings disappear at Boston
 midnight after their final day. Successful responses have a five-minute Netlify
 CDN cache; failures are uncached and do not fall back to manual private events.
