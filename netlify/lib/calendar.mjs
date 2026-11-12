@@ -1,5 +1,7 @@
 import { Parser } from 'htmlparser2';
 import { JWT } from 'google-auth-library';
+import { createPrivateKey } from 'node:crypto';
+import { CalendarFailure, googleFailure } from './calendar-errors.mjs';
 import { getShowDateString } from '../../utils/shows.mjs';
 import { formatCalendarShowDate, isUpcomingCalendarShow } from '../../utils/calendar-shows.mjs';
 
@@ -88,20 +90,32 @@ export function publicShow(event, now = new Date()) {
 
 export async function readPublicShows({ env = process.env, now = new Date(), fetchImpl = fetch, accessToken } = {}) {
   const calendarId = env.GOOGLE_CALENDAR_ID;
-  if (!calendarId) throw new Error('Calendar configuration missing');
+  const required = ['GOOGLE_CALENDAR_ID', ...(!accessToken ? ['GOOGLE_CLIENT_EMAIL', 'GOOGLE_PRIVATE_KEY'] : [])];
+  const missingVariables = required.filter(name => typeof env[name] !== 'string' || !env[name].trim());
+  if (missingVariables.length) throw new CalendarFailure('MISSING_ENVIRONMENT', 'configuration', { missingVariables });
   if (!accessToken) {
-    if (!env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY) {
-      throw new Error('Calendar credentials missing');
+    const key = env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
+    try {
+      if (createPrivateKey(key).asymmetricKeyType !== 'rsa') throw new Error();
+    } catch {
+      throw new CalendarFailure('INVALID_CREDENTIAL_FORMAT', 'credentials', { reason: 'invalid_private_key' });
     }
-    const client = new JWT({
-      email: env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      key: env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, '\n'),
-      scopes: ['https://www.googleapis.com/auth/calendar.events.readonly'],
-      transporterOptions: { timeout: 10000, retry: false }
-    });
-    // Bound token and Calendar requests so failures do not hang the function.
-    accessToken = (await client.getAccessToken()).token;
-    if (!accessToken) throw new Error('Calendar authentication failed');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(env.GOOGLE_CLIENT_EMAIL)) {
+      throw new CalendarFailure('INVALID_CREDENTIAL_FORMAT', 'credentials', { reason: 'invalid_service_account_email' });
+    }
+    try {
+      const client = new JWT({
+        email: env.GOOGLE_CLIENT_EMAIL,
+        key,
+        scopes: ['https://www.googleapis.com/auth/calendar.events.readonly'],
+        transporterOptions: { timeout: 10000, retry: false }
+      });
+      // Bound token and Calendar requests so failures do not hang the function.
+      accessToken = (await client.getAccessToken()).token;
+    } catch (error) {
+      throw googleFailure('authentication', { status: error.response?.status, data: error.response?.data, name: error.name, networkCode: error.code || error.cause?.code });
+    }
+    if (!accessToken) throw new CalendarFailure('AUTHENTICATION_FAILED', 'authentication', { reason: 'missing_access_token' });
   }
   const timeMax = new Date(now);
   timeMax.setUTCFullYear(timeMax.getUTCFullYear() + 1);
@@ -114,18 +128,32 @@ export async function readPublicShows({ env = process.env, now = new Date(), fet
   const shows = [];
   const pages = new Set();
   do {
-    const response = await fetchImpl(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?${params}`, {
-      headers: { Authorization: `Bearer ${accessToken}` }, signal: AbortSignal.timeout(10000)
-    });
-    if (!response.ok) throw new Error('Calendar request failed');
-    const data = await response.json();
-    if (data.items !== undefined && !Array.isArray(data.items)) throw new Error('Invalid Calendar response');
+    let response;
+    try {
+      response = await fetchImpl(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?${params}`, {
+        headers: { Authorization: `Bearer ${accessToken}` }, signal: AbortSignal.timeout(10000)
+      });
+    } catch (error) {
+      throw googleFailure('calendar_request', { name: error.name, networkCode: error.code || error.cause?.code });
+    }
+    if (!response.ok) {
+      // Read only known error reason codes; the raw body is never logged/returned.
+      const data = await response.json().catch(() => null);
+      throw googleFailure('calendar_request', { status: response.status, data });
+    }
+    let data;
+    try { data = await response.json(); } catch {
+      throw new CalendarFailure('INVALID_CALENDAR_RESPONSE', 'calendar_response');
+    }
+    if (!data || typeof data !== 'object' || (data.items !== undefined && !Array.isArray(data.items))) {
+      throw new CalendarFailure('INVALID_CALENDAR_RESPONSE', 'calendar_response');
+    }
     for (const event of data.items || []) {
       const show = publicShow(event, now);
       if (show) shows.push(show);
     }
     if (!data.nextPageToken) break;
-    if (pages.has(data.nextPageToken)) throw new Error('Invalid Calendar pagination');
+    if (pages.has(data.nextPageToken)) throw new CalendarFailure('INVALID_CALENDAR_RESPONSE', 'calendar_response');
     pages.add(data.nextPageToken);
     params.set('pageToken', data.nextPageToken);
   } while (true);

@@ -51,8 +51,8 @@ Upstream errors are not returned or logged.
 4. In Netlify, set these variables with **Functions** scope for the preview/branch
    context first, and production when ready:
    - `GOOGLE_CALENDAR_ID`: the shared calendar's actual ID, not `primary`.
-   - `GOOGLE_SERVICE_ACCOUNT_EMAIL`: the service account email.
-   - `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`: its PEM private key; real line breaks
+   - `GOOGLE_CLIENT_EMAIL`: the service account email.
+   - `GOOGLE_PRIVATE_KEY`: its PEM private key; real line breaks
      and literal `\n` sequences are supported.
 5. Use Node.js 22 or later in Netlify. Keep credentials out of source control and
    `runtimeConfig.public`. The function uses `calendar.events.readonly`.
@@ -148,3 +148,30 @@ References: [Google events.list](https://developers.google.com/workspace/calenda
 [service accounts](https://developers.google.com/identity/protocols/oauth2/service-account),
 [Netlify Functions](https://docs.netlify.com/build/functions/api/),
 [function environment variables](https://docs.netlify.com/build/functions/environment-variables/).
+
+## Safe server diagnostics
+
+The public error stays generic (HTTP 503, uncached). Its `X-Calendar-Request-ID`
+response header correlates with a single JSON `calendar_shows_failure` entry in
+Netlify Function logs. The entry includes only a generated request ID, fixed
+failure code/stage, optional numeric Google HTTP status, known Google reason code,
+and missing environment variable **names**. It never logs raw Error objects,
+stacks, request URLs, credentials, tokens, response bodies, descriptions or events.
+
+| Failure code | Meaning / next check |
+| --- | --- |
+| `MISSING_ENVIRONMENT` | Set the listed variable names in the branch context with Functions scope, then redeploy. Whitespace-only values count as missing. |
+| `INVALID_CREDENTIAL_FORMAT` | Check the PEM RSA private key format and service-account email. Never paste them into logs. |
+| `AUTHENTICATION_FAILED` | Check revoked/wrong keys, account identity and token authorization. `invalid_grant` is a token-stage rejection, not proof of Calendar sharing failure. |
+| `CALENDAR_PERMISSION_DENIED` | Google returned 403. Check calendar sharing, account identity and read scope. |
+| `CALENDAR_NOT_FOUND_OR_INACCESSIBLE` | Google returned 404. Verify both the exact calendar ID and sharing with this service account. A 404 alone cannot distinguish a wrong ID from a private inaccessible calendar. |
+| `CALENDAR_API_DISABLED` | Enable Calendar API in the service account's Google project; Google reported a recognized disabled-service reason. |
+| `GOOGLE_RATE_LIMITED` | Google returned 429 or a recognized quota/rate-limit reason. |
+| `NETWORK_FAILURE` / `REQUEST_TIMEOUT` | Check connectivity and upstream availability at the reported stage. |
+| `GOOGLE_API_FAILURE` | Other Google HTTP error; use the sanitized status/reason to investigate. |
+| `INVALID_CALENDAR_RESPONSE` | Unexpected JSON/response shape or pagination. |
+| `RUNTIME_FAILURE` | Other runtime error; investigate code/runtime using the request ID. Raw exception details are deliberately omitted. |
+
+The function uses the existing Netlify variables `GOOGLE_CALENDAR_ID`,
+`GOOGLE_CLIENT_EMAIL` and `GOOGLE_PRIVATE_KEY`. No Netlify environment variables
+need to be renamed. Missing-variable diagnostics report these exact names.
