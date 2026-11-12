@@ -138,7 +138,7 @@
                   : 'border-transparent bg-black/40'
               "
             >
-              <p class="break-words md:text-lg">{{ show.title }}</p>
+              <p class="break-words md:text-lg">{{ show.venue }}</p>
             </div>
 
             <!-- Location -->

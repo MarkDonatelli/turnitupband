@@ -27,12 +27,12 @@ test('only exact standalone description hashtag opts in', () => {
   assert.equal(publicShow(event({ summary: '#confirmedshow', description: '' }), now), null);
 });
 
-test('first valid HTTPS URL wins in plain text and Google rich text', () => {
-  assert.equal(parseDescription('http://ignored.example\nhttps://\nhttps://venue.example/\nhttps://second.example').link, 'https://venue.example/');
+test('first valid HTTP or HTTPS URL wins in plain text and Google rich text', () => {
+  assert.equal(parseDescription('https://\nhttps://venue.example/\nhttps://second.example').link, 'https://venue.example/');
   assert.equal(parseDescription('<a href="https://venue.example/?a=1&amp;b=2">Venue site</a><br>#confirmedshow').link, 'https://venue.example/?a=1&b=2');
   assert.equal(parseDescription('https://venue.example/?a=1&amp;b=2<br>#confirmedshow').link, 'https://venue.example/?a=1&b=2');
   assert.equal(parseDescription('https://first.example/<br><a href="https://second.example/">site</a>').link, 'https://first.example/');
-  assert.equal(parseDescription('javascript:alert(1)\nhttp://insecure.example\n#confirmedshow').link, '');
+  assert.equal(parseDescription('javascript:alert(1)\ndata:text/html,private\n#confirmedshow').link, '');
   assert.equal(parseDescription('https://user:password@venue.example\nhttps://safe.example').link, 'https://safe.example/');
   assert.equal(parseDescription('HTTPS://venue.example/\n#confirmedshow').link, 'https://venue.example/');
 });
@@ -41,12 +41,12 @@ test('public projection preserves titles and only returns approved fields', () =
   const title = '  [SHOW] Test Show & Friends!  ';
   const show = publicShow(event({ summary: title }), now);
   assert.equal(show.title, title);
-  assert.equal(show.location, 'Test Venue, Boston, MA');
+  assert.equal(show.venue, title);
+  assert.equal(show.location, 'Boston, MA');
   assert.equal(show.start, '2026-11-13T21:45:00-05:00');
   assert.equal(show.end, '2026-11-14T01:00:00-05:00');
-  assert.match(show.dateString, /9:45 PM/);
-  assert.match(show.dateString, /1:00 AM/);
-  assert.deepEqual(Object.keys(show).sort(), ['id', 'title', 'start', 'end', 'allDay', 'dateCheckString', 'dateString', 'location', 'link'].sort());
+  assert.equal(show.dateString, 'Fri, Nov 13 2026 @ 9:45pm');
+  assert.deepEqual(Object.keys(show).sort(), ['id', 'title', 'venue', 'start', 'end', 'allDay', 'dateCheckString', 'dateString', 'location', 'link'].sort());
   assert.equal(JSON.stringify(show).includes('Internal production notes'), false);
   assert.equal(JSON.stringify(show).includes('private@example.com'), false);
   assert.equal(JSON.stringify(show).includes('#confirmedshow'), false);
@@ -69,9 +69,7 @@ test('all-day ranges use exclusive Google end dates and Boston date boundaries',
     start: { date: '2027-07-22' }, end: { date: '2027-07-25' }
   }), now);
   assert.equal(show.allDay, true);
-  assert.match(show.dateString, /Jul 22/);
-  assert.match(show.dateString, /Jul 24/);
-  assert.doesNotMatch(show.dateString, /Jul 25/);
+  assert.equal(show.dateString, 'Thu, Jul 22 2027');
   assert.equal(isUpcomingCalendarShow(show, new Date('2027-07-25T03:59:59Z')), true);
   assert.equal(isUpcomingCalendarShow(show, new Date('2027-07-25T04:00:00Z')), false);
   assert.equal(publicShow(event({ start: { date: '2027-02-30' }, end: { date: '2027-03-03' } }), now), null);

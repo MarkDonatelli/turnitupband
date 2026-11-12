@@ -7,21 +7,16 @@ export function isUpcomingCalendarShow(show, now = new Date()) {
     : Date.parse(show.end) > now.getTime();
 }
 
-export function formatCalendarShowDate(start, end, allDay) {
-  const date = value => new Intl.DateTimeFormat('en-US', {
-    timeZone: allDay ? 'UTC' : 'America/New_York',
-    weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
-  }).format(new Date(allDay ? `${value}T12:00:00Z` : value));
-  if (allDay) {
-    const lastDay = new Date(`${end}T12:00:00Z`);
-    lastDay.setUTCDate(lastDay.getUTCDate() - 1);
-    const last = lastDay.toISOString().slice(0, 10);
-    return start === last ? date(start) : `${date(start)} – ${date(last)}`;
-  }
-  const time = value => new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit'
-  }).format(new Date(value));
-  return getShowDateString(new Date(start)) === getShowDateString(new Date(end))
-    ? `${date(start)} @ ${time(start)} – ${time(end)}`
-    : `${date(start)} @ ${time(start)} – ${date(end)} @ ${time(end)}`;
+export function formatCalendarShowDate(start, _end, allDay) {
+  // Noon UTC preserves a date-only booking's day when formatted in Boston time.
+  const date = new Date(allDay ? `${start}T12:00:00Z` : start);
+  if (!start || !Number.isFinite(date.getTime())) return '';
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York', weekday: 'short', month: 'short',
+    day: 'numeric', year: 'numeric',
+    ...(!allDay && { hour: 'numeric', minute: '2-digit', hour12: true })
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+  const label = `${values.weekday}, ${values.month} ${values.day} ${values.year}`;
+  return allDay ? label : `${label} @ ${values.hour}:${values.minute}${values.dayPeriod.toLowerCase()}`;
 }

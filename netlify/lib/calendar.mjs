@@ -2,16 +2,17 @@ import { Parser } from 'htmlparser2';
 import { JWT } from 'google-auth-library';
 import { createPrivateKey } from 'node:crypto';
 import { CalendarFailure, googleFailure } from './calendar-errors.mjs';
+import { extractCityState } from './show-location.mjs';
 import { getShowDateString } from '../../utils/shows.mjs';
 import { formatCalendarShowDate, isUpcomingCalendarShow } from '../../utils/calendar-shows.mjs';
 
 const HASHTAG = /(?<![\p{L}\p{N}\p{M}_#-])#confirmedshow(?![\p{L}\p{N}\p{M}_#-])/u;
 const BLOCK_TAGS = new Set(['br', 'div', 'p', 'li', 'ul', 'ol', 'section']);
 
-function httpsUrl(value) {
+function venueUrl(value) {
   try {
     const url = new URL(value);
-    return url.protocol === 'https:' && url.hostname && !url.username && !url.password
+    return ['http:', 'https:'].includes(url.protocol) && url.hostname && !url.username && !url.password
       ? url.href : '';
   } catch {
     return '';
@@ -24,7 +25,7 @@ export function parseDescription(description = '') {
   let textChunk = '';
   const urls = [];
   const flush = () => {
-    urls.push(...(textChunk.match(/https:\/\/[^\s<>"']+/gi) || []));
+    urls.push(...(textChunk.match(/https?:\/\/[^\s<>"']+/gi) || []));
     textChunk = '';
   };
   const parser = new Parser({
@@ -50,7 +51,7 @@ export function parseDescription(description = '') {
   flush();
   // A fragment in a URL is not an opt-in hashtag. Attributes/comments are not text.
   const confirmed = HASHTAG.test(text.replace(/https?:\/\/\S+/gi, ''));
-  return { confirmed, link: urls.map(httpsUrl).find(Boolean) || '' };
+  return { confirmed, link: urls.map(venueUrl).find(Boolean) || '' };
 }
 
 function validDate(value) {
@@ -73,16 +74,18 @@ export function publicShow(event, now = new Date()) {
   const end = allDay ? event.end?.date : event.end?.dateTime;
   const valid = allDay ? validDate : validDateTime;
   if (!valid(start) || !valid(end) || Date.parse(end) <= Date.parse(start)) return null;
+  const location = extractCityState(event.location);
   // Explicit allowlist: no description, attendees, organizer, or Google event link.
   const show = {
     id: event.id,
     title: event.summary,
+    venue: event.summary,
     start,
     end,
     allDay,
     dateCheckString: allDay ? start : getShowDateString(new Date(start)),
     dateString: formatCalendarShowDate(start, end, allDay),
-    location: typeof event.location === 'string' ? event.location : '',
+    location,
     link
   };
   return isUpcomingCalendarShow(show, now) ? show : null;

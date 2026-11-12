@@ -8,13 +8,18 @@ homepage or used as a fallback.
 
 ## Publication requirements
 
-- Title: event name, displayed exactly as entered. No `[SHOW]` prefix is required
-  or stripped.
-- Start/end: Google Calendar dates/times. Timed events display both times in
-  `America/New_York`; overnight events include both dates. All-day ranges respect
-  Google's exclusive end date and are displayed as one booking.
-- Location: public venue name and address, displayed as entered.
-- Description: venue HTTPS website on its own line, followed by `#confirmedshow`.
+- Title: venue name, used directly and unchanged for the card's venue field.
+  Never derived from the address. No `[SHOW]` prefix is required or stripped.
+- Start/end: Google Calendar dates/times. The card displays only the start date
+  and time in `America/New_York`, e.g. `Wed, Nov 18 2026 @ 6:00pm`. All-day
+  bookings show only their start date. End times remain available for expiry logic
+  but are never included in the date label.
+- Location: full Google Maps venue address. Only the recognized `City, ST` is
+  displayed. US state abbreviations/full names, ZIP codes, country names,
+  multiline addresses and combined city/state lines are supported. Missing or
+  ambiguous locations keep the existing location placeholder, without guessing
+  a city or state. No geocoding requests or full address display.
+- Description: venue HTTP/HTTPS website on its own line, followed by `#confirmedshow`.
 
 Example description:
 
@@ -26,16 +31,16 @@ https://www.pressroomnh.com/
 Only the exact, case-sensitive, standalone `#confirmedshow` in description text
 opts an event in. Similar hashtags, longer words, title-only markers, URL fragments,
 and HTML attributes/comments do not opt events in. Google rich-text descriptions
-and linked URLs are supported. The first valid HTTPS URL is used for Venue
-Information; HTTP, JavaScript and credential-bearing URLs are ignored. No valid
-HTTPS URL means the existing disabled venue button is shown.
+and linked URLs are supported. The first valid HTTP/HTTPS URL is used for Venue
+Information; JavaScript, non-HTTP protocols and credential-bearing URLs are ignored. No valid
+HTTP/HTTPS URL means the existing disabled venue button is shown.
 
 Unmarked private events, rehearsals and days off are excluded. Cancelled events
 and nonstandard Google event types (such as out-of-office) are excluded. The
 marker is an explicit instruction to publish the title, location and dates; do
 not add it to an event whose title or address must stay private.
 
-The public response contains only `id`, `title`, `start`, `end`, `allDay`,
+The public response contains only `id`, `title`, `venue`, `start`, `end`, `allDay`,
 `dateCheckString`, `dateString`, `location`, and `link`. Full descriptions,
 attendees, organizers, calendar IDs and credentials never enter the response.
 Upstream errors are not returned or logged.
@@ -119,30 +124,26 @@ Static generation does not contact Google or need Calendar credentials. Avoid
 running generation against the same working tree as a running Nuxt dev server,
 since both write `.nuxt`; stop dev first or use a separate checkout.
 
-## Deployment verification: Test Show
+## Deployment verification: confirmed venue event
 
-Live verification has **not** been performed yet. The current checkout is not
-linked to a Netlify site, credentials are not configured locally, and the Google
-Calendar connector is not connected in this session. Local tests use synthetic
-fixtures and do not prove that the real event is accessible.
+The latest mapping changes have not been deployed yet. Local tests verify the
+example event and privacy rules. Once a branch deployment is authorized:
 
-Once deployed with credentials:
-
-1. Read the existing **Test Show** event; ensure its date is ongoing/upcoming
-   within the next year, its location is populated, and its description contains
-   the venue website and `#confirmedshow`. Do not rename it or copy private notes
-   into the website.
+1. Use the existing confirmed event, with its title set to **Bill's Bar & Lounge**,
+   the full venue address in Location, and the website plus `#confirmedshow` in
+   Description. Its start should be November 18, 2026 at 6:00 PM in Boston.
 2. Run `node scripts/verify-calendar.mjs https://YOUR-PREVIEW.netlify.app`.
-   This checks the deployed endpoint for the exact title, a valid HTTPS venue
-   website, and the public field allowlist without printing descriptions.
-3. Open the preview and verify the Test Show card's title, times, location and
-   venue button against the Calendar event. Check desktop and mobile layout.
+   An optional third argument selects another exact event title. The script
+   verifies the title/venue mapping, dates, safe venue URL and public field
+   allowlist without printing descriptions.
+3. Check that the card displays `Wed, Nov 18 2026 @ 6:00pm`,
+   `Bill's Bar & Lounge`, `Boston, MA`, and a Venue Information button pointing to
+   `https://www.lansdownepubboston.com/`. Check desktop and mobile layout.
 4. If changes to the test event are authorized, remove its marker and confirm it
-   disappears after cache expiry; restore the marker and confirm it reappears.
-   Repeat with `#confirmedshows` to confirm longer hashtags stay excluded.
+   disappears after cache expiry; restore it and confirm it reappears. Repeat
+   with `#confirmedshows` to verify longer hashtags stay excluded.
 5. Confirm unmarked private events and days off are absent from both the page
-   and the JSON response. Calendar editing is optional; use existing unmarked
-   events for this check.
+   and JSON. No Calendar events are modified by the verification script.
 
 References: [Google events.list](https://developers.google.com/workspace/calendar/api/v3/reference/events/list),
 [service accounts](https://developers.google.com/identity/protocols/oauth2/service-account),
