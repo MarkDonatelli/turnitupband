@@ -1,5 +1,8 @@
 # Nuxt 3 Minimal Starter
 
+Google Calendar shows setup and deployment verification:
+[Calendar integration](docs/google-calendar.md).
+
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 ## Setup
@@ -22,21 +25,19 @@ bun install
 
 ## Development Server
 
-Start the development server on `http://localhost:3000`:
+Run the full Nuxt + standalone Netlify Functions app with synthetic Calendar data:
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+npm run dev:mock
 ```
+
+Open **http://localhost:8888**. No Google credentials or Netlify login are needed
+in mock mode. Netlify Dev runs Nuxt internally on port 3001 and serves
+`/.netlify/functions/shows` on port 8888.
+
+Use `npm run dev` for real Calendar data after configuring the server-only
+environment variables. `npm run dev:nuxt` runs Nuxt alone and does not serve
+Netlify Functions. See [Calendar setup](docs/google-calendar.md) for details.
 
 ## Production
 

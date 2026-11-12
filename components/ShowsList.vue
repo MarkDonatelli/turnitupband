@@ -1,31 +1,64 @@
 <script setup>
-  import { shows } from '~/data/shows.mjs';
-  import { getShowDateString, selectShows } from '~/utils/shows.mjs';
+  import { getShowDateString } from '~/utils/shows.mjs';
+  import { isUpcomingCalendarShow } from '~/utils/calendar-shows.mjs';
 
-  // Nuxt serializes this value so server and client use the same initial date.
-  const todayString = useState('shows-today', () => getShowDateString(new Date()));
-  let todayTimer;
-  const refreshToday = () => {
-    todayString.value = getShowDateString(new Date());
+  const shows = ref([]);
+  const loading = ref(true);
+  const loadError = ref(false);
+  // Serialize the initial clock to avoid server/client hydration differences.
+  const now = useState('shows-now', () => Date.now());
+  const todayString = computed(() => getShowDateString(new Date(now.value)));
+  let clockTimer;
+  let refreshTimer;
+  let controller;
+
+  const refreshShows = async () => {
+    controller?.abort();
+    const request = new AbortController();
+    controller = request;
+    try {
+      const response = await $fetch('/.netlify/functions/shows', {
+        signal: request.signal, timeout: 30000, retry: 0
+      });
+      if (!Array.isArray(response.shows)) throw new Error('Invalid shows response');
+      console.log('[Google Calendar] Public shows response:', response);
+      shows.value = response.shows;
+      loadError.value = false;
+    } catch {
+      if (request.signal.aborted) return;
+      shows.value = [];
+      loadError.value = true;
+    } finally {
+      if (!request.signal.aborted) loading.value = false;
+    }
+  };
+  const refreshOnFocus = () => {
+    now.value = Date.now();
+    refreshShows();
   };
   onMounted(() => {
-    refreshToday();
-    todayTimer = window.setInterval(refreshToday, 1000);
-    window.addEventListener('focus', refreshToday);
+    refreshOnFocus();
+    clockTimer = window.setInterval(() => { now.value = Date.now(); }, 1000);
+    refreshTimer = window.setInterval(refreshShows, 300000);
+    window.addEventListener('focus', refreshOnFocus);
   });
   onUnmounted(() => {
-    window.clearInterval(todayTimer);
-    window.removeEventListener('focus', refreshToday);
+    controller?.abort();
+    window.clearInterval(clockTimer);
+    window.clearInterval(refreshTimer);
+    window.removeEventListener('focus', refreshOnFocus);
   });
-  const showsSorted = computed(() => selectShows(shows, todayString.value));
-  const nextShowDate = computed(() => showsSorted.value[0]?.dateCheckString);
+  const showsSorted = computed(() => shows.value
+    .filter(show => isUpcomingCalendarShow(show, new Date(now.value)))
+    .sort((a, b) => Date.parse(a.start) - Date.parse(b.start)));
+  const nextShowId = computed(() => showsSorted.value[0]?.id);
   const PAGE = 15;
   const displayCount = ref(PAGE);
   const visibleShows = computed(() => showsSorted.value.slice(0, displayCount.value));
   const loadMore = () => { displayCount.value += PAGE; };
   const getVenueLink = (show) => show.link;
   const isToday = (show) => show.dateCheckString === todayString.value;
-  const isNextShow = (show) => show.dateCheckString === nextShowDate.value;
+  const isNextShow = (show) => show.id === nextShowId.value;
 </script>
 
 <template>
@@ -41,14 +74,19 @@
         </p>
       </div>
 
-      <p v-if="!showsSorted.length" class="mt-8 text-center text-white/70" role="status">
+      <p v-if="loading" class="mt-8 text-center text-white/70" role="status">Loading shows…</p>
+      <div v-else-if="loadError" class="mt-8 text-center text-white/70" role="status">
+        <p>Shows are temporarily unavailable. Please try again shortly.</p>
+        <button type="button" class="mt-3 font-semibold text-white underline underline-offset-4 hover:text-pink" @click="refreshShows">Try again</button>
+      </div>
+      <p v-else-if="!showsSorted.length" class="mt-8 text-center text-white/70" role="status">
         New dates coming soon. Check back for upcoming shows!
       </p>
       <!-- List -->
       <ul class="mt-8 space-y-3">
         <li
           v-for="show in visibleShows"
-          :key="`${show.venue}-${show.dateCheckString}-${show.dateString}`"
+          :key="show.id"
           class="p-4 overflow-hidden border rounded-2xl backdrop-blur-sm md:p-5"
           :class="
             isNextShow(show)
@@ -100,7 +138,7 @@
                   : 'border-transparent bg-black/40'
               "
             >
-              <p class="break-words md:text-lg">{{ show.venue }}</p>
+              <p class="break-words md:text-lg">{{ show.title }}</p>
             </div>
 
             <!-- Location -->
@@ -121,6 +159,7 @@
               :href="getVenueLink(show)"
               :class="isNextShow(show) ? 'border-cyan-300 bg-cyan-300 text-black hover:border-cyan-200 hover:bg-cyan-200' : 'border-[#F63D7A] text-white hover:bg-black hover:text-white hover:border-white'"
               target="_blank"
+              rel="noopener noreferrer"
               class="w-full md:col-start-2 md:row-start-2 xl:col-start-4 xl:row-start-1 inline-flex items-center justify-center px-5 py-3 rounded-full border font-semibold uppercase tracking-wide transition-colors text-xs lg:text-sm"
             >
               Venue Information

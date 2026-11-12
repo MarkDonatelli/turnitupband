@@ -1,0 +1,14 @@
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Keep the site's existing build command and publish directory in Netlify.
+# Both static Nuxt output and this standalone function are deployed together.
+
+[dev]
+  framework = "#custom"
+  command = "npm run dev:nuxt"
+  targetPort = 3001
+  port = 8888
+  publish = "public"
+  autoLaunch = false
