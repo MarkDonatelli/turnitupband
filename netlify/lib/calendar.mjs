@@ -4,7 +4,7 @@ import { createPrivateKey } from 'node:crypto';
 import { CalendarFailure, googleFailure } from './calendar-errors.mjs';
 import { extractCityState } from './show-location.mjs';
 import { getShowDateString } from '../../utils/shows.mjs';
-import { formatCalendarShowDate, isUpcomingCalendarShow } from '../../utils/calendar-shows.mjs';
+import { expandCalendarShow, formatCalendarShowDate, isUpcomingCalendarShow } from '../../utils/calendar-shows.mjs';
 
 const HASHTAG = /(?<![\p{L}\p{N}\p{M}_#-])#confirmedshow(?![\p{L}\p{N}\p{M}_#-])/u;
 const BLOCK_TAGS = new Set(['br', 'div', 'p', 'li', 'ul', 'ol', 'section']);
@@ -153,7 +153,7 @@ export async function readPublicShows({ env = process.env, now = new Date(), fet
     }
     for (const event of data.items || []) {
       const show = publicShow(event, now);
-      if (show) shows.push(show);
+      if (show) shows.push(...expandCalendarShow(show, now));
     }
     if (!data.nextPageToken) break;
     if (pages.has(data.nextPageToken)) throw new CalendarFailure('INVALID_CALENDAR_RESPONSE', 'calendar_response');

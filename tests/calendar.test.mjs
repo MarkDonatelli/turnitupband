@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { parseDescription, publicShow, readPublicShows } from '../netlify/lib/calendar.mjs';
 import { createShowsHandler } from '../netlify/functions/shows.mjs';
-import { isUpcomingCalendarShow } from '../utils/calendar-shows.mjs';
+import { expandCalendarShow, isUpcomingCalendarShow } from '../utils/calendar-shows.mjs';
 
 const now = new Date('2026-11-12T15:00:00Z');
 const event = (overrides = {}) => ({
@@ -69,7 +69,7 @@ test('all-day ranges use exclusive Google end dates and Boston date boundaries',
     start: { date: '2027-07-22' }, end: { date: '2027-07-25' }
   }), now);
   assert.equal(show.allDay, true);
-  assert.equal(show.dateString, 'Thu, Jul 22 2027 – Sat, Jul 24 2027');
+  assert.equal(show.dateString, 'Thu, Jul 22 2027');
   assert.equal(isUpcomingCalendarShow(show, new Date('2027-07-25T03:59:59Z')), true);
   assert.equal(isUpcomingCalendarShow(show, new Date('2027-07-25T04:00:00Z')), false);
   assert.equal(publicShow(event({ start: { date: '2027-02-30' }, end: { date: '2027-03-03' } }), now), null);
@@ -122,4 +122,42 @@ test('missing credentials, upstream errors and looping pagination fail closed', 
   await assert.rejects(readPublicShows({ env: { GOOGLE_CALENDAR_ID: 'private' }, now }));
   await assert.rejects(readPublicShows({ env: { GOOGLE_CALENDAR_ID: 'private' }, now, accessToken: 'fake', fetchImpl: async () => new Response('secret', { status: 403 }) }));
   await assert.rejects(readPublicShows({ env: { GOOGLE_CALENDAR_ID: 'private' }, now, accessToken: 'fake', fetchImpl: async () => Response.json({ items: [], nextPageToken: 'repeat' }) }));
+});
+
+test('one Thursday–Saturday calendar booking becomes three independently expiring rows', async () => {
+  const booking = event({ start: { dateTime: '2026-11-19T21:00:00-05:00' }, end: { dateTime: '2026-11-22T01:00:00-05:00' } });
+  const read = at => readPublicShows({
+    env: { GOOGLE_CALENDAR_ID: 'private' }, now: new Date(at), accessToken: 'fake',
+    fetchImpl: async () => Response.json({ items: [booking] })
+  });
+  const rows = await read('2026-11-18T15:00:00Z');
+  assert.deepEqual(rows.map(row => row.dateString), [
+    'Thu, Nov 19 2026 @ 9:00pm', 'Fri, Nov 20 2026 @ 9:00pm', 'Sat, Nov 21 2026 @ 9:00pm'
+  ]);
+  assert.equal(new Set(rows.map(row => row.id)).size, 3);
+  for (const row of rows) {
+    assert.equal(row.venue, booking.summary);
+    assert.equal(row.link, 'https://venue.example/');
+    assert.equal(Date.parse(row.end) - Date.parse(row.start), 4 * 3600000);
+  }
+  const remaining = await read('2026-11-20T06:00:00Z');
+  assert.deepEqual(remaining.map(row => row.id), rows.slice(1).map(row => row.id));
+  assert.deepEqual(await read('2026-11-22T06:00:00Z'), []);
+});
+
+
+test('expanded bookings preserve Boston nightly times through DST and year boundaries', () => {
+  const show = publicShow(event({
+    start: { dateTime: '2026-10-30T21:00:00-04:00' },
+    end: { dateTime: '2026-11-02T02:00:00-05:00' }
+  }), new Date('2026-10-29T00:00:00Z'));
+  const rows = expandCalendarShow(show, new Date('2026-10-29T00:00:00Z'));
+  assert.equal(rows.length, 3);
+  assert.ok(rows.every(row => row.dateString.endsWith('@ 9:00pm')));
+  assert.equal(rows[2].start, '2026-11-02T02:00:00.000Z');
+  assert.equal(rows[2].end, '2026-11-02T07:00:00.000Z');
+  const allDay = publicShow(event({ start: { date: '2026-12-31' }, end: { date: '2027-01-03' } }), now);
+  assert.deepEqual(expandCalendarShow(allDay, now).map(row => row.dateCheckString),
+    ['2026-12-31', '2027-01-01', '2027-01-02']);
+  assert.equal(expandCalendarShow(publicShow(event(), now), now).length, 1);
 });
