@@ -10,10 +10,11 @@ homepage or used as a fallback.
 
 - Title: venue name, used directly and unchanged for the card's venue field.
   Never derived from the address. No `[SHOW]` prefix is required or stripped.
-- Start/end: Google Calendar dates/times. The card displays only the start date
-  and time in `America/New_York`, e.g. `Wed, Nov 18 2026 @ 6:00pm`. All-day
-  bookings show only their start date. End times remain available for expiry logic
-  but are never included in the date label.
+- Start/end: Google Calendar dates/times. Single-night cards display the start date
+  and time in `America/New_York`, e.g. `Wed, Nov 18 2026 @ 6:00pm`. Multi-night
+  bookings display the first and final performance dates plus the start time
+  followed by `each night`. All-day bookings display their inclusive date range
+  without a time. Events expire at their actual end time.
 - Location: full Google Maps venue address. Only the recognized `City, ST` is
   displayed. US state abbreviations/full names, ZIP codes, country names,
   multiline addresses and combined city/state lines are supported. Missing or
@@ -44,6 +45,19 @@ The public response contains only `id`, `title`, `venue`, `start`, `end`, `allDa
 `dateCheckString`, `dateString`, `location`, and `link`. Full descriptions,
 attendees, organizers, calendar IDs and credentials never enter the response.
 Upstream errors are not returned or logged.
+
+## Weekend bookings at the same venue
+
+Create one event starting at the first night's show time and ending when the
+final night's show finishes. For Friday through Sunday at 9pm, ending Monday at
+1am, set Friday 9pm as the start and Monday 1am as the end. The card displays
+`Fri, Nov 20 2026 – Sun, Nov 22 2026 @ 9:00pm each night`.
+
+An end clock time at or before the start clock time belongs to the preceding
+performance date, so an ordinary overnight show stays a single-night listing.
+All-day event end dates are exclusive. Use separate events when nights have
+different start times or the booking skips a day. Keep the venue title, location,
+website and `#confirmedshow` description marker as usual.
 
 ## Google Cloud and Netlify setup
 

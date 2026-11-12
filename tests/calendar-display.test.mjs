@@ -59,7 +59,7 @@ test('dates match original formatting in Boston time, including UTC and DST boun
   assert.equal(formatCalendarShowDate('2027-07-23T02:30:00Z', '2027-07-23T06:00:00Z', false), 'Thu, Jul 22 2027 @ 10:30pm');
   assert.equal(formatCalendarShowDate('2026-11-18T05:00:00Z', null, false), 'Wed, Nov 18 2026 @ 12:00am');
   assert.equal(formatCalendarShowDate('2026-11-18T17:00:00Z', null, false), 'Wed, Nov 18 2026 @ 12:00pm');
-  assert.equal(formatCalendarShowDate('2026-11-18', '2026-11-20', true), 'Wed, Nov 18 2026');
+  assert.equal(formatCalendarShowDate('2026-11-18', '2026-11-20', true), 'Wed, Nov 18 2026 – Thu, Nov 19 2026');
   assert.equal(formatCalendarShowDate(undefined, null, false), '');
   assert.equal(formatCalendarShowDate('invalid', null, false), '');
 });
@@ -84,4 +84,17 @@ test('first safe HTTP/HTTPS link is extracted without the publication marker', (
   for (const description of ['#confirmedshow', 'javascript:alert(1)\n#confirmedshow', 'data:text/html,private\n#confirmedshow', '//venue.example/\n#confirmedshow', 'https://\nhttp://\n#confirmedshow', 'https://user:pass@venue.example/\n#confirmedshow']) {
     assert.equal(parseDescription(description).link, '', description);
   }
+});
+
+
+test('weekend bookings show each performance night, including overnight endings', () => {
+  for (const end of ['2026-11-22T23:00:00-05:00', '2026-11-23T01:00:00-05:00']) {
+    assert.equal(formatCalendarShowDate('2026-11-20T21:00:00-05:00', end, false),
+      'Fri, Nov 20 2026 – Sun, Nov 22 2026 @ 9:00pm each night');
+  }
+  assert.equal(formatCalendarShowDate('2026-11-20T21:00:00-05:00', '2026-11-22T01:00:00-05:00', false),
+    'Fri, Nov 20 2026 – Sat, Nov 21 2026 @ 9:00pm each night');
+  assert.equal(formatCalendarShowDate('2026-12-31T21:00:00-05:00', '2027-01-02T01:00:00-05:00', false),
+    'Thu, Dec 31 2026 – Fri, Jan 1 2027 @ 9:00pm each night');
+  assert.equal(formatCalendarShowDate('2026-11-20', '2026-11-21', true), 'Fri, Nov 20 2026');
 });

@@ -69,7 +69,7 @@ test('all-day ranges use exclusive Google end dates and Boston date boundaries',
     start: { date: '2027-07-22' }, end: { date: '2027-07-25' }
   }), now);
   assert.equal(show.allDay, true);
-  assert.equal(show.dateString, 'Thu, Jul 22 2027');
+  assert.equal(show.dateString, 'Thu, Jul 22 2027 – Sat, Jul 24 2027');
   assert.equal(isUpcomingCalendarShow(show, new Date('2027-07-25T03:59:59Z')), true);
   assert.equal(isUpcomingCalendarShow(show, new Date('2027-07-25T04:00:00Z')), false);
   assert.equal(publicShow(event({ start: { date: '2027-02-30' }, end: { date: '2027-03-03' } }), now), null);
