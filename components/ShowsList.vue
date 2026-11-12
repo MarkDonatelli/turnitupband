@@ -1,221 +1,55 @@
 <script setup>
-  const shows = [
-    {
-      dateString: 'Fri, May 29 2026 @ 10:30pm',
-      dateCheckString: '2026-05-29',
-      venue: 'Chicken Box',
-      location: 'Nantucket, MA',
-      link: 'https://thechickenbox.com/'
-    },
-    {
-      dateString: 'Sat, May 30 2026 @ 10:30pm',
-      dateCheckString: '2026-05-30',
-      venue: 'Chicken Box',
-      location: 'Nantucket, MA',
-      link: 'https://thechickenbox.com/'
-    },
-    {
-      dateString: 'Sun, Jul 5 2026 @ 2:00pm',
-      dateCheckString: '2026-07-05',
-      venue: 'Ballards Beach Bar',
-      location: 'Block Island, RI',
-      link: 'https://ballardsbi.com/'
-    },
-    {
-      dateString: 'Mon, Jul 6 2026 @ 2:00pm',
-      dateCheckString: '2026-07-06',
-      venue: 'Ballards Beach Bar',
-      location: 'Block Island, RI',
-      link: 'https://ballardsbi.com/'
-    },
-    {
-      dateString: 'Sat, Jul 18 2026 @ 8:15pm',
-      dateCheckString: '2026-07-18',
-      venue: "Bernie's",
-      location: 'Hampton Beach, NH',
-      link: 'https://berniesnh.com/'
-    },
-    {
-      dateString: 'Fri, Jul 24 2026',
-      dateCheckString: '2026-07-24',
-      venue: 'Private event',
-      location: 'Danvers, MA',
-      link: ''
-    },
-    {
-      dateString: 'Sat, Jul 25 2026',
-      dateCheckString: '2026-07-25',
-      venue: 'Private event',
-      location: 'Revere, MA',
-      link: ''
-    },
-    {
-      dateString: 'Fri, Jul 31 2026 @ 10:30pm',
-      dateCheckString: '2026-07-31',
-      venue: "Bill's Bar",
-      location: 'Boston, MA',
-      link: 'https://www.billsbarboston.com/'
-    },
-    {
-      dateString: 'Sun, Aug 2 2026 @ 4:00pm',
-      dateCheckString: '2026-08-02',
-      venue: 'Bonnet Shores',
-      location: 'Narragansett, RI',
-      link: 'https://www.bonnetshoresbeachclub.com/'
-    },
-    {
-      dateString: 'Fri, Aug 7 2026 @ 9:00pm',
-      dateCheckString: '2026-08-07',
-      venue: 'Yellow Kittens',
-      location: 'Block Island, RI',
-      link: 'https://www.yellowkittens.com/'
-    },
-    {
-      dateString: 'Sat, Aug 8 2026 @ 9:00pm',
-      dateCheckString: '2026-08-08',
-      venue: 'Yellow Kittens',
-      location: 'Block Island, RI',
-      link: 'https://www.yellowkittens.com/'
-    },
-    {
-      dateString: 'Sat, Aug 29 2026 @ 8:15pm',
-      dateCheckString: '2026-08-29',
-      venue: "Bernie's",
-      location: 'Hampton Beach, NH',
-      link: 'https://berniesnh.com/'
-    },
-    {
-      dateString: 'Fri, Sep 11 2026 @ 10:30pm',
-      dateCheckString: '2026-09-11',
-      venue: 'Chicken Box',
-      location: 'Nantucket, MA',
-      link: 'https://thechickenbox.com/'
-    },
-    {
-      dateString: 'Sat, Sep 12 2026 @ 10:30pm',
-      dateCheckString: '2026-09-12',
-      venue: 'Chicken Box',
-      location: 'Nantucket, MA',
-      link: 'https://thechickenbox.com/'
-    },
-    {
-      dateString: 'Sat, Sep 26 2026 @ 10:30pm',
-      dateCheckString: '2026-09-26',
-      venue: 'Lansdowne Pub',
-      location: 'Boston, MA',
-      link: 'https://www.lansdownepubboston.com/'
-    },
-    {
-      dateString: 'Fri, Nov 13 2026 @ 10:30pm',
-      dateCheckString: '2026-11-13',
-      venue: "Bill's Bar",
-      location: 'Boston, MA',
-      link: 'https://www.billsbarboston.com/'
-    },
-    {
-      dateString: 'Fri, Dec 18 2026 @ 10:30pm',
-      dateCheckString: '2026-12-18',
-      venue: 'Lansdowne Pub',
-      location: 'Boston, MA',
-      link: 'https://www.lansdownepubboston.com/'
-    }
-  ];
+  import { shows } from '~/data/shows.mjs';
+  import { getShowDateString, selectShows } from '~/utils/shows.mjs';
 
-  const showsSorted = computed(() =>
-    [...shows].sort((a, b) =>
-      a.dateCheckString.localeCompare(b.dateCheckString)
-    )
-  );
-
-  const SHOW_TIME_ZONE = 'America/New_York';
-
-  const getShowDateString = (date) => {
-    const parts = new Intl.DateTimeFormat('en-US', {
-      timeZone: SHOW_TIME_ZONE,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    }).formatToParts(date);
-
-    const dateParts = Object.fromEntries(
-      parts
-        .filter(({ type }) => type !== 'literal')
-        .map(({ type, value }) => [type, value])
-    );
-
-    return `${dateParts.year}-${dateParts.month}-${dateParts.day}`;
-  };
-
-  const todayString = ref('');
+  const props = defineProps({ past: { type: Boolean, default: false } });
+  // Nuxt serializes this value so server and client use the same initial date.
+  const todayString = useState('shows-today', () => getShowDateString(new Date()));
   let todayTimer;
-
-  const setTodayString = () => {
+  const refreshToday = () => {
     todayString.value = getShowDateString(new Date());
   };
-
-  const scheduleTodayRefresh = () => {
-    const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 1, 0);
-
-    todayTimer = window.setTimeout(() => {
-      setTodayString();
-      scheduleTodayRefresh();
-    }, tomorrow.getTime() - now.getTime());
-  };
-
   onMounted(() => {
-    setTodayString();
-    scheduleTodayRefresh();
+    refreshToday();
+    todayTimer = window.setInterval(refreshToday, 1000);
+    window.addEventListener('focus', refreshToday);
   });
-
   onUnmounted(() => {
-    window.clearTimeout(todayTimer);
+    window.clearInterval(todayTimer);
+    window.removeEventListener('focus', refreshToday);
   });
-
-  const nextShowDate = computed(
-    () =>
-      showsSorted.value.find((show) => show.dateCheckString >= todayString.value)
-        ?.dateCheckString
-  );
-
+  const showsSorted = computed(() => selectShows(shows, todayString.value, props.past));
+  const nextShowDate = computed(() => props.past ? null : showsSorted.value[0]?.dateCheckString);
   const PAGE = 15;
   const displayCount = ref(PAGE);
-
-  const visibleShows = computed(() =>
-    showsSorted.value.slice(0, displayCount.value)
-  );
-
-  const loadMore = () => {
-    displayCount.value = Math.min(
-      displayCount.value + PAGE,
-      showsSorted.value.length
-    );
-  };
-
-  const showAll = () => (displayCount.value = showsSorted.value.length);
-
+  const visibleShows = computed(() => showsSorted.value.slice(0, displayCount.value));
+  const loadMore = () => { displayCount.value += PAGE; };
   const getVenueLink = (show) => show.link;
-
-  const isToday = (show) => show.dateCheckString === todayString.value;
-
-  const isNextShow = (show) => show.dateCheckString === nextShowDate.value;
+  const isToday = (show) => !props.past && show.dateCheckString === todayString.value;
+  const isNextShow = (show) => !props.past && show.dateCheckString === nextShowDate.value;
 </script>
 
 <template>
-  <section id="shows" class="py-16 bg-black md:py-24 overflow-x-clip">
+  <section class="py-16 bg-black md:py-24 overflow-x-clip">
     <div class="container">
       <!-- Header -->
       <div class="text-center">
-        <h2 class="text-4xl font-extrabold text-white md:text-5xl">
-          Upcoming Shows
-        </h2>
+        <component :is="past ? 'h1' : 'h2'" class="text-4xl font-extrabold text-white md:text-5xl">
+          {{ past ? 'Past Shows' : 'Upcoming Shows' }}
+        </component>
         <p class="mt-2 text-[#F63D7A] uppercase tracking-widest font-semibold">
-          We bring the party, you bring the noise!
+          {{ past ? 'Thanks for being part of the party!' : 'We bring the party, you bring the noise!' }}
         </p>
       </div>
 
+      <div class="mt-6 text-center">
+        <NuxtLink :to="past ? '/#shows' : '/past-shows'" class="font-semibold text-white underline underline-offset-4 hover:text-pink">
+          {{ past ? 'View upcoming shows' : 'View past shows' }}
+        </NuxtLink>
+      </div>
+      <p v-if="!showsSorted.length" class="mt-8 text-center text-white/70" role="status">
+        {{ past ? 'No past shows yet.' : 'New dates coming soon. Check back for upcoming shows!' }}
+      </p>
       <!-- List -->
       <ul class="mt-8 space-y-3">
         <li
@@ -223,9 +57,9 @@
           :key="`${show.venue}-${show.dateCheckString}-${show.dateString}`"
           class="p-4 overflow-hidden border rounded-2xl backdrop-blur-sm md:p-5"
           :class="
-            isToday(show)
-              ? 'border-[#F63D7A]/70 bg-[#F63D7A]/8 shadow-[inset_4px_0_0_rgba(246,61,122,0.85)]'
-              : isNextShow(show)
+            isNextShow(show)
+              ? 'border-cyan-300 bg-cyan-400/10 shadow-[inset_5px_0_0_#67e8f9,0_0_28px_rgba(34,211,238,0.15)]'
+              : isToday(show)
                 ? 'border-[#F63D7A]/70 bg-[#F63D7A]/8 shadow-[inset_4px_0_0_rgba(246,61,122,0.85)]'
                 : 'border-white/10 bg-white/5'
           "
@@ -242,7 +76,7 @@
             </span>
             <span
               v-if="isNextShow(show)"
-              class="rounded-full border border-[#F63D7A]/70 bg-[#F63D7A]/15 px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-[#F63D7A]"
+              class="rounded-full bg-cyan-300 px-3 py-1.5 text-xs font-extrabold uppercase tracking-widest text-black"
             >
               Next Show
             </span>
@@ -292,8 +126,9 @@
             <a
               v-if="show.link"
               :href="getVenueLink(show)"
+              :class="isNextShow(show) ? 'border-cyan-300 bg-cyan-300 text-black hover:border-cyan-200 hover:bg-cyan-200' : 'border-[#F63D7A] text-white hover:bg-black hover:text-white hover:border-white'"
               target="_blank"
-              class="shrink-0 justify-self-stretch md:justify-self-start inline-flex items-center justify-center px-5 py-3 rounded-full border border-[#F63D7A] text-white font-semibold uppercase tracking-wide hover:bg-black hover:text-white hover:border-white transition-colors text-xs lg:text-sm"
+              class="shrink-0 justify-self-stretch md:justify-self-start inline-flex items-center justify-center px-5 py-3 rounded-full border font-semibold uppercase tracking-wide transition-colors text-xs lg:text-sm"
             >
               Venue Information
             </a>
@@ -301,8 +136,8 @@
               v-else
               type="button"
               disabled
-              title="No venue information available for private events."
-              aria-label="No venue information available for private events."
+              title="Venue information is not available."
+              aria-label="Venue information is not available."
               class="shrink-0 justify-self-stretch md:justify-self-start inline-flex items-center justify-center px-5 py-3 rounded-full border border-white/20 text-white/45 font-semibold uppercase tracking-wide text-xs lg:text-sm cursor-not-allowed"
             >
               Venue Information
@@ -330,7 +165,7 @@
             />
           </svg>
         </button>
-        <p v-else class="text-sm text-white/60">All shows loaded</p>
+        <p v-else-if="showsSorted.length" class="text-sm text-white/60">All shows loaded</p>
       </div>
     </div>
   </section>
