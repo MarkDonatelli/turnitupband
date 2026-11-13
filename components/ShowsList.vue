@@ -103,7 +103,7 @@
           >
             <span
               v-if="isToday(show)"
-              class="rounded-full bg-[#F63D7A] px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-black"
+              class="inline-flex items-center justify-center rounded-full bg-[#F63D7A] px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-black"
             >
               Today
             </span>
