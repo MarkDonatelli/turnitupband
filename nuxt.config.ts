@@ -33,6 +33,9 @@ export default defineNuxtConfig({
     }
   ],
   googleFonts: {
+    // Keep local startup independent of the Google Fonts download service.
+    download: process.env.NODE_ENV === 'production',
+    useStylesheet: true,
     display: 'swap',
     preload: true,
     families: {

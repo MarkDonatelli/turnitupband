@@ -4,11 +4,12 @@
     composable
     */
   const { scrollToElement } = useScrollIntoView();
+  const { $gsap } = useNuxtApp();
 
   onMounted(() => {
     const parallax = document.querySelector('.parallax');
     if (parallax) {
-      gsap.to(parallax, {
+      $gsap.to(parallax, {
         scrollTrigger: {
           trigger: '.parallax',
           start: 'top bottom',

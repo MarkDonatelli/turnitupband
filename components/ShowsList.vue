@@ -1,65 +1,59 @@
 <script setup>
-  // Data + date logic unchanged from main. Only the template is restyled.
-  const shows = [
-    { dateString: 'Fri, May 29 2026 @ 10:30pm', dateCheckString: '2026-05-29', venue: 'Chicken Box', location: 'Nantucket, MA', link: 'https://thechickenbox.com/' },
-    { dateString: 'Sat, May 30 2026 @ 10:30pm', dateCheckString: '2026-05-30', venue: 'Chicken Box', location: 'Nantucket, MA', link: 'https://thechickenbox.com/' },
-    { dateString: 'Sun, Jul 5 2026 @ 2:00pm', dateCheckString: '2026-07-05', venue: 'Ballards Beach Bar', location: 'Block Island, RI', link: 'https://ballardsbi.com/' },
-    { dateString: 'Mon, Jul 6 2026 @ 2:00pm', dateCheckString: '2026-07-06', venue: 'Ballards Beach Bar', location: 'Block Island, RI', link: 'https://ballardsbi.com/' },
-    { dateString: 'Sat, Jul 18 2026 @ 8:15pm', dateCheckString: '2026-07-18', venue: "Bernie's", location: 'Hampton Beach, NH', link: 'https://berniesnh.com/' },
-    { dateString: 'Fri, Jul 24 2026', dateCheckString: '2026-07-24', venue: 'Private event', location: 'Danvers, MA', link: '' },
-    { dateString: 'Sat, Jul 25 2026', dateCheckString: '2026-07-25', venue: 'Private event', location: 'Revere, MA', link: '' },
-    { dateString: 'Fri, Jul 31 2026 @ 10:30pm', dateCheckString: '2026-07-31', venue: "Bill's Bar", location: 'Boston, MA', link: 'https://www.billsbarboston.com/' },
-    { dateString: 'Sun, Aug 2 2026 @ 4:00pm', dateCheckString: '2026-08-02', venue: 'Bonnet Shores', location: 'Narragansett, RI', link: 'https://www.bonnetshoresbeachclub.com/' },
-    { dateString: 'Fri, Aug 7 2026 @ 9:00pm', dateCheckString: '2026-08-07', venue: 'Yellow Kittens', location: 'Block Island, RI', link: 'https://www.yellowkittens.com/' },
-    { dateString: 'Sat, Aug 8 2026 @ 9:00pm', dateCheckString: '2026-08-08', venue: 'Yellow Kittens', location: 'Block Island, RI', link: 'https://www.yellowkittens.com/' },
-    { dateString: 'Sat, Aug 29 2026 @ 8:15pm', dateCheckString: '2026-08-29', venue: "Bernie's", location: 'Hampton Beach, NH', link: 'https://berniesnh.com/' },
-    { dateString: 'Fri, Sep 11 2026 @ 10:30pm', dateCheckString: '2026-09-11', venue: 'Chicken Box', location: 'Nantucket, MA', link: 'https://thechickenbox.com/' },
-    { dateString: 'Sat, Sep 12 2026 @ 10:30pm', dateCheckString: '2026-09-12', venue: 'Chicken Box', location: 'Nantucket, MA', link: 'https://thechickenbox.com/' },
-    { dateString: 'Sat, Sep 26 2026 @ 10:30pm', dateCheckString: '2026-09-26', venue: 'Lansdowne Pub', location: 'Boston, MA', link: 'https://www.lansdownepubboston.com/' },
-    { dateString: 'Fri, Nov 13 2026 @ 10:30pm', dateCheckString: '2026-11-13', venue: "Bill's Bar", location: 'Boston, MA', link: 'https://www.billsbarboston.com/' },
-    { dateString: 'Fri, Dec 18 2026 @ 10:30pm', dateCheckString: '2026-12-18', venue: 'Lansdowne Pub', location: 'Boston, MA', link: 'https://www.lansdownepubboston.com/' }
-  ];
+  // Data comes from the Google Calendar Netlify Function (same logic as main);
+  // only the template is restyled for the redesign.
+  import { getShowDateString } from '~/utils/shows.mjs';
+  import { isUpcomingCalendarShow } from '~/utils/calendar-shows.mjs';
 
-  const SHOW_TIME_ZONE = 'America/New_York';
+  const shows = ref([]);
+  const loading = ref(true);
+  const loadError = ref(false);
+  // Serialize the initial clock to avoid server/client hydration differences.
+  const now = useState('shows-now', () => Date.now());
+  const todayString = computed(() => getShowDateString(new Date(now.value)));
+  let clockTimer;
+  let refreshTimer;
+  let controller;
 
-  const getShowDateString = (date) => {
-    const parts = new Intl.DateTimeFormat('en-US', {
-      timeZone: SHOW_TIME_ZONE,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    }).formatToParts(date);
-    const p = Object.fromEntries(
-      parts.filter(({ type }) => type !== 'literal').map(({ type, value }) => [type, value])
-    );
-    return `${p.year}-${p.month}-${p.day}`;
+  const refreshShows = async () => {
+    controller?.abort();
+    const request = new AbortController();
+    controller = request;
+    try {
+      const response = await $fetch('/.netlify/functions/shows', {
+        signal: request.signal, timeout: 30000, retry: 0
+      });
+      if (!Array.isArray(response.shows)) throw new Error('Invalid shows response');
+      console.log('[Google Calendar] Public shows response:', response);
+      shows.value = response.shows;
+      loadError.value = false;
+    } catch {
+      if (request.signal.aborted) return;
+      shows.value = [];
+      loadError.value = true;
+    } finally {
+      if (!request.signal.aborted) loading.value = false;
+    }
   };
-
-  const todayString = ref('');
-  let todayTimer;
-  const setTodayString = () => (todayString.value = getShowDateString(new Date()));
-  const scheduleTodayRefresh = () => {
-    const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 1, 0);
-    todayTimer = window.setTimeout(() => {
-      setTodayString();
-      scheduleTodayRefresh();
-    }, tomorrow.getTime() - now.getTime());
+  const refreshOnFocus = () => {
+    now.value = Date.now();
+    refreshShows();
   };
   onMounted(() => {
-    setTodayString();
-    scheduleTodayRefresh();
+    refreshOnFocus();
+    clockTimer = window.setInterval(() => { now.value = Date.now(); }, 1000);
+    refreshTimer = window.setInterval(refreshShows, 300000);
+    window.addEventListener('focus', refreshOnFocus);
   });
-  onUnmounted(() => window.clearTimeout(todayTimer));
+  onUnmounted(() => {
+    controller?.abort();
+    window.clearInterval(clockTimer);
+    window.clearInterval(refreshTimer);
+    window.removeEventListener('focus', refreshOnFocus);
+  });
 
-  // Upcoming only (past shows hidden once "today" is known)
-  const upcoming = computed(() =>
-    [...shows]
-      .sort((a, b) => a.dateCheckString.localeCompare(b.dateCheckString))
-      .filter((s) => !todayString.value || s.dateCheckString >= todayString.value)
-  );
+  const upcoming = computed(() => shows.value
+    .filter(show => isUpcomingCalendarShow(show, new Date(now.value)))
+    .sort((a, b) => Date.parse(a.start) - Date.parse(b.start)));
 
   const PAGE = 5;
   const displayCount = ref(PAGE);
@@ -67,7 +61,7 @@
   const loadMore = () => (displayCount.value += PAGE);
 
   const isToday = (s) => s.dateCheckString === todayString.value;
-  const isNext = (s) => s.dateCheckString === upcoming.value[0]?.dateCheckString;
+  const isNext = (s) => s.id === upcoming.value[0]?.id;
 
   const parse = (s) => {
     const d = new Date(s.dateCheckString + 'T12:00:00');
@@ -82,16 +76,28 @@
 
 <template>
   <div class="flex flex-col">
-    <p v-if="!upcoming.length" class="py-6 text-muted">
+    <p v-if="loading" class="py-6 text-muted" role="status">Loading shows…</p>
+    <div v-else-if="loadError" class="py-6 text-muted" role="status">
+      <p>Shows are temporarily unavailable. Please try again shortly.</p>
+      <button
+        type="button"
+        class="mt-3 text-sm font-semibold text-pink"
+        @click="refreshShows"
+      >
+        Try again →
+      </button>
+    </div>
+    <p v-else-if="!upcoming.length" class="py-6 text-muted" role="status">
       New dates coming soon. Follow us on Instagram for announcements.
     </p>
 
     <component
       :is="show.link ? 'a' : 'div'"
       v-for="show in visibleShows"
-      :key="`${show.venue}-${show.dateCheckString}`"
+      :key="show.id"
       :href="show.link || undefined"
       :target="show.link ? '_blank' : undefined"
+      :rel="show.link ? 'noopener noreferrer' : undefined"
       class="grid grid-cols-[84px_1fr] md:grid-cols-[120px_1fr_auto] gap-[18px] md:gap-8 items-center py-[18px] md:py-[26px] border-b border-ivory/15 transition-all"
       :class="show.link ? 'md:hover:pl-3.5 hover:text-pink' : ''"
     >
@@ -113,7 +119,8 @@
           >
         </span>
         <span class="text-[13px] md:text-sm text-muted2"
-          >{{ show.location }}<template v-if="parse(show).time"> · {{ parse(show).time }}</template></span
+          >{{ show.location || 'Location to be announced'
+          }}<template v-if="parse(show).time"> · {{ parse(show).time }}</template></span
         >
       </div>
       <span
