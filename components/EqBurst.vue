@@ -1,55 +1,51 @@
 <script setup>
-  // Radiating equalizer squares (from the TIU logo), pulsing outward.
-  const props = defineProps({
-    size: { type: Number, default: 560 },
-    rays: { type: Number, default: 36 },
-    rings: { type: Number, default: 8 },
-    inner: { type: Number, default: 0.2 },
-    color: { type: String, default: '#FF2E8A' },
-    alt: { type: String, default: '#F3EEE6' }
-  });
+  // The equalizer burst from the TIU logo, drawn with the logo's exact square
+  // shapes and pulsing outward from the center.
+  import squares from '~/data/eqBurstSquares.js';
 
-  const squares = computed(() => {
-    const c = props.size / 2;
-    const out = [];
-    for (let r = 0; r < props.rays; r++) {
-      const a = (r / props.rays) * Math.PI * 2;
-      const len = props.rings - ((r * 7) % 3);
-      for (let k = 0; k < len; k++) {
-        const d = c * (props.inner + k * ((0.95 - props.inner) / props.rings));
-        const s = props.size * (0.011 + k * 0.0024);
-        out.push({
-          key: r + '-' + k,
-          style: {
-            left: c + Math.cos(a) * d - s / 2 + 'px',
-            top: c + Math.sin(a) * d - s / 2 + 'px',
-            width: s + 'px',
-            height: s + 'px',
-            background: props.alt && (r + k) % 5 === 0 ? props.alt : props.color,
-            transform: 'rotate(' + a + 'rad)',
-            animation:
-              'tiuPulse 2.6s ease-in-out ' +
-              (k * 0.16 + (r % 6) * 0.05).toFixed(2) +
-              's infinite'
-          }
-        });
-      }
-    }
-    return out;
+  defineProps({
+    // Rendered width in px (the burst is 915 × 872 logo units).
+    size: { type: Number, default: 560 },
+    color: { type: String, default: '#FF2E8A' },
+    // Optional logo image, placed where it sits in the original artwork.
+    logo: { type: String, default: '' },
+    logoAlt: { type: String, default: 'Turn It Up!' },
+    logoClass: { type: String, default: '' }
   });
 </script>
 
 <template>
   <div
     class="relative pointer-events-none"
-    :style="{ width: size + 'px', height: size + 'px' }"
-    aria-hidden="true"
+    :style="{ width: size + 'px', height: (size * 872) / 915 + 'px' }"
   >
-    <span
-      v-for="sq in squares"
-      :key="sq.key"
-      class="absolute eq-sq"
-      :style="sq.style"
-    ></span>
+    <svg
+      viewBox="0 0 915 872"
+      class="absolute inset-0 w-full h-full"
+      aria-hidden="true"
+    >
+      <path
+        v-for="(sq, i) in squares"
+        :key="i"
+        class="eq-sq"
+        :d="sq.d"
+        :transform="sq.rot ? `rotate(${sq.rot} 444.08 439)` : undefined"
+        :fill="color"
+        :style="{ animation: `tiuPulse 2.6s ease-in-out ${sq.delay}s infinite` }"
+      />
+    </svg>
+    <!-- Logo artwork spans x 73–893, y 86–796 in the same coordinate space -->
+    <img
+      v-if="logo"
+      :src="logo"
+      :alt="logoAlt"
+      class="absolute max-w-none"
+      :class="logoClass"
+      :style="{
+        left: (73 / 915) * 100 + '%',
+        top: (86 / 872) * 100 + '%',
+        width: (820 / 915) * 100 + '%'
+      }"
+    />
   </div>
 </template>

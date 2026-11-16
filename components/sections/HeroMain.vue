@@ -1,6 +1,11 @@
 <script setup>
 import useScrollIntoView from '~/composables/useScrollIntoView';
 const { scrollToElement } = useScrollIntoView();
+const bursts = [
+  { class: 'lg:hidden', size: 206 },
+  { class: 'hidden lg:block xl:hidden', size: 262 },
+  { class: 'hidden xl:block', size: 385 }
+];
 const tags = ['Weddings', 'Corporate', 'Casinos', 'Clubs', 'Private parties'];
 </script>
 
@@ -10,17 +15,19 @@ const tags = ['Weddings', 'Corporate', 'Casinos', 'Clubs', 'Private parties'];
     class="relative overflow-hidden h-[720px] lg:h-[780px] bg-ink"
   >
     <div class="container relative h-full">
-      <!-- EQ burst + logo: stacked above the copy below lg, beside it from lg up -->
+      <!-- EQ burst + logo: stacked above the copy below lg, beside it from lg up.
+           Burst widths = logo width × 915/820 so the squares match the TIU artwork;
+           offsets keep the logo center where it was before. -->
       <div
-        class="absolute left-1/2 -translate-x-1/2 top-[80px] lg:left-auto lg:translate-x-0 lg:right-6 lg:top-[190px] xl:right-0 xl:top-[130px]"
+        class="absolute left-1/2 -translate-x-1/2 top-[130px] lg:left-auto lg:translate-x-0 lg:right-[100px] lg:top-[264px] xl:right-[78px] xl:top-[205px]"
       >
-        <EqBurst class="lg:hidden" :size="300" :rays="28" :rings="7" alt="" />
-        <EqBurst class="hidden lg:block xl:hidden" :size="400" :rays="32" />
-        <EqBurst class="hidden xl:block" :size="520" />
-        <img
-          src="/images/tiu_newpink.svg"
-          alt="Turn It Up!"
-          class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-none w-[185px] lg:w-[235px] xl:w-[345px] drop-shadow-[0_14px_40px_rgba(0,0,0,.55)] pointer-events-none"
+        <EqBurst
+          v-for="b in bursts"
+          :key="b.size"
+          :class="b.class"
+          :size="b.size"
+          logo="/images/tiu_newpink.svg"
+          logo-class="drop-shadow-[0_14px_40px_rgba(0,0,0,.55)]"
         />
       </div>
 

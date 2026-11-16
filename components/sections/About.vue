@@ -2,7 +2,6 @@
   const members = [
     { name: 'Kelcey', role: 'Vocals', img: '/images/kelcey-balloons.jpg' },
     { name: 'Bob', role: 'Vocals', img: '/images/bob.jpg' },
-    { name: 'Joey', role: 'Guitar, Vocals', img: '/images/joey.jpg' }, // TODO: add joey.jpg to /public/images
     { name: 'Mark', role: 'Guitar', img: '/images/mark.jpg' },
     { name: 'Tom', role: 'Bass', img: '/images/tom-balloons.jpg' },
     { name: 'James', role: 'Drums', img: '/images/james.jpg' }
@@ -20,7 +19,7 @@
           </h2>
         </div>
         <p class="hidden md:block text-[17px] leading-relaxed text-muted">
-          Six musicians, three lead voices, and years of packed club nights
+          Five musicians, two lead voices, and years of packed club nights
           behind every wedding and gala we play.
         </p>
       </div>
