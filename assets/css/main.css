@@ -12,6 +12,25 @@ a {
   color: inherit;
 }
 
+/* One vertical rhythm for every homepage section. Adjacent sections
+   each contribute their padding, so the gap between them is double. */
+:root {
+  --section-y: 56px;
+}
+@media (min-width: 768px) {
+  :root { --section-y: 88px; }
+}
+@media (min-width: 1280px) {
+  :root { --section-y: 104px; }
+}
+.section-y {
+  padding-top: var(--section-y);
+  padding-bottom: var(--section-y);
+}
+.section-t {
+  padding-top: var(--section-y);
+}
+
 .eyebrow {
   @apply text-xs font-semibold uppercase tracking-[0.22em] text-pink;
 }

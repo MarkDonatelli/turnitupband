@@ -76,7 +76,27 @@
 
 <template>
   <div class="flex flex-col">
-    <p v-if="loading" class="py-6 text-muted" role="status">Loading shows…</p>
+    <!-- Skeleton rows mirror the show row layout so nothing shifts on load -->
+    <div v-if="loading" role="status" aria-live="polite">
+      <span class="sr-only">Loading shows…</span>
+      <div
+        v-for="n in PAGE"
+        :key="n"
+        aria-hidden="true"
+        class="grid grid-cols-[84px_1fr] md:grid-cols-[120px_1fr_auto] gap-[18px] md:gap-8 items-center py-[18px] md:py-[26px] border-b border-ivory/15 motion-safe:animate-pulse"
+        :style="{ animationDelay: `${(n - 1) * 120}ms` }"
+      >
+        <div class="flex flex-col gap-2">
+          <span class="hidden md:block h-3 w-10 rounded bg-ivory/10"></span>
+          <span class="h-[30px] md:h-[40px] w-[72px] md:w-[100px] rounded bg-ivory/15"></span>
+        </div>
+        <div class="flex flex-col gap-2 min-w-0">
+          <span class="h-5 md:h-6 rounded bg-ivory/15" :style="{ width: `${[55, 40, 65, 48, 35][n - 1]}%` }"></span>
+          <span class="h-3.5 w-32 md:w-44 rounded bg-ivory/10"></span>
+        </div>
+        <span class="hidden md:block h-[38px] w-[84px] rounded-full border border-ivory/10"></span>
+      </div>
+    </div>
     <div v-else-if="loadError" class="py-6 text-muted" role="status">
       <p>Shows are temporarily unavailable. Please try again shortly.</p>
       <button
@@ -126,7 +146,7 @@
       <span
         class="hidden md:inline-flex px-[18px] py-2.5 text-[13px] font-semibold border rounded-full"
         :class="show.link ? 'border-ivory/25' : 'border-ivory/10 text-ivory/40'"
-        >{{ show.link ? 'Details' : 'Private' }}</span
+        >{{ show.link ? 'Venue information' : 'Private' }}</span
       >
     </component>
 

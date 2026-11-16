@@ -14,8 +14,8 @@
 
 <template>
   <header
-    class="fixed top-0 z-[60] w-full transition-colors duration-300"
-    :class="scrolled ? 'bg-ink/95 backdrop-blur' : 'bg-transparent'"
+    class="header-in fixed top-0 z-[60] w-full border-b transition-colors duration-500"
+    :class="scrolled ? 'bg-ink/90 backdrop-blur-md border-ivory/10' : 'bg-transparent border-transparent'"
   >
     <nav
       class="relative z-50 flex items-center justify-between mx-auto max-w-[1440px] px-[22px] py-[22px] md:px-[72px] md:py-[30px]"
@@ -28,9 +28,9 @@
 
       <button
         @click="scrollToElement('#contact')"
-        class="hidden lg:inline-flex px-[22px] py-[13px] text-sm font-semibold border rounded-full border-pink text-ivory hover:bg-pink hover:text-ink transition-colors"
+        class="hidden lg:inline-flex px-[22px] py-[13px] text-sm font-semibold border rounded-full border-pink text-ivory hover:bg-pink hover:text-ink transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
       >
-        Check your date
+        Book the band
       </button>
 
       <Hamburger />
@@ -39,3 +39,15 @@
     <MobileMenu />
   </header>
 </template>
+
+<style scoped>
+.header-in {
+  animation: headerIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+@keyframes headerIn {
+  from { opacity: 0; transform: translateY(-12px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .header-in { animation: none; }
+}
+</style>

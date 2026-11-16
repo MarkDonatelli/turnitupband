@@ -10,7 +10,7 @@
 </script>
 
 <template>
-  <section id="songs" class="scroll-mt-[95px] pb-16 md:pb-[120px]">
+  <section id="songs" class="section-y scroll-mt-[95px]">
     <div class="container flex flex-col gap-6 md:gap-11">
       <div class="flex flex-col gap-4 md:flex-row md:justify-between md:items-end">
         <div class="flex flex-col gap-4">

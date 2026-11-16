@@ -20,23 +20,23 @@
       target: '#contact'
     },
     {
-      tag: '03 · Clubs',
-      title: 'Clubs & casinos',
-      body: 'Where it started. Loud, sweaty, classics to today’s hits, most weekends around New England.',
-      cta: 'See public shows →',
+      tag: '03 · Private parties',
+      title: 'Private parties',
+      body: 'Milestone birthdays, reunions and backyard blowouts. Your guest list, your must-plays, a real dance floor.',
+      cta: 'Party details →',
       img: '/images/group-1.jpg',
-      target: '#shows',
+      target: '#contact',
       pink: true
     }
   ];
 </script>
 
 <template>
-  <section id="events" class="scroll-mt-[95px] py-16 md:py-[120px]">
+  <section id="events" class="section-y scroll-mt-[95px]">
     <div class="container flex flex-col gap-7 md:gap-14">
       <div class="grid gap-6 md:grid-cols-[1.2fr_1fr] md:gap-16 md:items-end">
         <div class="flex flex-col gap-4">
-          <p class="eyebrow">One band, every room</p>
+          <p class="eyebrow">Private events</p>
           <h2 class="font-serif text-[40px] md:text-[64px] leading-[1.02]">
             From first dance <em>to last call.</em>
           </h2>

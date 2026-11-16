@@ -20,7 +20,7 @@
 </script>
 
 <template>
-  <section class="bg-ivory text-ink py-14 md:py-[120px]">
+  <section class="section-y bg-ivory text-ink">
     <div class="container flex flex-col gap-8 md:gap-16">
       <div class="flex items-end justify-between">
         <h2 class="font-serif text-[36px] md:text-[64px] leading-none">

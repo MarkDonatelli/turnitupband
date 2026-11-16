@@ -14,13 +14,12 @@
 <template>
   <main>
     <HeroMain />
-    <HeroConcept />
+    <Shows />
     <Events />
     <Songs />
     <Videos />
     <About />
     <Reviews />
-    <Shows />
     <Faq />
     <Contact />
   </main>

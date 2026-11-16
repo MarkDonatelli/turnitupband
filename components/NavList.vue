@@ -6,8 +6,8 @@
   const { scrollToElement } = useScrollIntoView();
 
   const navItems = [
-    { name: 'Events', scrollTo: 'events' },
     { name: 'Shows', scrollTo: 'shows' },
+    { name: 'Events', scrollTo: 'events' },
     { name: 'Songs', scrollTo: 'songs' },
     { name: 'The Band', scrollTo: 'about' },
     { name: 'FAQ', scrollTo: 'faq' }
@@ -23,9 +23,14 @@
     >
       <button
         @click="scrollToElement(`#${item.scrollTo}`), closeMobileMenu()"
-        class="w-full py-5 text-left text-lg font-medium lg:py-0 lg:text-sm text-[#D9D3C9] hover:text-pink transition-colors"
+        class="group relative w-full py-5 text-left text-lg font-medium lg:py-1.5 lg:text-sm text-[#D9D3C9] hover:text-ivory lg:hover:text-ivory transition-colors duration-300 focus-visible:outline-none focus-visible:text-pink"
       >
         {{ item.name }}
+        <!-- Underline draws in from the left on hover (desktop only) -->
+        <span
+          class="absolute inset-x-0 bottom-0 hidden h-px origin-left scale-x-0 bg-pink transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100 lg:block"
+          aria-hidden="true"
+        />
       </button>
     </li>
   </ul>
