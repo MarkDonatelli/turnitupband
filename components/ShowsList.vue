@@ -23,11 +23,14 @@
         signal: request.signal, timeout: 30000, retry: 0
       });
       if (!Array.isArray(response.shows)) throw new Error('Invalid shows response');
-      console.log('[Google Calendar] Public shows response:', response);
+      console.log(`[Google Calendar] ${response.shows.length} show(s) loaded:`, response);
+      console.table(response.shows.map(({ dateString, venue, location, link }) => ({ dateString, venue, location, link })));
       shows.value = response.shows;
       loadError.value = false;
-    } catch {
+    } catch (error) {
       if (request.signal.aborted) return;
+      // 503 = the Netlify function failed; its terminal log has the reason code.
+      console.warn('[Google Calendar] Shows failed to load:', error?.statusCode ?? '', error?.data?.error ?? error?.message);
       shows.value = [];
       loadError.value = true;
     } finally {
