@@ -13,7 +13,7 @@
   const pad = n => String(n).padStart(2, '0');
 
   // Touch screens have no hover, so the card snapped into view is the one
-  // that "turns up" to full colour. It also drives the mobile counter.
+  // that "turns up" to full colour.
   const scroller = ref(null);
   const live = ref(0);
   const isTouch = ref(false);
@@ -27,7 +27,7 @@
           if (e.isIntersecting) live.value = Number(e.target.dataset.i);
         });
       },
-      { root: window.innerWidth < 768 ? scroller.value : null, threshold: 0.65 }
+      { threshold: 0.65 }
     );
     scroller.value?.querySelectorAll('[data-i]').forEach(el => io.observe(el));
   });
@@ -100,21 +100,19 @@
       >
         <span class="text-ivory">The lineup</span>
         <span class="h-px flex-1 bg-ivory/15" aria-hidden="true" />
-        <span class="tabular-nums md:hidden"
-          ><span class="text-pink">{{ pad(live + 1) }}</span> / {{ pad(members.length) }}</span
-        >      </div>
+      </div>
 
-      <!-- Five members: swipe row on mobile, 3 + 2 centred on tablet,
+      <!-- Five members: 2 columns on mobile (last one centred), 3 + 2 centred on tablet,
            staggered five-column spread on desktop -->
       <ul
         ref="scroller"
-        class="no-scrollbar -mx-[1.375rem] mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-[1.375rem] px-[1.375rem] pb-2 md:mx-0 md:mt-8 md:grid md:grid-cols-6 md:gap-x-6 md:gap-y-12 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-5 lg:items-start lg:gap-x-5"
+        class="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 md:mt-8 md:grid-cols-6 md:gap-x-6 md:gap-y-12 lg:grid-cols-5 lg:items-start lg:gap-x-5"
       >
         <li
           v-for="(m, i) in members"
           :key="m.name"
           :data-i="i"
-          class="member w-[68vw] max-w-[300px] shrink-0 snap-start md:col-span-2 md:w-auto md:max-w-none md:[&:nth-child(4)]:col-start-2 lg:col-span-1 lg:[&:nth-child(4)]:col-start-auto lg:[&:nth-child(even)]:mt-16"
+          class="member max-md:[&:nth-child(5)]:col-span-2 max-md:[&:nth-child(5)]:mx-auto max-md:[&:nth-child(5)]:w-[calc(50%-0.5rem)] md:col-span-2 md:[&:nth-child(4)]:col-start-2 lg:col-span-1 lg:[&:nth-child(4)]:col-start-auto lg:[&:nth-child(even)]:mt-16"
           :class="{ 'is-live': isTouch && live === i }"
         >
           <div class="mb-3 flex items-end justify-between border-t border-ivory/20 pt-3">

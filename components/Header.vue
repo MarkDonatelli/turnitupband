@@ -35,9 +35,12 @@
 
       <Hamburger />
     </nav>
-
-    <MobileMenu />
   </header>
+
+  <!-- Outside the header on purpose: the header's backdrop-blur/transform make
+       it the containing block for fixed children, which squashed the menu to
+       the header's height and left it see-through. -->
+  <MobileMenu />
 </template>
 
 <style scoped>

@@ -74,7 +74,7 @@ const tags = ['Weddings', 'Corporate', 'Casinos', 'Clubs', 'Private parties'];
       />
     </div>
 
-    <div class="container relative z-10 -mt-[120px] pb-12 sm:-mt-[150px] lg:mt-0 lg:flex lg:min-h-[800px] lg:flex-col lg:justify-end lg:pb-[150px] xl:min-h-[860px]">
+    <div class="container relative z-10 -mt-[70px] pb-12 sm:-mt-[110px] lg:mt-0 lg:flex lg:min-h-[800px] lg:flex-col lg:justify-end lg:pb-[150px] xl:min-h-[860px]">
       <div class="flex max-w-[860px] flex-col gap-6 lg:gap-8">
         <p class="eyebrow hero-fade" style="animation-delay: 0.2s">
           <span class="lg:hidden">Boston · Classics to now</span>

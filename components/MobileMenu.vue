@@ -7,6 +7,15 @@
 </script>
 
 <template>
+  <!-- Dim the page behind the panel; tapping it closes the menu -->
+  <Transition name="fade">
+    <div
+      v-if="mobileMenuStore.isOpen"
+      class="fixed inset-0 z-30 bg-ink/70 lg:hidden"
+      aria-hidden="true"
+      @click="closeMobileMenu()"
+    />
+  </Transition>
   <Transition name="slide-fade">
     <div
       v-if="mobileMenuStore.isOpen"

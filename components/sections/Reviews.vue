@@ -31,12 +31,12 @@
         >
       </div>
       <div
-        class="flex gap-6 overflow-x-auto snap-x -mx-[22px] px-[22px] md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-12 md:overflow-visible"
+        class="grid gap-10 md:grid-cols-3 md:gap-12"
       >
         <figure
           v-for="q in quotes"
           :key="q.who"
-          class="flex-none w-[300px] md:w-auto snap-start flex flex-col gap-6 pt-7 border-t border-ink"
+          class="flex flex-col gap-6 pt-7 border-t border-ink"
         >
           <blockquote class="font-serif text-[24px] md:text-[27px] leading-[1.3]">
             “{{ q.text }}”

@@ -49,13 +49,13 @@
       </div>
 
       <div
-        class="flex gap-3.5 overflow-x-auto -mx-[22px] px-[22px] md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible"
+        class="grid gap-12 md:grid-cols-3 md:gap-6"
       >
         <button
           v-for="(r, i) in rooms"
           :key="r.title"
           @click="scrollToElement(r.target)"
-          class="flex-none w-[260px] md:w-auto flex flex-col gap-4 md:gap-[22px] text-left transition-transform hover:-translate-y-1.5"
+          class="flex flex-col gap-4 md:gap-[22px] text-left transition-transform hover:-translate-y-1.5"
           :class="{ 'md:mt-14': i === 1, 'md:mt-28': i === 2 }"
         >
           <div
@@ -76,10 +76,10 @@
           </div>
           <div class="flex flex-col gap-2.5">
             <h3 class="font-serif text-[26px] md:text-[32px]">{{ r.title }}</h3>
-            <p class="hidden md:block text-[15px] leading-relaxed text-muted">
+            <p class="text-[15px] leading-relaxed text-muted">
               {{ r.body }}
             </p>
-            <span class="hidden md:block text-sm font-semibold text-pink">{{
+            <span class="text-sm font-semibold text-pink">{{
               r.cta
             }}</span>
           </div>
