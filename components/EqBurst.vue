@@ -10,14 +10,17 @@
     // Optional logo image, placed where it sits in the original artwork.
     logo: { type: String, default: '' },
     logoAlt: { type: String, default: 'Turn It Up!' },
-    logoClass: { type: String, default: '' }
+    logoClass: { type: String, default: '' },
+    // Fill the parent's width instead of a fixed pixel size, so one instance
+    // can scale across breakpoints.
+    fluid: { type: Boolean, default: false }
   });
 </script>
 
 <template>
   <div
     class="relative pointer-events-none"
-    :style="{ width: size + 'px', height: (size * 872) / 915 + 'px' }"
+    :style="fluid ? { width: '100%', aspectRatio: '915 / 872' } : { width: size + 'px', height: (size * 872) / 915 + 'px' }"
   >
     <svg
       viewBox="0 0 915 872"

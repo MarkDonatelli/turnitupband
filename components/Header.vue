@@ -1,56 +1,100 @@
 <script setup>
   import useScrollIntoView from '~/composables/useScrollIntoView';
   import { useMobileMenuStore } from '~/store/mobileMenu';
+  import { bookHref } from '~/data/nav.js';
 
   const { scrollToElement } = useScrollIntoView();
-  const mobileMenuStore = useMobileMenuStore();
+  const menu = useMobileMenuStore();
 
+  // Solid backing only once the hero has scrolled under the bar.
   const scrolled = ref(false);
-  const handleScroll = () => (scrolled.value = window.scrollY > 150);
+  const onScroll = () => (scrolled.value = window.scrollY > 24);
+  onMounted(() => {
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  });
+  onUnmounted(() => window.removeEventListener('scroll', onScroll));
 
-  onMounted(() => window.addEventListener('scroll', handleScroll));
-  onUnmounted(() => window.removeEventListener('scroll', handleScroll));
+  const go = (e, href) => {
+    e.preventDefault();
+    scrollToElement(href);
+  };
+
+  const link =
+    'relative py-2 text-[12px] font-semibold uppercase tracking-[0.22em] text-ivory transition-colors duration-300 hover:text-pink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink';
 </script>
 
 <template>
   <header
-    class="header-in fixed top-0 z-[60] w-full border-b transition-colors duration-500"
-    :class="scrolled ? 'bg-ink/90 backdrop-blur-md border-ivory/10' : 'bg-transparent border-transparent'"
+    class="nav-in fixed inset-x-0 top-0 z-[60] border-b transition-[background-color,border-color] duration-500"
+    :class="scrolled ? 'border-ivory/10 bg-ink/[0.94]' : 'border-transparent bg-transparent'"
   >
     <nav
-      class="relative z-50 flex items-center justify-between mx-auto max-w-[1440px] px-[22px] py-[22px] md:px-[72px] md:py-[30px]"
+      aria-label="Main"
+      class="grid h-[68px] grid-cols-[1fr_auto] items-center gap-6 px-[22px] md:h-[84px] md:grid-cols-[1fr_auto_1fr] md:px-10 xl:px-14"
     >
-      <button @click="scrollToElement('#home')" aria-label="Turn It Up! home">
-        <Wordmark size="text-[28px] md:text-[34px]" />
-      </button>
-
-      <NavList class="hidden lg:flex gap-[38px]" />
-
-      <button
-        @click="scrollToElement('#contact')"
-        class="hidden lg:inline-flex px-[22px] py-[13px] text-sm font-semibold border rounded-full border-pink text-ivory hover:bg-pink hover:text-ink transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
+      <!-- Left: wordmark -->
+      <a
+        href="#home"
+        class="justify-self-start focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
+        aria-label="Turn It Up! — back to top"
+        @click="go($event, '#home')"
       >
-        Book the band
-      </button>
+        <Wordmark size="text-[26px] md:text-[30px]" />
+      </a>
 
-      <Hamburger />
+      <!-- Center: Shows / Menu + (mobile: Menu + only, pinned right) -->
+      <div class="flex items-center gap-5 justify-self-end md:justify-self-center">
+        <a href="#shows" :class="[link, 'hidden md:inline-block']" @click="go($event, '#shows')">Shows</a>
+        <span class="hidden h-3 w-px bg-ivory/30 md:block" aria-hidden="true" />
+        <button
+          id="menu-toggle"
+          type="button"
+          :class="[link, 'group inline-flex items-center gap-2.5']"
+          aria-haspopup="dialog"
+          :aria-expanded="menu.isOpen ? 'true' : 'false'"
+          aria-controls="site-menu"
+          @click="menu.toggleMobileMenu()"
+        >
+          Menu
+          <span class="relative block size-2.5" aria-hidden="true">
+            <span class="absolute inset-x-0 top-1/2 h-[1.5px] -translate-y-1/2 bg-pink" />
+            <span
+              class="absolute inset-y-0 left-1/2 w-[1.5px] -translate-x-1/2 bg-pink transition-transform duration-300 group-hover:rotate-90"
+            />
+          </span>
+        </button>
+      </div>
+
+      <!-- Right: Book Us -->
+      <a
+        :href="bookHref"
+        :class="[link, 'group hidden items-center gap-2 justify-self-end md:inline-flex']"
+        @click="go($event, bookHref)"
+      >
+        Book Us
+        <span class="text-pink transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">→</span>
+      </a>
     </nav>
   </header>
 
-  <!-- Outside the header on purpose: the header's backdrop-blur/transform make
-       it the containing block for fixed children, which squashed the menu to
-       the header's height and left it see-through. -->
-  <MobileMenu />
+  <SiteMenu />
 </template>
 
 <style scoped>
-.header-in {
-  animation: headerIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
-}
-@keyframes headerIn {
-  from { opacity: 0; transform: translateY(-12px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .header-in { animation: none; }
-}
+  /* Step 2 of the hero sequence: the bar settles in after the footage. */
+  .nav-in {
+    animation: navIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  }
+  @keyframes navIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-in {
+      animation: none;
+    }
+  }
 </style>

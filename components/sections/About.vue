@@ -1,4 +1,7 @@
 <script setup>
+  import useScrollIntoView from '~/composables/useScrollIntoView';
+  const { scrollToElement } = useScrollIntoView();
+
   // Exactly five members. `zoom` + `origin` bring every head to a similar
   // size inside the shared 4:5 frame, so mixed close-ups and full-length
   // shots crop consistently.
@@ -11,31 +14,72 @@
   ];
 
   const pad = n => String(n).padStart(2, '0');
+  const slug = name => `member-${name.toLowerCase()}`;
 
-  // Touch screens have no hover, so the card snapped into view is the one
-  // that "turns up" to full colour.
-  const scroller = ref(null);
-  const live = ref(0);
+  // "Turned up" (full colour, pink number and bar) is shared between the
+  // roll call and the lineup: pointing at or focusing a name lights the
+  // portrait, and pointing at a portrait lights its name.
+  // On touch there is no hover, so the portrait crossing the middle of the
+  // screen is the one that turns up.
+  const active = ref(null);
+  const centred = ref(null);
   const isTouch = ref(false);
-  let io;
+  const isLive = i => active.value === i || (isTouch.value && active.value === null && centred.value === i);
+
+  const goTo = (e, i) => {
+    e.preventDefault();
+    active.value = i;
+    scrollToElement(`#${slug(members[i].name)}`, { block: 'center' });
+  };
+
+  const root = ref(null);
+  const lineup = ref(null);
+  const animated = ref(false);
+  let centreIo;
+  let revealIo;
 
   onMounted(() => {
     isTouch.value = window.matchMedia('(hover: none)').matches;
-    io = new IntersectionObserver(
-      entries => {
+    if (isTouch.value) {
+      centreIo = new IntersectionObserver(
+        entries =>
+          entries.forEach(e => {
+            if (e.isIntersecting) centred.value = Number(e.target.dataset.i);
+          }),
+        { rootMargin: '-45% 0px -45% 0px' }
+      );
+      lineup.value?.querySelectorAll('[data-i]').forEach(el => centreIo.observe(el));
+    }
+
+    // Entrances: the group photo opens, then the five portraits follow in one
+    // wave, so the two halves read as one introduction.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    animated.value = true;
+    revealIo = new IntersectionObserver(
+      entries =>
         entries.forEach(e => {
-          if (e.isIntersecting) live.value = Number(e.target.dataset.i);
-        });
-      },
-      { threshold: 0.65 }
+          if (!e.isIntersecting) return;
+          e.target.classList.add('is-in');
+          revealIo.unobserve(e.target);
+        }),
+      { rootMargin: '0px 0px -15% 0px' }
     );
-    scroller.value?.querySelectorAll('[data-i]').forEach(el => io.observe(el));
+    root.value.querySelectorAll('[data-reveal]').forEach(el => revealIo.observe(el));
   });
-  onBeforeUnmount(() => io?.disconnect());
+  onBeforeUnmount(() => {
+    centreIo?.disconnect();
+    revealIo?.disconnect();
+  });
 </script>
 
 <template>
-  <section id="about" class="section-y scroll-mt-[95px]">
+  <section
+    id="about"
+    ref="root"
+    class="section-y scroll-mt-[95px]"
+    :class="{ 'is-animated': animated }"
+    aria-labelledby="about-title"
+  >
     <div class="container">
       <!-- Feature opener: oversized headline overlapping the group photograph -->
       <div class="grid gap-6 md:gap-8 lg:grid-cols-12 lg:gap-x-6 lg:gap-y-10">
@@ -45,6 +89,7 @@
             <span class="h-px w-12 bg-pink/60 md:w-20" aria-hidden="true" />
           </p>
           <h2
+            id="about-title"
             class="font-serif text-[56px] leading-[0.9] tracking-[-0.01em] sm:text-[76px] md:text-[104px] xl:text-[128px]"
           >
             This is<br />
@@ -53,12 +98,13 @@
         </header>
 
         <figure
+          data-reveal
           class="photo group/photo relative overflow-hidden rounded-sm bg-ink3 aspect-[18/11] lg:col-start-6 lg:col-end-13 lg:row-span-2 lg:row-start-1 lg:aspect-auto lg:min-h-[440px]"
         >
           <NuxtImg
             src="/images/TIU_Grafitti.jpg"
-            alt="Turn It Up! — Kelcey, Bob, Mark, Tom and James"
-            sizes="100vw lg:60vw"
+            alt="The five members of Turn It Up!: Kelcey, Bob, Mark, Tom and James"
+            sizes="xs:100vw lg:60vw"
             format="webp"
             loading="lazy"
             class="graded absolute inset-0 size-full object-cover object-[center_32%]"
@@ -77,46 +123,66 @@
           </figcaption>
         </figure>
 
-        <div class="flex flex-col gap-5 lg:col-start-1 lg:col-end-5 lg:row-start-2 lg:self-end lg:pb-1">
+        <div class="flex flex-col gap-5 lg:col-start-1 lg:col-end-6 lg:row-start-2 lg:self-end lg:pb-1">
           <p class="max-w-[440px] text-base leading-relaxed text-muted md:text-[17px]">
             Five musicians, two lead voices, and years of packed club nights behind every wedding and
             gala we play.
           </p>
-          <p
-            class="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-ivory/15 pt-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted2"
-          >
-            <span class="text-ivory/50">Featuring</span>
-            <template v-for="(m, i) in members" :key="m.name">
-              <span class="text-ivory">{{ m.name }}</span>
-              <span v-if="i < members.length - 1" class="text-pink" aria-hidden="true">/</span>
-            </template>
-          </p>
+          <!-- Roll call: each name points at its portrait below -->
+          <nav aria-labelledby="roll-label" class="border-t border-ivory/15 pt-4">
+            <p id="roll-label" class="text-[10px] font-semibold uppercase tracking-[0.24em] text-ivory/50 md:text-[11px]">
+              Featuring
+            </p>
+            <ul
+              class="mt-1 flex flex-nowrap items-center gap-x-2 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.14em] text-muted2 sm:gap-x-3 sm:tracking-[0.2em] md:text-[12px]"
+            >
+              <li v-for="(m, i) in members" :key="m.name" class="flex items-center gap-2 sm:gap-3">
+                <a
+                  :href="`#${slug(m.name)}`"
+                  class="roll inline-flex min-h-[32px] items-center transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink"
+                  :class="isLive(i) ? 'text-pink' : 'text-ivory hover:text-pink'"
+                  @mouseenter="active = i"
+                  @mouseleave="active = null"
+                  @focus="active = i"
+                  @blur="active = null"
+                  @click="goTo($event, i)"
+                  >{{ m.name }}</a
+                >
+                <span v-if="i < members.length - 1" class="text-pink" aria-hidden="true">/</span>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
 
-      <!-- Lineup rule -->
+      <!-- Lineup rule: picks up the same hairline as the roll call -->
       <div
-        class="mt-12 flex items-center gap-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-muted2 md:mt-20 lg:mt-24"
+        class="mt-14 flex items-center gap-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-muted2 md:mt-16 lg:mt-20"
       >
         <span class="text-ivory">The lineup</span>
         <span class="h-px flex-1 bg-ivory/15" aria-hidden="true" />
       </div>
 
-      <!-- Five members: 2 columns on mobile (last one centred), 3 + 2 centred on tablet,
-           staggered five-column spread on desktop -->
+      <!-- Five members. Mobile: staggered pair columns. Tablet: 3 + 2 centred,
+           middle offset. Desktop: staggered five-column spread. -->
       <ul
-        ref="scroller"
-        class="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 md:mt-8 md:grid-cols-6 md:gap-x-6 md:gap-y-12 lg:grid-cols-5 lg:items-start lg:gap-x-5"
+        ref="lineup"
+        data-reveal
+        class="lineup mt-6 grid grid-cols-2 gap-x-4 gap-y-10 md:mt-8 md:grid-cols-6 md:gap-x-6 md:gap-y-12 lg:grid-cols-5 lg:items-start lg:gap-x-6"
       >
         <li
           v-for="(m, i) in members"
+          :id="slug(m.name)"
           :key="m.name"
           :data-i="i"
-          class="member max-md:[&:nth-child(5)]:col-span-2 max-md:[&:nth-child(5)]:mx-auto max-md:[&:nth-child(5)]:w-[calc(50%-0.5rem)] md:col-span-2 md:[&:nth-child(4)]:col-start-2 lg:col-span-1 lg:[&:nth-child(4)]:col-start-auto lg:[&:nth-child(even)]:mt-16"
-          :class="{ 'is-live': isTouch && live === i }"
+          class="member scroll-mt-[120px] max-md:[&:nth-child(even)]:mt-14 md:col-span-2 md:[&:nth-child(2)]:mt-12 md:[&:nth-child(4)]:col-start-2 lg:col-span-1 lg:[&:nth-child(2)]:mt-16 lg:[&:nth-child(4)]:col-start-auto lg:[&:nth-child(4)]:mt-16"
+          :class="{ 'is-live': isLive(i) }"
+          :style="{ '--i': i }"
+          @mouseenter="active = i"
+          @mouseleave="active = null"
         >
           <div class="mb-3 flex items-end justify-between border-t border-ivory/20 pt-3">
-            <span class="num font-display text-[52px] font-black leading-[0.8] lg:text-[64px]">{{
+            <span class="num font-display text-[48px] font-black leading-[0.8] md:text-[52px] lg:text-[64px]" aria-hidden="true">{{
               pad(i + 1)
             }}</span>
             <span class="text-[11px] font-semibold uppercase tracking-[0.2em] text-pink">{{ m.role }}</span>
@@ -126,7 +192,7 @@
             <NuxtImg
               :src="m.img"
               :alt="`${m.name}, ${m.role.toLowerCase()}`"
-              sizes="70vw md:33vw lg:20vw"
+              sizes="xs:48vw md:33vw lg:20vw"
               format="webp"
               loading="lazy"
               class="graded absolute inset-0 size-full object-cover"
@@ -140,7 +206,7 @@
             <span class="bar absolute bottom-0 left-0 h-[3px] w-full bg-pink" aria-hidden="true" />
           </div>
 
-          <h3 class="name mt-4 font-serif text-[30px] leading-none md:text-[34px] xl:text-[38px]">
+          <h3 class="name mt-4 font-serif text-[28px] leading-none md:text-[34px] xl:text-[38px]">
             {{ m.name }}
           </h3>
         </li>
@@ -151,7 +217,7 @@
 
 <style scoped>
   /* Shared grade: high-contrast black & white with a magenta stage light,
-     matching the hero photograph. Hover brings back the real colour. */
+     matching the hero photograph. Turning up brings back the real colour. */
   .graded {
     filter: grayscale(1) contrast(1.15) brightness(0.9);
     transform: scale(var(--z, 1));
@@ -186,9 +252,8 @@
     transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
-  /* --- Turned up: hover on pointer devices, snapped card on touch --- */
-  .member.is-live .graded,
-  .photo.is-live .graded {
+  /* --- Turned up: hover, a roll-call name, or the centred card on touch --- */
+  .member.is-live .graded {
     filter: grayscale(0) contrast(1.05) brightness(1);
     transform: scale(calc(var(--z, 1) * 1.05));
   }
@@ -202,27 +267,35 @@
   .member.is-live .bar {
     transform: scaleX(1);
   }
+  .member.is-live .name {
+    transform: translateX(6px);
+  }
 
   @media (hover: hover) {
-    .member:hover .graded,
     .photo:hover .graded {
       filter: grayscale(0) contrast(1.05) brightness(1);
       transform: scale(calc(var(--z, 1) * 1.05));
     }
-    .member:hover .tint,
     .photo:hover .tint {
       opacity: 0;
     }
-    .member:hover .num {
-      color: #ff2e8a;
-      -webkit-text-stroke-color: #ff2e8a;
-    }
-    .member:hover .bar {
-      transform: scaleX(1);
-    }
-    .member:hover .name {
-      transform: translateX(6px);
-    }
+  }
+
+  /* --- Entrances (motion allowed only) --- */
+  .is-animated .photo {
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 1.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .is-animated .photo.is-in {
+    clip-path: inset(0 0 0 0);
+  }
+  /* The lineup follows as one left-to-right wave. */
+  .is-animated .lineup .portrait {
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 1.1s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 90ms);
+  }
+  .is-animated .lineup.is-in .portrait {
+    clip-path: inset(0 0 0 0);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -231,12 +304,5 @@
     .name {
       transition-duration: 0.01ms;
     }
-  }
-
-  .no-scrollbar {
-    scrollbar-width: none;
-  }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
   }
 </style>

@@ -6,8 +6,9 @@ export default function useScrollIntoView() {
     }
     const element = document.querySelector(selector);
     if (element) {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       element.scrollIntoView({
-        behavior: 'smooth',
+        behavior: reduce ? 'auto' : 'smooth',
         ...options
       });
     }

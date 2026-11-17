@@ -14,8 +14,21 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      igKey: process.env.INSTAGRAM_KEY
+      // Everything under `public` is serialized into every page's HTML.
+      // Never put API keys or tokens here.
+      //
+      // Netlify sets CONTEXT at build time (production, deploy-preview,
+      // branch-deploy). The booking form only sends inquiries from production.
+      deployContext: process.env.CONTEXT || 'local',
+      // Netlify's URL is the site's primary production address in every
+      // context, so previews still point canonical/OG at the live site.
+      siteUrl: (process.env.URL || 'http://localhost:3000').replace(/\/$/, '')
     }
+  },
+
+  // Static files with per-context content (previews are disallowed).
+  nitro: {
+    prerender: { routes: ['/robots.txt', '/sitemap.xml'] }
   },
 
   css: ['~/assets/css/main.css'],

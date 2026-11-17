@@ -1,11 +1,35 @@
 <script setup>
-  // TODO: confirm answers
+  // Proposed copy: confirm each answer matches how the band actually works
+  // (song requests, ceremony coverage, equipment, travel) before launch.
   const faqs = [
-    { q: 'Will you learn our first dance?', a: 'Yes. Send it with your booking and we’ll play it live, arranged for the band. Parent dances and entrance songs too.' },
-    { q: 'Can you cover ceremony and cocktail hour?', a: 'We offer acoustic ceremony and cocktail sets, plus curated playlists during breaks so the room never goes quiet.' },
-    { q: 'Do you bring sound and lighting?', a: 'Full professional PA and dance-floor lighting are included, sized to your venue. We coordinate load-in with your planner.' },
-    { q: 'How loud is it, really?', a: 'As loud as you want. Dinner sets stay conversational; after the cake cutting we open it up. You set the ceiling.' },
-    { q: 'How far do you travel?', a: 'All of New England as standard. Destination events are quoted on request.' }
+    {
+      q: 'Will you learn our first dance?',
+      a: 'Absolutely. Tell us which song you have in mind, and we’ll work with you on the best way to bring it to life. We can also discuss parent dances and entrance music.'
+    },
+    {
+      q: 'Can you cover ceremony and cocktail hour?',
+      a: 'We can discuss music options for your ceremony and cocktail hour as part of your event. Tell us what you’re planning, and we’ll help determine the right setup and coverage.'
+    },
+    {
+      q: 'Do you provide sound and lighting?',
+      a: 'Yes! We typically bring our own professional sound system and stage lighting, so you don’t have to worry about coordinating separate vendors. We’ll work with your venue to make sure everything is set up for the space and event.'
+    },
+    {
+      q: 'How loud is it, really?',
+      a: 'Loud enough to get the dance floor moving, but we’re not here to overpower the room. We adjust our volume to the venue, crowd, and moment. We know when to dial it back and when to turn it up.'
+    },
+    {
+      q: 'How do you choose the setlist?',
+      a: 'We read the room. Every crowd is different, and that’s part of what makes playing live so much fun. We mix classics, rock, pop, country, and today’s hits based on the energy in the room. We also love hearing your must-plays before the event.'
+    },
+    {
+      q: 'How far do you travel?',
+      a: 'We’re based in the Boston area and regularly perform throughout New England. Planning something farther away? Reach out and tell us where. We’re always open to discussing the right event.'
+    },
+    {
+      q: 'How do we book Turn It Up?',
+      a: 'Start by sending us your event date, location, and a few details about what you’re planning. We’ll check availability, talk through your event, and help you figure out the next steps.'
+    }
   ];
   const open = ref(0);
   const toggle = i => (open.value = open.value === i ? null : i);
@@ -30,7 +54,7 @@
         </p>
         <a
           href="#contact"
-          class="group/cta mt-1 inline-flex w-fit items-center gap-3 border-b border-pink pb-1.5 text-[12px] font-semibold uppercase tracking-[0.2em] text-ivory transition-colors hover:text-pink"
+          class="group/cta mt-1 inline-flex w-fit items-center gap-3 border-b border-pink pb-1.5 text-[12px] font-semibold uppercase tracking-[0.2em] text-ivory transition-colors hover:text-pink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
         >
           Ask us anything
           <span class="transition-transform group-hover/cta:translate-x-1" aria-hidden="true">→</span>
@@ -51,10 +75,10 @@
               type="button"
               :aria-expanded="open === i"
               :aria-controls="`faq-a-${i}`"
-              class="group/q grid w-full grid-cols-[40px_1fr_auto] items-center gap-4 py-6 text-left md:grid-cols-[64px_1fr_auto] md:gap-6 md:py-8"
+              class="group/q grid w-full grid-cols-[40px_1fr_auto] items-center gap-4 py-6 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink md:grid-cols-[64px_1fr_auto] md:gap-6 md:py-8"
               @click="toggle(i)"
             >
-              <span class="num font-display text-[30px] font-black leading-none md:text-[40px]">{{
+              <span class="num font-display text-[30px] font-black leading-none md:text-[40px]" aria-hidden="true">{{
                 pad(i + 1)
               }}</span>
               <span
@@ -73,14 +97,11 @@
 
           <div
             :id="`faq-a-${i}`"
-            role="region"
-            :aria-labelledby="`faq-q-${i}`"
-            :aria-hidden="open !== i"
             class="answer grid"
           >
             <div class="overflow-hidden">
               <p
-                class="max-w-[680px] pb-7 pl-[56px] pr-2 md:pr-12text-[15px] leading-relaxed text-muted md:pb-9 md:pl-[88px] md:text-[17px]"
+                class="max-w-[680px] pb-7 pl-[56px] pr-2 md:pr-12 text-[15px] leading-relaxed text-muted md:pb-9 md:pl-[88px] md:text-[17px]"
               >
                 {{ f.a }}
               </p>
