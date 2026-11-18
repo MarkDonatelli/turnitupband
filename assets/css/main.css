@@ -40,6 +40,12 @@ a {
   35% { opacity: 1; }
 }
 
+/* Hero logo burst: never drops below 40% so the logo's shape always reads. */
+@keyframes tiuPulseLogo {
+  0%, 100% { opacity: 0.4; }
+  35% { opacity: 1; }
+}
+
 @keyframes tiuFade {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: none; }
