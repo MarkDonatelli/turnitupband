@@ -126,16 +126,17 @@
       <!-- Act two: the connection -->
       <div class="mt-14 grid items-center gap-10 md:mt-24 lg:grid-cols-12 lg:gap-x-6">
         <figure data-reveal="photo" class="photo w-[78%] max-w-[420px] lg:col-span-5 lg:w-full lg:max-w-none">
-          <div class="photo-frame aspect-[4/5]">
+          <!-- 6:5 to match the group shot so all five members stay in frame -->
+          <div class="photo-frame aspect-[6/5]">
             <NuxtImg
-              src="/images/mo/grit.jpg"
-              alt="A Turn It Up! band member pulling a face at the camera on stage"
+              src="/images/group-1.jpg"
+              alt="The five members of Turn It Up! laughing together"
               sizes="xs:78vw sm:420px lg:40vw"
-              width="864"
-              height="1080"
+              width="3000"
+              height="2483"
               format="webp"
               loading="lazy"
-              class="photo-img bw size-full object-cover object-[50%_20%]"
+              class="photo-img bw size-full object-cover object-[50%_35%]"
             />
           </div>
         </figure>
