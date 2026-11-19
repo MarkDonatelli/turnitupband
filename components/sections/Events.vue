@@ -1,4 +1,8 @@
 <script setup>
+  // AVIF versions of the large photos (same sizes and crops; WebP stays the fallback).
+  const weddingAvif = useAvifSource('/images/wedding-group.jpeg', { sizes: 'xs:88vw lg:48vw xl:600px', width: 864, height: 1259 });
+  const corporateAvif = useAvifSource('/images/servicenowgig.png', { sizes: 'xs:100vw lg:84vw xl:1000px', width: 1448, height: 1086 });
+
   // Three rooms, three different shapes on the page: a portrait feature
   // (weddings), a captioned panorama (corporate), a small close-up (parties).
   // Photos are the band's own: the band at a real wedding, and a real
@@ -82,16 +86,19 @@
       <article class="mt-14 grid gap-7 md:mt-20 lg:grid-cols-12 lg:items-center lg:gap-x-6" aria-labelledby="ev-weddings">
         <figure data-reveal class="rise-photo w-[88%] lg:col-span-6 lg:w-full">
           <div class="frame aspect-[4/5]">
-            <NuxtImg
-              src="/images/wedding-group.jpeg"
-              alt="The five members of Turn It Up!, dressed up and smiling on stage under a wedding tent"
-              sizes="xs:88vw lg:48vw xl:600px"
-              width="864"
-              height="1259"
-              format="webp"
-              loading="lazy"
-              class="img size-full object-cover object-bottom"
-            />
+            <picture class="contents">
+              <source type="image/avif" :srcset="weddingAvif.srcset" :sizes="weddingAvif.sizes" />
+              <NuxtImg
+                src="/images/wedding-group.jpeg"
+                alt="The five members of Turn It Up!, dressed up and smiling on stage under a wedding tent"
+                sizes="xs:88vw lg:48vw xl:600px"
+                width="864"
+                height="1259"
+                format="webp"
+                loading="lazy"
+                class="img size-full object-cover object-bottom"
+              />
+            </picture>
           </div>
         </figure>
         <div data-reveal class="copy flex flex-col gap-4 lg:col-span-5 lg:col-start-8">
@@ -127,16 +134,19 @@
         </div>
         <figure data-reveal class="rise-photo -mx-[1.375rem] mt-6 md:mx-0 md:mt-8">
           <div class="frame aspect-[4/3] md:aspect-[2/1]">
-            <NuxtImg
-              src="/images/servicenowgig.png"
-              alt="Turn It Up! stage set for a corporate event at ServiceNow in Boston, with the band's banners either side of the screen"
-              sizes="xs:100vw lg:84vw xl:1000px"
-              width="1448"
-              height="1086"
-              format="webp"
-              loading="lazy"
-              class="pano size-full object-cover object-[50%_55%]"
-            />
+            <picture class="contents">
+              <source type="image/avif" :srcset="corporateAvif.srcset" :sizes="corporateAvif.sizes" />
+              <NuxtImg
+                src="/images/servicenowgig.png"
+                alt="Turn It Up! stage set for a corporate event at ServiceNow in Boston, with the band's banners either side of the screen"
+                sizes="xs:100vw lg:84vw xl:1000px"
+                width="1448"
+                height="1086"
+                format="webp"
+                loading="lazy"
+                class="pano size-full object-cover object-[50%_55%]"
+              />
+            </picture>
           </div>
         </figure>
       </article>

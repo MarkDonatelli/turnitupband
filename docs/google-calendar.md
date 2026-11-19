@@ -112,10 +112,42 @@ more than five minutes old, so the visible list stays current without a rebuild.
   structured data.
 - **Keeping the HTML current (optional).** `netlify/functions/rebuild-shows.mjs`
   triggers one rebuild a day (09:00 UTC) so the HTML search engines see drops
-  finished shows and adds new ones. It does nothing until
-  `SHOWS_REBUILD_HOOK_URL` is set to a Netlify build hook (Site configuration →
-  Build & deploy → Build hooks). Scheduled functions only run on the published
-  production deploy.
+  finished shows and adds new ones. It does nothing until it has a build hook;
+  see "Daily rebuild setup" below.
+
+### Daily rebuild setup
+
+Nothing here is configured by the code; do these once in the Netlify UI.
+
+1. **Let builds read the calendar.** Site configuration → Environment
+   variables. For each of `GOOGLE_CALENDAR_ID`, `GOOGLE_CLIENT_EMAIL` and
+   `GOOGLE_PRIVATE_KEY`, open Options → Edit and make sure the scopes include
+   **Builds** and **Functions**, with a value for the **Production** context.
+2. **Create the build hook.** Site configuration → Build & deploy → Continuous
+   deployment → Build hooks → Add build hook. Name it "Daily shows rebuild"
+   and choose the production branch (`main`). Copy the URL it shows.
+3. **Store it as a secret.** Environment variables → Add a variable:
+   `SHOWS_REBUILD_HOOK_URL` = the hook URL, scope **Functions**, context
+   **Production**, and tick "Contains secret values". Never put it in code,
+   `netlify.toml` or `runtimeConfig`.
+4. **Deploy production** so the scheduled function picks up the variable.
+5. **Test it.** Logs & metrics → Functions → `rebuild-shows` → **Run now**. The
+   log should show `shows_rebuild_requested` with status 200, and a new
+   production deploy should start ("Triggered by build hook").
+6. **Check the build log** of that deploy for `calendar_build_failure`. None
+   means the shows in the HTML came from the calendar.
+
+How it stays safe:
+
+- Visitors can't run it: Netlify doesn't expose scheduled functions at a URL.
+  It runs only on its schedule (published production deploys only) or from
+  "Run now" in the Netlify UI.
+- No loop: the function starts a build; builds never call the function.
+- The hook URL is only read on the server and is never logged. Anyone who has
+  the URL can start builds, so if it leaks, delete the hook and create a new one.
+- The function itself never reads the calendar. If the calendar fails during
+  the rebuild, the build behaves as described under "Build access to
+  credentials" above.
 
 ## Local development
 

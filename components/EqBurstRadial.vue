@@ -47,10 +47,15 @@
     }
     return out;
   });
+
+  // Hold the pulse while the burst is off-screen.
+  const root = ref(null);
+  usePauseOffscreen(root);
 </script>
 
 <template>
   <div
+    ref="root"
     class="relative pointer-events-none"
     :style="{ width: size + 'px', height: size + 'px' }"
     aria-hidden="true"

@@ -1,4 +1,7 @@
 <script setup>
+  // AVIF versions of the large photos (same sizes and crops; WebP stays the fallback).
+  const groupAvif = useAvifSource('/images/TIU_Grafitti.jpg', { sizes: 'xs:100vw lg:60vw' });
+
   import useScrollIntoView from '~/composables/useScrollIntoView';
   const { scrollToElement } = useScrollIntoView();
 
@@ -96,14 +99,17 @@
           data-reveal
           class="photo group/photo relative overflow-hidden rounded-sm bg-ink3 aspect-[18/11] lg:col-start-6 lg:col-end-13 lg:row-span-2 lg:row-start-1 lg:aspect-auto lg:min-h-[440px]"
         >
-          <NuxtImg
-            src="/images/TIU_Grafitti.jpg"
-            alt="The five members of Turn It Up!: Kelcey, Bob, Mark, Tom and James"
-            sizes="xs:100vw lg:60vw"
-            format="webp"
-            loading="lazy"
-            class="graded absolute inset-0 size-full object-cover object-[center_32%]"
-          />
+          <picture class="contents">
+            <source type="image/avif" :srcset="groupAvif.srcset" :sizes="groupAvif.sizes" />
+            <NuxtImg
+              src="/images/TIU_Grafitti.jpg"
+              alt="The five members of Turn It Up!: Kelcey, Bob, Mark, Tom and James"
+              sizes="xs:100vw lg:60vw"
+              format="webp"
+              loading="lazy"
+              class="graded absolute inset-0 size-full object-cover object-[center_32%]"
+            />
+          </picture>
           <span class="tint absolute inset-0" aria-hidden="true" />
           <!-- Let the headline sit cleanly on the photo's left edge -->
           <span

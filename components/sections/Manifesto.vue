@@ -1,4 +1,8 @@
 <script setup>
+  // AVIF versions of the large photos (same sizes and crops; WebP stays the fallback).
+  const edgeAvif = useAvifSource('/images/wallys.jpg', { sizes: 'xs:88vw sm:64vw lg:48vw xl:640px', width: 2048, height: 1196 });
+  const connectionAvif = useAvifSource('/images/group-1.jpg', { sizes: 'xs:78vw sm:420px lg:40vw', width: 3000, height: 2483 });
+
   // The Turn It Up M.O.
   //
   // Motion, in two kinds:
@@ -113,16 +117,19 @@
         >
           <!-- Frame matches the photo (2048 × 1196) so the whole shot shows -->
           <div class="photo-frame aspect-[2048/1196]">
-            <NuxtImg
-              src="/images/wallys.jpg"
-              alt="Turn It Up! guitarist Mark playing under the stage lights, the band behind him"
-              sizes="xs:88vw sm:64vw lg:48vw xl:640px"
-              width="2048"
-              height="1196"
-              format="webp"
-              loading="lazy"
-              class="photo-img size-full object-cover"
-            />
+            <picture class="contents">
+              <source type="image/avif" :srcset="edgeAvif.srcset" :sizes="edgeAvif.sizes" />
+              <NuxtImg
+                src="/images/wallys.jpg"
+                alt="Turn It Up! guitarist Mark playing under the stage lights, the band behind him"
+                sizes="xs:88vw sm:64vw lg:48vw xl:640px"
+                width="2048"
+                height="1196"
+                format="webp"
+                loading="lazy"
+                class="photo-img size-full object-cover"
+              />
+            </picture>
           </div>
         </figure>
       </div>
@@ -132,16 +139,19 @@
         <figure data-reveal="photo" class="photo w-[78%] max-w-[420px] lg:col-span-5 lg:w-full lg:max-w-none">
           <!-- 6:5 to match the group shot so all five members stay in frame -->
           <div class="photo-frame aspect-[6/5]">
-            <NuxtImg
-              src="/images/group-1.jpg"
-              alt="The five members of Turn It Up! laughing together"
-              sizes="xs:78vw sm:420px lg:40vw"
-              width="3000"
-              height="2483"
-              format="webp"
-              loading="lazy"
-              class="photo-img size-full object-cover object-[50%_35%]"
-            />
+            <picture class="contents">
+              <source type="image/avif" :srcset="connectionAvif.srcset" :sizes="connectionAvif.sizes" />
+              <NuxtImg
+                src="/images/group-1.jpg"
+                alt="The five members of Turn It Up! laughing together"
+                sizes="xs:78vw sm:420px lg:40vw"
+                width="3000"
+                height="2483"
+                format="webp"
+                loading="lazy"
+                class="photo-img size-full object-cover object-[50%_35%]"
+              />
+            </picture>
           </div>
         </figure>
         <p
@@ -159,11 +169,15 @@
       <div class="scene-frame relative flex h-[100svh] min-h-[560px] items-end overflow-hidden lg:items-center">
         <div class="absolute inset-0" aria-hidden="true">
           <picture>
+            <source media="(orientation: portrait)" type="image/avif" srcset="/images/mo/standout-portrait.avif" />
             <source media="(orientation: portrait)" srcset="/images/mo/standout-portrait.jpg" />
+            <source type="image/avif" srcset="/images/mo/standout.avif" />
             <img src="/images/mo/standout.jpg" alt="" loading="lazy" class="scene-img absolute inset-0 size-full object-cover grayscale" />
           </picture>
           <picture>
+            <source media="(orientation: portrait)" type="image/avif" srcset="/images/mo/standout-portrait.avif" />
             <source media="(orientation: portrait)" srcset="/images/mo/standout-portrait.jpg" />
+            <source type="image/avif" srcset="/images/mo/standout.avif" />
             <img src="/images/mo/standout.jpg" alt="" loading="lazy" class="scene-color absolute inset-0 size-full object-cover" />
           </picture>
           <span class="scene-dim absolute inset-0 bg-ink" />

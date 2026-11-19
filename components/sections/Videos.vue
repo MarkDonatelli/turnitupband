@@ -1,4 +1,7 @@
 <script setup>
+  // AVIF versions of the large photos (same sizes and crops; WebP stays the fallback).
+  const posterAvif = useAvifSource('/images/reel-poster.jpg', { sizes: 'xs:100vw xl:1340px', width: 1300, height: 731 });
+
   // Custom poster with a live shot instead of YouTube's logo thumbnail.
   // Nothing from YouTube loads until someone presses play; then the
   // privacy-enhanced player takes the poster's place, starts, and receives
@@ -43,16 +46,19 @@
             class="poster group absolute inset-0 size-full text-left focus-visible:outline-none"
             @click="play"
           >
-            <NuxtImg
-              src="/images/reel-poster.jpg"
-              alt=""
-              sizes="xs:100vw xl:1340px"
-              width="1300"
-              height="731"
-              format="webp"
-              loading="lazy"
-              class="poster-img absolute inset-0 size-full object-cover object-[60%_45%]"
-            />
+            <picture class="contents">
+              <source type="image/avif" :srcset="posterAvif.srcset" :sizes="posterAvif.sizes" />
+              <NuxtImg
+                src="/images/reel-poster.jpg"
+                alt=""
+                sizes="xs:100vw xl:1340px"
+                width="1300"
+                height="731"
+                format="webp"
+                loading="lazy"
+                class="poster-img absolute inset-0 size-full object-cover object-[60%_45%]"
+              />
+            </picture>
             <span class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-ink/20" aria-hidden="true" />
 
             <!-- Play button: fixed in place; the triangle is centred on its visual centre -->

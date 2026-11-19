@@ -15,10 +15,15 @@
     // can scale across breakpoints.
     fluid: { type: Boolean, default: false }
   });
+
+  // Hold the pulse while the burst is off-screen.
+  const root = ref(null);
+  usePauseOffscreen(root);
 </script>
 
 <template>
   <div
+    ref="root"
     class="relative pointer-events-none"
     :style="fluid ? { width: '100%', aspectRatio: '915 / 872' } : { width: size + 'px', height: (size * 872) / 915 + 'px' }"
   >

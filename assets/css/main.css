@@ -72,6 +72,12 @@ a {
   animation-play-state: paused !important;
 }
 
+/* EQ bursts hold their pulse while off-screen (composables/usePauseOffscreen):
+   paused, not stopped, so they resume mid-beat with no jump. */
+.is-offscreen .eq-sq {
+  animation-play-state: paused !important;
+}
+
 /* mobile menu */
 .slide-fade-enter-active { transition: all 0.3s ease-out; }
 .slide-fade-leave-active { transition: all 0.4s ease-in; }
