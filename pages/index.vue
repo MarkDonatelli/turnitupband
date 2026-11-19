@@ -87,7 +87,9 @@
     <Videos />
     <Manifesto />
     <About />
-    <Reviews />
+    <!-- Reviews (components/sections/Reviews.vue, data/reviews.js) is hidden
+         until real customer quotes replace the placeholders. Restore it here,
+         between About and Faq. -->
     <Faq />
     <Contact />
   </main>
