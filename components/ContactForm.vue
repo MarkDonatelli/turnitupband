@@ -219,8 +219,10 @@
       <p class="-mt-1 text-sm text-ivory">{{ current.note }} Fields marked * are required.</p>
 
       <div class="grid w-full gap-x-2.5 gap-y-4 md:grid-cols-2">
-        <!-- Event date: the browser's own date picker -->
-        <div>
+        <!-- Event date: the browser's own date picker. iOS Safari gives date
+             inputs an intrinsic min-width that ignores w-full, so the input
+             drops native appearance and both it and its grid cell may shrink. -->
+        <div class="min-w-0">
           <label for="cf-date" :class="labelClass">
             Event date <span :class="optionalClass">(optional)</span>
           </label>
@@ -230,7 +232,7 @@
             name="date"
             type="date"
             :min="minDate || undefined"
-            :class="[field, '[&::-webkit-date-and-time-value]:text-left', showError('date') && invalid]"
+            :class="[field, 'block min-w-0 max-w-full appearance-none [&::-webkit-date-and-time-value]:text-left', showError('date') && invalid]"
             :aria-invalid="showError('date') ? 'true' : undefined"
             :aria-describedby="describedBy('date')"
             @input="onDateInput"
