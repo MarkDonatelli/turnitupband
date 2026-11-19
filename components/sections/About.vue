@@ -13,10 +13,9 @@
     { name: 'James', role: 'Drums', img: '/images/james.jpg', zoom: 1, origin: '40% 40%', focus: '38% 40%' }
   ];
 
-  const pad = n => String(n).padStart(2, '0');
   const slug = name => `member-${name.toLowerCase()}`;
 
-  // "Turned up" (full colour, pink number and bar) is shared between the
+  // "Turned up" (full colour, pink bar) is shared between the
   // roll call and the lineup: pointing at or focusing a name lights the
   // portrait, and pointing at a portrait lights its name.
   // On touch there is no hover, so the portrait crossing the middle of the
@@ -84,10 +83,6 @@
       <!-- Feature opener: oversized headline overlapping the group photograph -->
       <div class="grid gap-6 md:gap-8 lg:grid-cols-12 lg:gap-x-6 lg:gap-y-10">
         <header class="relative z-10 flex flex-col gap-4 md:gap-6 lg:col-start-1 lg:col-end-8 lg:row-start-1 lg:pt-4">
-          <p class="eyebrow flex items-center gap-4">
-            The band
-            <span class="h-px w-12 bg-pink/60 md:w-20" aria-hidden="true" />
-          </p>
           <h2
             id="about-title"
             class="font-serif text-[56px] leading-[0.9] tracking-[-0.01em] sm:text-[76px] md:text-[104px] xl:text-[128px]"
@@ -115,12 +110,6 @@
             class="absolute inset-y-0 left-0 hidden w-1/3 bg-gradient-to-r from-ink/80 to-transparent lg:block"
             aria-hidden="true"
           />
-          <figcaption
-            class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-ink/85 to-transparent px-4 pb-3 pt-12 text-[10px] font-semibold uppercase tracking-[0.22em] text-ivory/80 md:px-6 md:pb-5 md:text-[11px]"
-          >
-            <span>The full lineup</span>
-            <span class="text-pink">Boston</span>
-          </figcaption>
         </figure>
 
         <div class="flex flex-col gap-5 lg:col-start-1 lg:col-end-6 lg:row-start-2 lg:self-end lg:pb-1">
@@ -181,10 +170,7 @@
           @mouseenter="active = i"
           @mouseleave="active = null"
         >
-          <div class="mb-3 flex items-end justify-between border-t border-ivory/20 pt-3">
-            <span class="num font-display text-[48px] font-black leading-[0.8] md:text-[52px] lg:text-[64px]" aria-hidden="true">{{
-              pad(i + 1)
-            }}</span>
+          <div class="mb-3 border-t border-ivory/20 pt-3">
             <span class="text-[11px] font-semibold uppercase tracking-[0.2em] text-pink">{{ m.role }}</span>
           </div>
 
@@ -234,14 +220,6 @@
     transition: opacity 0.6s ease;
   }
 
-  .num {
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(243, 238, 230, 0.35);
-    transition:
-      color 0.4s ease,
-      -webkit-text-stroke-color 0.4s ease;
-  }
-
   .bar {
     transform: scaleX(0);
     transform-origin: left;
@@ -259,10 +237,6 @@
   }
   .member.is-live .tint {
     opacity: 0;
-  }
-  .member.is-live .num {
-    color: #ff2e8a;
-    -webkit-text-stroke-color: #ff2e8a;
   }
   .member.is-live .bar {
     transform: scaleX(1);

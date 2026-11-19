@@ -35,7 +35,7 @@
   >
     <!-- Wider than the contained sections: aligned to the nav edges -->
     <div class="px-[22px] md:px-10 xl:px-14">
-      <header class="flex flex-col gap-5 border-b border-ink/15 pb-6 md:flex-row md:items-end md:justify-between md:pb-8">
+      <header>
         <h2
           id="reviews-title"
           class="font-serif text-[52px] leading-[0.92] tracking-[-0.02em] md:text-[84px] xl:text-[112px]"
@@ -43,9 +43,6 @@
           Heard on the<br />
           <em>dance floor.</em>
         </h2>
-        <div class="flex flex-col gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] md:items-end md:pb-3 md:text-[12px]">
-          <span class="text-stone">Reviews</span>
-        </div>
       </header>
 
       <div class="mt-10 grid gap-12 md:mt-16 lg:grid-cols-12 lg:gap-x-6">

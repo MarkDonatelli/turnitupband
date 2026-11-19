@@ -147,7 +147,7 @@
           Boston’s high-energy live band
         </p>
         <p class="max-w-[22ch] font-serif text-[19px] italic leading-snug text-ivory/80 md:max-w-none md:text-[22px]">
-          From packed clubs to unforgettable celebrations.
+          From packed clubs to your first dance.
         </p>
       </div>
     </div>

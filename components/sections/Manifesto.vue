@@ -1,5 +1,5 @@
 <script setup>
-  // The Turn It Up M.O. Copy is the band's own words, kept verbatim.
+  // The Turn It Up M.O.
   //
   // Motion, in two kinds:
   //  - Reveals: blocks marked data-reveal rise or unclip once as they enter.
@@ -8,8 +8,6 @@
   //    supporting sentences). Steps are class changes, so the browser only
   //    animates opacity, transform and clip-path.
   // Without JS, or with reduced motion, everything is simply visible.
-  import useScrollIntoView from '~/composables/useScrollIntoView';
-  const { scrollToElement } = useScrollIntoView();
 
   const root = ref(null);
   const scene = ref(null);
@@ -68,11 +66,6 @@
     disable();
     cancelAnimationFrame(raf);
   });
-
-  const toBand = e => {
-    e.preventDefault();
-    scrollToElement('#about');
-  };
 </script>
 
 <template>
@@ -85,7 +78,7 @@
   >
     <!-- Opening: the chapter title, condensed and loud -->
     <div class="container">
-      <header class="flex items-end justify-between gap-6 border-b border-ivory/15 pb-5 md:pb-7">
+      <header>
         <h2
           id="mo-title"
           data-reveal="mask"
@@ -101,8 +94,8 @@
           data-reveal="rise"
           class="rise font-serif text-[clamp(30px,4.4vw,64px)] leading-[1.08] tracking-[-0.01em] lg:col-span-8"
         >
-          We bring a dynamic edge and a level of energy that slick, corporate-style function bands
-          don’t bring.
+          Function bands play it safe. We learned in packed Boston bars, and we play your wedding
+          the same way.
         </p>
         <figure
           data-reveal="photo"
@@ -144,8 +137,8 @@
           data-reveal="rise"
           class="rise max-w-[30ch] text-[19px] leading-[1.6] text-ivory/85 md:text-[22px] lg:col-span-5 lg:col-start-7 lg:max-w-none"
         >
-          Our show is authentic, spontaneous, and passionate, while the band has a deep connection to
-          the music, bringing a more contagious, high-octane atmosphere to the dance floor.
+          Two lead singers trading songs, a setlist that bends to the room, and five people who would
+          be on the dance floor if they weren’t on the stage.
         </p>
       </div>
     </div>
@@ -176,26 +169,13 @@
           <p
             class="scene-copy mt-8 max-w-[34ch] text-[17px] leading-[1.6] text-ivory md:mt-10 md:text-[20px] lg:ml-auto lg:mr-[4%]"
           >
-            Not a human jukebox playing note for note. We will give your event a distinct personality
-            and a wow factor guests remember.
+            Not a human jukebox playing note for note. The songs you know, played by a band that
+            means every one of them.
           </p>
         </div>
       </div>
     </div>
 
-    <div class="container">
-      <!-- Bridge into the band -->
-      <div class="mt-12 flex justify-end border-t border-ivory/15 pt-5 md:mt-16">
-        <a
-          href="#about"
-          class="group inline-flex min-h-[44px] items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.24em] text-ivory transition-colors hover:text-pink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
-          @click="toBand"
-        >
-          Meet the band
-          <span class="text-pink transition-transform duration-300 group-hover:translate-y-0.5" aria-hidden="true">↓</span>
-        </a>
-      </div>
-    </div>
   </section>
 </template>
 

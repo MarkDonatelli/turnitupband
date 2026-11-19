@@ -52,15 +52,12 @@
     aria-labelledby="songs-title"
   >
     <div class="container">
-      <header class="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-x-6">
-        <div class="lg:col-span-7">
-          <p class="eyebrow">The songs</p>
-          <h2 id="songs-title" class="mt-4 font-serif text-[44px] leading-[1] tracking-[-0.01em] md:text-[64px] xl:text-[72px]">
-            Every era.<br />
-            <em>Every guest.</em>
-          </h2>
-        </div>
-        <p class="max-w-[36ch] text-base leading-relaxed text-muted md:text-[17px] lg:col-span-4 lg:col-start-9 lg:pb-2">
+      <header>
+        <h2 id="songs-title" class="font-serif text-[44px] leading-[1] tracking-[-0.01em] md:text-[64px] xl:text-[72px]">
+          Every era.<br />
+          <em>Every guest.</em>
+        </h2>
+        <p class="mt-5 max-w-[36ch] text-base leading-relaxed text-muted md:text-[17px]">
           A taste of the setlist. ABBA to Ella Langley without losing the floor.
         </p>
       </header>

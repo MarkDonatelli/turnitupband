@@ -41,13 +41,9 @@
     <div class="container grid gap-10 md:gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
       <!-- Intro column: sticks beside the list on desktop -->
       <div class="flex flex-col gap-5 md:gap-6 lg:sticky lg:top-[120px] lg:self-start">
-        <p class="eyebrow flex items-center gap-4">
-          FAQ
-          <span class="h-px w-12 bg-pink/60 md:w-20" aria-hidden="true" />
-        </p>
         <h2 class="font-serif text-[48px] leading-[0.95] tracking-[-0.01em] md:text-[72px] xl:text-[84px]">
           Planner<br />
-          <em class="text-pink">questions.</em>
+          questions.
         </h2>
         <p class="max-w-[380px] text-base leading-relaxed text-muted md:text-[17px]">
           The things couples and planners ask before they book. Anything else, just ask.
@@ -75,10 +71,10 @@
               type="button"
               :aria-expanded="open === i"
               :aria-controls="`faq-a-${i}`"
-              class="group/q grid w-full grid-cols-[40px_1fr_auto] items-center gap-4 py-6 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink md:grid-cols-[64px_1fr_auto] md:gap-6 md:py-8"
+              class="group/q grid w-full grid-cols-[20px_1fr_auto] items-center gap-4 py-6 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink md:grid-cols-[24px_1fr_auto] md:gap-6 md:py-8"
               @click="toggle(i)"
             >
-              <span class="num font-display text-[30px] font-black leading-none md:text-[40px]" aria-hidden="true">{{
+              <span class="num text-[11px] font-semibold leading-none tracking-[0.2em]" aria-hidden="true">{{
                 pad(i + 1)
               }}</span>
               <span
@@ -101,7 +97,7 @@
           >
             <div class="overflow-hidden">
               <p
-                class="max-w-[680px] pb-7 pl-[56px] pr-2 md:pr-12 text-[15px] leading-relaxed text-muted md:pb-9 md:pl-[88px] md:text-[17px]"
+                class="max-w-[680px] pb-7 pl-[36px] pr-2 md:pr-12 text-[15px] leading-relaxed text-muted md:pb-9 md:pl-[48px] md:text-[17px]"
               >
                 {{ f.a }}
               </p>
@@ -115,15 +111,11 @@
 
 <style scoped>
   .num {
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(243, 238, 230, 0.3);
-    transition:
-      color 0.35s ease,
-      -webkit-text-stroke-color 0.35s ease;
+    color: #8c867c;
+    transition: color 0.35s ease;
   }
   .is-open .num {
     color: #ff2e8a;
-    -webkit-text-stroke-color: #ff2e8a;
   }
 
   /* Plus → minus */

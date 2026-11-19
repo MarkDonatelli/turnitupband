@@ -12,7 +12,7 @@
     scrollToElement('#contact');
   };
 
-  // Reveals: each block gets its own entrance (see styles). Without JS or
+  // Reveals: one entrance for the photos, one for the text. Without JS or
   // with reduced motion, everything is simply visible.
   const root = ref(null);
   const animated = ref(false);
@@ -88,7 +88,7 @@
             on the same floor.
           </p>
           <a href="#contact" :class="link" @click="toContact">
-            <span class="u">Wedding details</span>
+            <span class="u">Ask about your wedding</span>
             <span class="arrow text-pink-deep" aria-hidden="true">→</span>
           </a>
         </div>
@@ -108,11 +108,11 @@
             follows the run of show.
           </p>
           <a href="#contact" :class="link" @click="toContact">
-            <span class="u">Corporate details</span>
+            <span class="u">Ask about your event</span>
             <span class="arrow text-pink-deep" aria-hidden="true">→</span>
           </a>
         </div>
-        <figure data-reveal class="wipe-photo -mx-[1.375rem] mt-6 md:mx-0 md:mt-8">
+        <figure data-reveal class="rise-photo -mx-[1.375rem] mt-6 md:mx-0 md:mt-8">
           <div class="frame aspect-[4/3] md:aspect-[2/1]">
             <NuxtImg
               src="/images/servicenowgig.png"
@@ -135,7 +135,7 @@
       >
         <figure
           data-reveal
-          class="pop-photo ml-auto w-[54%] max-w-[360px] md:-mt-10 md:ml-10 md:mr-auto md:w-[30%] lg:col-span-3 lg:col-start-1 lg:-mt-24 lg:ml-0 lg:w-full lg:max-w-none"
+          class="rise-photo ml-auto w-[54%] max-w-[360px] md:-mt-10 md:ml-10 md:mr-auto md:w-[30%] lg:col-span-3 lg:col-start-1 lg:-mt-24 lg:ml-0 lg:w-full lg:max-w-none"
         >
           <div class="frame aspect-square">
             <NuxtImg
@@ -152,14 +152,14 @@
         </figure>
         <div data-reveal class="copy flex flex-col gap-4 lg:col-span-5 lg:col-start-6 lg:pt-14">
           <h3 id="ev-parties" class="font-serif text-[38px] leading-none md:text-[48px]">
-            Private <em class="text-pink-deep">parties</em>
+            Private parties
           </h3>
           <p class="max-w-[38ch] text-[17px] leading-relaxed text-ink/75 md:text-[18px]">
             Milestone birthdays, reunions and backyard blowouts. Your guest list, your must-plays, a real
             dance floor.
           </p>
           <a href="#contact" :class="link" @click="toContact">
-            <span class="u">Party details</span>
+            <span class="u">Ask about your party</span>
             <span class="arrow text-pink-deep" aria-hidden="true">→</span>
           </a>
         </div>
@@ -209,7 +209,7 @@
     transform: translateX(5px);
   }
 
-  /* --- Entrances, one per idea (only once motion is enabled) --- */
+  /* --- Entrances (only once motion is enabled) --- */
 
   /* Title: two lines rise out of their masks. */
   .is-animated .title .t-line {
@@ -236,7 +236,7 @@
     transform: none;
   }
 
-  /* Weddings: the portrait opens upward and settles. */
+  /* Photos: each opens upward and settles. */
   .is-animated .rise-photo .frame {
     clip-path: inset(100% 0 0 0);
     transition: clip-path 1.3s var(--ease);
@@ -249,28 +249,6 @@
     clip-path: inset(0 0 0 0);
   }
   .is-animated .rise-photo.is-in .img {
-    transform: none;
-  }
-
-  /* Corporate: the panorama draws across like a curtain. */
-  .is-animated .wipe-photo .frame {
-    clip-path: inset(0 100% 0 0);
-    transition: clip-path 1.4s var(--ease);
-  }
-  .is-animated .wipe-photo.is-in .frame {
-    clip-path: inset(0 0 0 0);
-  }
-
-  /* Parties: the close-up pops in, a touch of attitude. */
-  .is-animated .pop-photo {
-    opacity: 0;
-    transform: scale(0.9);
-    transition:
-      opacity 0.6s ease,
-      transform 0.9s cubic-bezier(0.34, 1.3, 0.64, 1);
-  }
-  .is-animated .pop-photo.is-in {
-    opacity: 1;
     transform: none;
   }
 

@@ -23,7 +23,7 @@
           id="reel-title"
           class="font-serif text-[44px] leading-[0.95] tracking-[-0.01em] md:text-[72px] xl:text-[88px]"
         >
-          Don’t take our word <em class="text-pink">for it.</em>
+          Don’t take our word for it.
         </h2>
 
         <div class="relative -mx-[22px] aspect-video overflow-hidden bg-ink3 md:mx-0 md:rounded-md">

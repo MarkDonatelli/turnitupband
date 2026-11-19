@@ -12,21 +12,18 @@
 export const reviews = [
   {
     text: 'Every single guest danced, from our flower girl to my 88-year-old grandmother. They made the night.',
-    highlight: 'They made the night.',
     who: 'Sample couple',
     where: 'Wedding',
     placeholder: true
   },
   {
     text: 'Professional from the first call. They hit every cue in our program and then turned the gala into a party.',
-    highlight: 'turned the gala into a party.',
     who: 'Events director',
     where: 'Corporate gala',
     placeholder: true
   },
   {
     text: 'Best cover band in Boston, and it isn’t close. We plan our weekends around their calendar.',
-    highlight: 'it isn’t close.',
     who: 'Regular',
     where: 'Club night',
     placeholder: true
