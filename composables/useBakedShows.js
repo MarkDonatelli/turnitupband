@@ -13,10 +13,16 @@ export default async function useBakedShows() {
   // build's data; the list keeps it current after load.
   const count = useState('shows-count', () => null);
   const request = useAsyncData('shows', () =>
-    import.meta.server ? $fetch('/api/shows').catch(() => null) : Promise.resolve(null)
+    import.meta.server ? $fetch('/api/shows') : Promise.resolve(null)
   );
 
-  const { data } = await request;
+  const { data, error } = await request;
+  // /api/shows only errors when a production build requires the calendar
+  // (netlify/lib/build-shows.mjs). Failing the render fails the build, so
+  // Netlify keeps the last deploy instead of publishing an empty schedule.
+  if (import.meta.server && error.value) {
+    throw createError({ statusCode: 503, statusMessage: 'Calendar unavailable', fatal: true });
+  }
   if (count.value === null && data.value) {
     count.value = data.value.shows.filter(s => isUpcomingCalendarShow(s, new Date(now.value))).length;
   }

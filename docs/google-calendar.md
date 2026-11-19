@@ -100,11 +100,25 @@ and written into the HTML with `MusicEvent` structured data for public shows.
 Visitors' browsers reuse that data on load and only call the function when it is
 more than five minutes old, so the visible list stays current without a rebuild.
 
-- **Build access to credentials.** The three `GOOGLE_*` variables must be
-  available to **Builds** as well as Functions (Site configuration →
-  Environment variables → each variable's scopes). Without build access, the
-  build still succeeds: it logs `calendar_build_failure` with the reason code and
-  the page falls back to loading shows in the browser, as before.
+- **Build access to credentials (required for production).** The three
+  `GOOGLE_*` variables must be available to **Builds** as well as Functions
+  (Site configuration → Environment variables → each variable's scopes).
+- **Production builds fail rather than publish an empty schedule.** In the
+  production context (every deploy of `main`, including the daily rebuild), if
+  the calendar can't be read (missing or rejected credentials, Google API error,
+  more than 8 seconds, or a malformed response) the build log shows
+  `calendar_build_failure` with a reason code and
+  `"action":"failing_build_to_keep_last_deploy"`, the build fails, and Netlify
+  keeps the last successful deploy live. Zero upcoming public shows is a
+  successful read and builds normally ("New dates coming soon.").
+- **Other contexts keep the fallback.** Local builds, deploy previews and
+  branch deploys log `"action":"continuing_without_baked_shows"`, still build,
+  and the page loads shows in the browser.
+- **Shipping during a calendar outage.** To deploy an unrelated fix while
+  Google Calendar is down, set `SHOWS_ALLOW_EMPTY_BUILD` = `true` (scope
+  **Builds**, context **Production**), deploy, then delete the variable. That
+  deploy's HTML has no shows until the next good build; browsers still load
+  them.
 - **Private bookings.** An event is private if its Google visibility is Private
   or Confidential, or its title says "private" and it has no public link. The
   server removes its title, venue, city and link before anything is published;
@@ -123,6 +137,8 @@ Nothing here is configured by the code; do these once in the Netlify UI.
    variables. For each of `GOOGLE_CALENDAR_ID`, `GOOGLE_CLIENT_EMAIL` and
    `GOOGLE_PRIVATE_KEY`, open Options → Edit and make sure the scopes include
    **Builds** and **Functions**, with a value for the **Production** context.
+   Do this **before** merging to `main`: without it every production build
+   fails (the live site stays as it is, but nothing new deploys).
 2. **Create the build hook.** Site configuration → Build & deploy → Continuous
    deployment → Build hooks → Add build hook. Name it "Daily shows rebuild"
    and choose the production branch (`main`). Copy the URL it shows.
@@ -146,8 +162,9 @@ How it stays safe:
 - The hook URL is only read on the server and is never logged. Anyone who has
   the URL can start builds, so if it leaks, delete the hook and create a new one.
 - The function itself never reads the calendar. If the calendar fails during
-  the rebuild, the build behaves as described under "Build access to
-  credentials" above.
+  the rebuild, the rebuild fails and the previous deploy stays live (see
+  "Production builds fail rather than publish an empty schedule" above). The
+  next day's rebuild tries again.
 
 ## Local development
 
