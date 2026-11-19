@@ -115,7 +115,7 @@
           <a
             href="#home"
             class="justify-self-start focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
-            aria-label="Turn It Up! — back to top"
+            aria-label="Turn It Up!, back to top"
             @click="go($event, '#home')"
           >
             <Wordmark size="text-[26px] md:text-[30px]" />
@@ -204,10 +204,10 @@
 <style scoped>
   /* Panel wipes down from the bar; links rise as one gentle wave. */
   .site-menu-enter-active {
-    transition: clip-path 0.75s cubic-bezier(0.76, 0, 0.24, 1);
+    transition: clip-path 0.75s var(--ease-in-out);
   }
   .site-menu-leave-active {
-    transition: clip-path 0.55s cubic-bezier(0.76, 0, 0.24, 1) 0.05s;
+    transition: clip-path 0.55s var(--ease-in-out) 0.05s;
   }
   .site-menu-enter-from,
   .site-menu-leave-to {
@@ -221,7 +221,7 @@
   .site-menu-enter-active .menu-item {
     transition:
       opacity 0.7s ease var(--d),
-      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--d);
+      transform 0.9s var(--ease-out) var(--d);
   }
   .site-menu-enter-from .menu-item {
     opacity: 0;

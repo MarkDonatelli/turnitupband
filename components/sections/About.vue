@@ -114,8 +114,7 @@
 
         <div class="flex flex-col gap-5 lg:col-start-1 lg:col-end-6 lg:row-start-2 lg:self-end lg:pb-1">
           <p class="max-w-[440px] text-base leading-relaxed text-muted md:text-[17px]">
-            Five musicians, two lead voices, and years of packed club nights behind every wedding and
-            gala we play.
+            Five musicians and years of packed club nights behind every wedding and gala we play.
           </p>
           <!-- Roll call: each name points at its portrait below -->
           <nav aria-labelledby="roll-label" class="border-t border-ivory/15 pt-4">
@@ -144,20 +143,12 @@
         </div>
       </div>
 
-      <!-- Lineup rule: picks up the same hairline as the roll call -->
-      <div
-        class="mt-14 flex items-center gap-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-muted2 md:mt-16 lg:mt-20"
-      >
-        <span class="text-ivory">The lineup</span>
-        <span class="h-px flex-1 bg-ivory/15" aria-hidden="true" />
-      </div>
-
       <!-- Five members. Mobile: staggered pair columns. Tablet: 3 + 2 centred,
            middle offset. Desktop: staggered five-column spread. -->
       <ul
         ref="lineup"
         data-reveal
-        class="lineup mt-6 grid grid-cols-2 gap-x-4 gap-y-10 md:mt-8 md:grid-cols-6 md:gap-x-6 md:gap-y-12 lg:grid-cols-5 lg:items-start lg:gap-x-6"
+        class="lineup mt-14 grid grid-cols-2 gap-x-4 gap-y-10 md:mt-16 md:grid-cols-6 md:gap-x-6 md:gap-y-12 lg:mt-20 lg:grid-cols-5 lg:items-start lg:gap-x-6"
       >
         <li
           v-for="(m, i) in members"
@@ -210,7 +201,7 @@
     transform-origin: var(--o, 50% 30%);
     transition:
       filter 0.7s ease,
-      transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1);
+      transform 1.1s var(--ease-out);
   }
 
   .tint {
@@ -223,11 +214,11 @@
   .bar {
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition: transform 0.6s var(--ease-out);
   }
 
   .name {
-    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition: transform 0.5s var(--ease-out);
   }
 
   /* --- Turned up: hover, a roll-call name, or the centred card on touch --- */
@@ -258,7 +249,7 @@
   /* --- Entrances (motion allowed only) --- */
   .is-animated .photo {
     clip-path: inset(100% 0 0 0);
-    transition: clip-path 1.3s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: clip-path 0.9s var(--ease-out);
   }
   .is-animated .photo.is-in {
     clip-path: inset(0 0 0 0);
@@ -266,7 +257,7 @@
   /* The lineup follows as one left-to-right wave. */
   .is-animated .lineup .portrait {
     clip-path: inset(100% 0 0 0);
-    transition: clip-path 1.1s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 90ms);
+    transition: clip-path 0.8s var(--ease-out) calc(var(--i) * 90ms);
   }
   .is-animated .lineup.is-in .portrait {
     clip-path: inset(0 0 0 0);

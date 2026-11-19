@@ -37,7 +37,7 @@
       <a
         href="#home"
         class="justify-self-start focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
-        aria-label="Turn It Up! — back to top"
+        aria-label="Turn It Up!, back to top"
         @click="go($event, '#home')"
       >
         <Wordmark size="text-[26px] md:text-[30px]" />
@@ -84,7 +84,7 @@
 <style scoped>
   /* Step 2 of the hero sequence: the bar settles in after the footage. */
   .nav-in {
-    animation: navIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+    animation: navIn 0.9s var(--ease-out) 0.3s both;
   }
   @keyframes navIn {
     from {

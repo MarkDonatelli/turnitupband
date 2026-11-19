@@ -21,7 +21,7 @@
       <div class="mx-auto flex max-w-[1340px] flex-col gap-6 md:gap-8">
         <h2
           id="reel-title"
-          class="font-serif text-[44px] leading-[0.95] tracking-[-0.01em] md:text-[72px] xl:text-[88px]"
+          class="text-balance font-serif text-[44px] leading-[0.95] tracking-[-0.01em] md:text-[72px] xl:text-[88px]"
         >
           Don’t take our word for it.
         </h2>
@@ -55,12 +55,12 @@
             />
             <span class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-ink/20" aria-hidden="true" />
 
-            <!-- Play button: eases up on hover/focus, the icon leans forward -->
+            <!-- Play button: fixed in place; the triangle is centred on its visual centre -->
             <span
               class="play absolute left-1/2 top-1/2 grid size-[80px] place-items-center rounded-full bg-pink text-ink shadow-[0_18px_50px_-12px_rgba(255,46,138,.75)] md:size-[104px]"
               aria-hidden="true"
             >
-              <svg class="icon ml-1 size-7 md:size-8" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z" /></svg>
+              <svg class="size-7 md:size-8" viewBox="0 0 24 24" fill="currentColor"><path d="M7.7 4.5v15l13-7.5z" /></svg>
             </span>
 
             <span
@@ -77,7 +77,7 @@
 
 <style scoped>
   .poster {
-    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease: var(--ease-out);
   }
   .poster-img {
     filter: saturate(0.85) contrast(1.05) brightness(0.85);
@@ -87,27 +87,12 @@
   }
   .play {
     transform: translate(-50%, -50%);
-    transition:
-      transform 0.6s var(--ease),
-      box-shadow 0.6s var(--ease);
-  }
-  .icon {
-    transition: transform 0.6s var(--ease);
   }
 
   .poster:hover .poster-img,
   .poster:focus-visible .poster-img {
     transform: scale(1.03);
     filter: saturate(1) contrast(1.05) brightness(0.95);
-  }
-  .poster:hover .play,
-  .poster:focus-visible .play {
-    transform: translate(-50%, -50%) scale(1.06);
-    box-shadow: 0 22px 56px -14px rgba(255, 46, 138, 0.8);
-  }
-  .poster:hover .icon,
-  .poster:focus-visible .icon {
-    transform: translateX(3px);
   }
   /* Keyboard focus: a crisp ring around the play button itself. */
   .poster:focus-visible .play {
@@ -116,9 +101,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .poster-img,
-    .play,
-    .icon {
+    .poster-img {
       transition: none;
     }
   }

@@ -122,7 +122,7 @@
         disableremoteplayback
         tabindex="-1"
       >
-        <source src="/videos/hero-loop-portrait.mp4" type="video/mp4" media="(orientation: portrait)" />
+        <source src="/videos/hero-loop-portrait-sm.mp4" type="video/mp4" media="(orientation: portrait)" />
         <source src="/videos/hero-loop.mp4" type="video/mp4" />
       </video>
       <span class="absolute inset-0 bg-ink/45" />
@@ -133,23 +133,28 @@
 
     <!-- Logo centerpiece, sitting just below the vertical midpoint -->
     <div class="relative z-10 flex h-full flex-col items-center justify-center px-6 pt-[9svh] text-center">
-      <h1 class="hero-logo w-[min(80vw,44svh)] md:w-[min(48vw,50svh)] xl:w-[min(580px,52svh)]">
-        <EqBurst
-          fluid
-          logo="/images/tiu_newpink.svg"
-          logo-alt="Turn It Up!"
-          logo-class="drop-shadow-[0_12px_32px_rgba(0,0,0,.45)]"
-        />
-      </h1>
-
-      <div class="hero-copy mt-3 flex flex-col items-center gap-2.5 md:mt-5 md:gap-3">
-        <p class="text-[11px] font-semibold uppercase tracking-[0.3em] text-ivory md:text-[13px]">
+      <!-- The H1 reads "Turn It Up! Boston's high-energy live band": the logo's
+           alt text plus the line under it, so the heading says what the band is. -->
+      <h1 class="flex flex-col items-center">
+        <span class="hero-logo block w-[min(80vw,44svh)] md:w-[min(48vw,50svh)] xl:w-[min(580px,52svh)]">
+          <EqBurst
+            fluid
+            logo="/images/tiu_newpink.svg"
+            logo-alt="Turn It Up!"
+            logo-class="drop-shadow-[0_12px_32px_rgba(0,0,0,.45)]"
+          />
+        </span>
+        <span
+          class="hero-copy mt-3 block text-[11px] font-semibold uppercase tracking-[0.3em] text-ivory md:mt-5 md:text-[13px]"
+        >
           Boston’s high-energy live band
-        </p>
-        <p class="max-w-[22ch] font-serif text-[19px] italic leading-snug text-ivory/80 md:max-w-none md:text-[22px]">
-          From packed clubs to your first dance.
-        </p>
-      </div>
+        </span>
+      </h1>
+      <p
+        class="hero-copy mt-2.5 max-w-[22ch] font-serif text-[19px] italic leading-snug text-ivory/80 md:mt-3 md:max-w-none md:text-[22px]"
+      >
+        From packed clubs to your first dance.
+      </p>
     </div>
 
     <!-- Scroll cue -->
@@ -184,9 +189,12 @@
 </template>
 
 <style scoped>
-  /* Sequence: footage (immediate) → nav (0.3s, Header) → logo → copy → cue. */
-  .hero-logo {
-    animation: heroLogo 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+  /* Sequence: footage (immediate) → nav (0.3s, Header) → logo → copy → cue.
+     The logo image itself paints straight away: it is the page's main content,
+     and Chrome only counts it (Largest Contentful Paint) if it isn't animating
+     when it first paints. The EQ burst around it carries the entrance. */
+  .hero-logo :deep(svg) {
+    animation: heroLogo 1.5s var(--ease-out) 0.6s both;
   }
   @keyframes heroLogo {
     from {
@@ -196,7 +204,7 @@
   }
 
   .hero-copy {
-    animation: heroRise 1.1s cubic-bezier(0.22, 1, 0.36, 1) 1.35s both;
+    animation: heroRise 1.1s var(--ease-out) 1.35s both;
   }
   @keyframes heroRise {
     from {
@@ -229,7 +237,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-logo,
+    .hero-logo :deep(svg),
     .hero-copy,
     .hero-scroll {
       animation: none;

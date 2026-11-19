@@ -31,6 +31,15 @@
     if (!raf) raf = requestAnimationFrame(measure);
   };
 
+  // Text rises out of a clipping mask. Once every transition inside has
+  // finished, the clip comes off so descenders (g, y, p) are never cut at rest.
+  const unclipWhenSettled = el =>
+    requestAnimationFrame(() =>
+      Promise.all(el.getAnimations({ subtree: true }).map(a => a.finished))
+        .catch(() => {})
+        .then(() => el.classList.add('is-done'))
+    );
+
   const enable = () => {
     animated.value = true;
     io = new IntersectionObserver(
@@ -38,6 +47,7 @@
         entries.forEach(e => {
           if (!e.isIntersecting) return;
           e.target.classList.add('is-in');
+          unclipWhenSettled(e.target);
           io.unobserve(e.target);
         }),
       { rootMargin: '0px 0px -12% 0px', threshold: 0.15 }
@@ -92,25 +102,26 @@
       <div class="mt-12 grid gap-10 md:mt-20 lg:grid-cols-12 lg:gap-x-6">
         <p
           data-reveal="rise"
-          class="rise font-serif text-[clamp(30px,4.4vw,64px)] leading-[1.08] tracking-[-0.01em] lg:col-span-8"
+          class="rise text-balance font-serif text-[clamp(28px,3.5vw,50px)] leading-[1.08] tracking-[-0.01em] lg:col-span-6"
         >
           Function bands play it safe. We learned in packed Boston bars, and we play your wedding
           the same way.
         </p>
         <figure
           data-reveal="photo"
-          class="photo ml-auto w-[62%] max-w-[300px] self-start sm:w-[44%] lg:col-span-3 lg:col-start-10 lg:ml-0 lg:mt-24 lg:w-full lg:max-w-none"
+          class="photo ml-auto w-[88%] max-w-[480px] self-start sm:w-[64%] lg:col-span-6 lg:col-start-7 lg:ml-0 lg:mt-4 lg:w-full lg:max-w-none"
         >
-          <div class="photo-frame aspect-[4/5]">
+          <!-- Frame matches the photo (2048 × 1196) so the whole shot shows -->
+          <div class="photo-frame aspect-[2048/1196]">
             <NuxtImg
-              src="/images/mo/edge.jpg"
-              alt="Turn It Up! guitarist mid-solo, shot from below"
-              sizes="xs:62vw sm:44vw lg:25vw"
-              width="864"
-              height="1080"
+              src="/images/wallys.jpg"
+              alt="Turn It Up! guitarist Mark playing under the stage lights, the band behind him"
+              sizes="xs:88vw sm:64vw lg:48vw xl:640px"
+              width="2048"
+              height="1196"
               format="webp"
               loading="lazy"
-              class="photo-img bw size-full object-cover"
+              class="photo-img size-full object-cover"
             />
           </div>
         </figure>
@@ -129,7 +140,7 @@
               height="2483"
               format="webp"
               loading="lazy"
-              class="photo-img bw size-full object-cover object-[50%_35%]"
+              class="photo-img size-full object-cover object-[50%_35%]"
             />
           </div>
         </figure>
@@ -137,8 +148,8 @@
           data-reveal="rise"
           class="rise max-w-[30ch] text-[19px] leading-[1.6] text-ivory/85 md:text-[22px] lg:col-span-5 lg:col-start-7 lg:max-w-none"
         >
-          Two lead singers trading songs, a setlist that bends to the room, and five people who would
-          be on the dance floor if they weren’t on the stage.
+          A setlist that bends to the room, and five people who would be on the dance floor if they
+          weren’t on the stage.
         </p>
       </div>
     </div>
@@ -181,7 +192,7 @@
 
 <style scoped>
   .mo {
-    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease: var(--ease-out);
   }
 
   /* --- Static (default, no-JS, reduced motion): everything visible --- */
@@ -190,16 +201,16 @@
     overflow: hidden;
     background: #1a1920;
   }
-  .bw {
-    filter: grayscale(1) contrast(1.12);
-  }
   .scene-dim {
     opacity: 0.55;
   }
+  /* Room below the line for descenders; the clip only exists mid-reveal. */
   .mask {
+    padding-bottom: 0.3em;
+    margin-bottom: -0.3em;
+  }
+  .is-animated .mask:not(.is-done) {
     overflow: hidden;
-    padding-bottom: 0.06em;
-    margin-bottom: -0.06em;
   }
   .mask-line {
     display: block;
@@ -207,8 +218,8 @@
 
   /* --- Reveals (only once motion is enabled) --- */
   .is-animated .mask .mask-line {
-    transform: translateY(105%);
-    transition: transform 1.2s var(--ease);
+    transform: translateY(calc(105% + 0.3em));
+    transition: transform 0.8s var(--ease);
   }
   .is-animated .mask.is-in .mask-line {
     transform: none;
@@ -218,8 +229,8 @@
     opacity: 0;
     transform: translateY(32px);
     transition:
-      opacity 1s ease,
-      transform 1.2s var(--ease);
+      opacity 0.7s ease,
+      transform 0.85s var(--ease);
   }
   .is-animated .rise.is-in {
     opacity: 1;
@@ -228,11 +239,11 @@
 
   .is-animated .photo .photo-frame {
     clip-path: inset(100% 0 0 0);
-    transition: clip-path 1.3s var(--ease);
+    transition: clip-path 0.9s var(--ease);
   }
   .is-animated .photo .photo-img {
-    transform: scale(1.14);
-    transition: transform 1.8s var(--ease);
+    transform: scale(1.04);
+    transition: transform 1.1s var(--ease);
   }
   .is-animated .photo.is-in .photo-frame {
     clip-path: inset(0 0 0 0);
@@ -263,13 +274,15 @@
   .is-animated .line-a {
     transition: opacity 0.9s ease;
   }
+  /* These lines can reverse on scroll-up, so the mask stays; it leaves
+     room below for the serif's descenders. */
   .is-animated .line-b .lm {
     overflow: hidden;
-    padding-bottom: 0.1em;
-    margin-bottom: -0.1em;
+    padding-bottom: 0.3em;
+    margin-bottom: -0.3em;
   }
   .is-animated .line-b .mask-line {
-    transform: translateY(108%);
+    transform: translateY(calc(108% + 0.3em));
     transition: transform 1.1s var(--ease);
   }
   .is-animated .line-b .lm + .lm .mask-line {

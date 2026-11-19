@@ -74,11 +74,6 @@
     aria-labelledby="statement-title"
   >
     <div class="frame sticky top-0 flex h-[100svh] flex-col justify-center overflow-hidden">
-      <p
-        class="absolute left-[22px] top-[96px] text-[11px] font-semibold uppercase tracking-[0.3em] text-muted2 md:left-10 md:top-[120px] xl:left-14"
-      >
-        Classics to today’s hits
-      </p>
 
       <div ref="track" class="track flex w-max items-center gap-[8vw] px-[6vw] will-change-transform">
         <h2

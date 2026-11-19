@@ -1,16 +1,28 @@
 <script setup>
   // Three rooms, three different shapes on the page: a portrait feature
   // (weddings), a captioned panorama (corporate), a small close-up (parties).
-  // Photos are the band's own: the corporate panorama is a real ServiceNow
-  // gig. There is no wedding photography in the project yet, so that image
-  // is a real crowd moment rather than a claimed wedding.
+  // Photos are the band's own: the band at a real wedding, and a real
+  // ServiceNow gig for the corporate panorama.
   import useScrollIntoView from '~/composables/useScrollIntoView';
   const { scrollToElement } = useScrollIntoView();
 
-  const toContact = e => {
+  // Each link opens the booking form with its own event type chosen
+  // (labels match ContactForm's chips).
+  const eventType = useState('contact-event-type', () => 'Wedding');
+  const toContact = (e, type) => {
     e.preventDefault();
+    eventType.value = type;
     scrollToElement('#contact');
   };
+
+  // Text rises out of a clipping mask. Once every transition inside has
+  // finished, the clip comes off so descenders (g, y, p) are never cut at rest.
+  const unclipWhenSettled = el =>
+    requestAnimationFrame(() =>
+      Promise.all(el.getAnimations({ subtree: true }).map(a => a.finished))
+        .catch(() => {})
+        .then(() => el.classList.add('is-done'))
+    );
 
   // Reveals: one entrance for the photos, one for the text. Without JS or
   // with reduced motion, everything is simply visible.
@@ -25,6 +37,7 @@
         entries.forEach(e => {
           if (!e.isIntersecting) return;
           e.target.classList.add('is-in');
+          unclipWhenSettled(e.target);
           io.unobserve(e.target);
         }),
       { rootMargin: '0px 0px -12% 0px', threshold: 0.12 }
@@ -70,14 +83,14 @@
         <figure data-reveal class="rise-photo w-[88%] lg:col-span-6 lg:w-full">
           <div class="frame aspect-[4/5]">
             <NuxtImg
-              src="/images/events/weddings.jpg"
-              alt="Guests of every age waving and laughing on a packed dance floor under string lights"
+              src="/images/wedding-group.jpeg"
+              alt="The five members of Turn It Up!, dressed up and smiling on stage under a wedding tent"
               sizes="xs:88vw lg:48vw xl:600px"
               width="864"
-              height="1080"
+              height="1259"
               format="webp"
               loading="lazy"
-              class="img size-full object-cover"
+              class="img size-full object-cover object-bottom"
             />
           </div>
         </figure>
@@ -87,7 +100,7 @@
             Your first dance learned, your timeline respected, your grandparents and college friends
             on the same floor.
           </p>
-          <a href="#contact" :class="link" @click="toContact">
+          <a href="#contact" :class="link" @click="toContact($event, 'Wedding')">
             <span class="u">Ask about your wedding</span>
             <span class="arrow text-pink-deep" aria-hidden="true">→</span>
           </a>
@@ -107,7 +120,7 @@
             Holiday parties, launches and fundraisers. Clean sets, on-time changeovers, and a band that
             follows the run of show.
           </p>
-          <a href="#contact" :class="link" @click="toContact">
+          <a href="#contact" :class="link" @click="toContact($event, 'Corporate')">
             <span class="u">Ask about your event</span>
             <span class="arrow text-pink-deep" aria-hidden="true">→</span>
           </a>
@@ -139,8 +152,8 @@
         >
           <div class="frame aspect-square">
             <NuxtImg
-              src="/images/events/parties.jpg"
-              alt="Turn It Up! singers working a packed room, every hand in the air"
+              src="/images/private-party-nh.jpg"
+              alt="Turn It Up! on stage with guests at a private party in New Hampshire"
               sizes="xs:54vw md:30vw lg:24vw xl:300px"
               width="1000"
               height="1000"
@@ -158,7 +171,7 @@
             Milestone birthdays, reunions and backyard blowouts. Your guest list, your must-plays, a real
             dance floor.
           </p>
-          <a href="#contact" :class="link" @click="toContact">
+          <a href="#contact" :class="link" @click="toContact($event, 'Private party')">
             <span class="u">Ask about your party</span>
             <span class="arrow text-pink-deep" aria-hidden="true">→</span>
           </a>
@@ -170,18 +183,21 @@
 
 <style scoped>
   .events {
-    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease: var(--ease-out);
   }
   .frame {
     position: relative;
     overflow: hidden;
     background: #e6dfd4;
   }
+  /* Room below the line for descenders; the clip only exists mid-reveal. */
   .t-mask {
     display: block;
+    padding-bottom: 0.3em;
+    margin-bottom: -0.3em;
+  }
+  .is-animated .title:not(.is-done) .t-mask {
     overflow: hidden;
-    padding-bottom: 0.08em;
-    margin-bottom: -0.08em;
   }
   .t-line {
     display: block;
@@ -213,8 +229,8 @@
 
   /* Title: two lines rise out of their masks. */
   .is-animated .title .t-line {
-    transform: translateY(105%);
-    transition: transform 1.1s var(--ease);
+    transform: translateY(calc(105% + 0.3em));
+    transition: transform 0.8s var(--ease);
   }
   .is-animated .title .t-mask + .t-mask .t-line {
     transition-delay: 0.1s;
@@ -228,8 +244,8 @@
     opacity: 0;
     transform: translateY(20px);
     transition:
-      opacity 0.9s ease 0.15s,
-      transform 1.1s var(--ease) 0.15s;
+      opacity 0.6s ease 0.1s,
+      transform 0.8s var(--ease) 0.1s;
   }
   .is-animated .copy.is-in {
     opacity: 1;
@@ -239,11 +255,11 @@
   /* Photos: each opens upward and settles. */
   .is-animated .rise-photo .frame {
     clip-path: inset(100% 0 0 0);
-    transition: clip-path 1.3s var(--ease);
+    transition: clip-path 0.9s var(--ease);
   }
   .is-animated .rise-photo .img {
-    transform: scale(1.12);
-    transition: transform 1.8s var(--ease);
+    transform: scale(1.04);
+    transition: transform 1.1s var(--ease);
   }
   .is-animated .rise-photo.is-in .frame {
     clip-path: inset(0 0 0 0);

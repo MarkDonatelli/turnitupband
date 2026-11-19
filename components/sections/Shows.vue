@@ -1,7 +1,8 @@
 <script setup>
-  // Tour-poster masthead over the schedule. The count comes from ShowsList:
-  // null while loading, -1 on error, otherwise the number of upcoming dates.
-  const count = useState('shows-count', () => null);
+  // Tour-poster masthead over the schedule. The count starts from the shows
+  // read at build time and ShowsList keeps it current: null while loading,
+  // -1 on error, otherwise the number of upcoming dates.
+  const { count } = await useBakedShows();
   const countLabel = computed(() => {
     if (count.value === null) return 'Loading dates';
     if (count.value < 1) return '';
@@ -31,8 +32,9 @@
 
 <template>
   <section id="shows" class="section-y scroll-mt-[95px]" aria-labelledby="shows-title">
-    <!-- Masthead: full-bleed, aligned to the nav's edges -->
-    <div class="px-[22px] md:px-10 xl:px-14">
+    <!-- Masthead: full-bleed, aligned to the nav's edges. Extra room on top
+         so its rule doesn't pair up with the Statement's progress line. -->
+    <div class="mt-10 px-[22px] md:mt-14 md:px-10 xl:px-14">
       <div
         class="flex items-baseline justify-between gap-6 border-b border-ivory/15 pb-4 text-[11px] font-semibold uppercase tracking-[0.24em] md:text-[12px]"
       >
@@ -72,8 +74,8 @@
     opacity: 0;
     transform: translateY(28px);
     transition:
-      opacity 0.9s ease,
-      transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 0.7s ease,
+      transform 0.9s var(--ease-out);
   }
   .masthead.is-animated .line + .line {
     transition-delay: 0.08s;

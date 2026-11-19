@@ -7,7 +7,7 @@
         <EqBurstRadial :size="900" :rays="44" :rings="9" :inner="0.28" alt="" />
       </div>
       <p class="relative eyebrow">Booking 2026–2027</p>
-      <h2 class="relative font-serif text-[40px] md:text-[84px] leading-none">
+      <h2 class="relative text-balance font-serif text-[40px] md:text-[84px] leading-none">
         Is your date <em>still open?</em>
       </h2>
       <ContactForm class="relative" />

@@ -46,7 +46,7 @@ test('public projection preserves titles and only returns approved fields', () =
   assert.equal(show.start, '2026-11-13T21:45:00-05:00');
   assert.equal(show.end, '2026-11-14T01:00:00-05:00');
   assert.equal(show.dateString, 'Fri, Nov 13 2026 @ 9:45pm');
-  assert.deepEqual(Object.keys(show).sort(), ['id', 'title', 'venue', 'start', 'end', 'allDay', 'dateCheckString', 'dateString', 'location', 'link'].sort());
+  assert.deepEqual(Object.keys(show).sort(), ['id', 'title', 'venue', 'start', 'end', 'allDay', 'dateCheckString', 'dateString', 'location', 'link', 'private'].sort());
   assert.equal(JSON.stringify(show).includes('Internal production notes'), false);
   assert.equal(JSON.stringify(show).includes('private@example.com'), false);
   assert.equal(JSON.stringify(show).includes('#confirmedshow'), false);

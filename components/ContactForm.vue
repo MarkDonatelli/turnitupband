@@ -1,61 +1,121 @@
 <script setup>
-  import { useVuelidate } from '@vuelidate/core';
-  import { required, email, helpers } from '@vuelidate/validators';
+  import {
+    EVENT_TYPES,
+    FIELD_ORDER,
+    LIMITS,
+    fieldError,
+    isoToday,
+    normalizeBooking,
+    validateBooking
+  } from '~/utils/booking.mjs';
 
-  const phoneNumberRegex =
-    /^\+?([0-9]{1,3})?([-.\s])?((\([0-9]{1,3}\))|[0-9]{1,3})?([-.\s])?([0-9]{1,4})([-.\s])?([0-9]{1,4})([-.\s])?([0-9]{1,9})$/;
+  // ---------------------------------------------------------------------------
+  // Event types. The labels and rules live in utils/booking.mjs, shared with
+  // the server. Notes are short and make no promises about pricing, packages
+  // or response times.
+  // ---------------------------------------------------------------------------
+  const copy = {
+    Wedding: { venuePh: 'Venue name or town', note: 'Tell us about your wedding, and we’ll check availability.' },
+    Corporate: { venuePh: 'Company, venue or town', note: 'Planning an event? Tell us what you have in mind.' },
+    'Private party': { venuePh: 'Home, hall or venue', note: 'Tell us what you’re celebrating.' },
+    'Bar / venue': { venuePh: 'Venue name and town', note: 'Looking to book Turn It Up? Send us the details.' },
+    'Something else': { venuePh: 'Where is it?', note: 'Have something different in mind? We’d love to hear about it.' }
+  };
+  const eventTypes = EVENT_TYPES.map(label => ({ label, ...copy[label] }));
 
-  const eventTypes = [
-    { label: 'Wedding', cta: 'Check your date', venuePh: 'Venue or town', note: 'We reply within one business day with availability and wedding packages.' },
-    { label: 'Corporate', cta: 'Request a quote', venuePh: 'Company + venue', note: 'Send your run of show if you have one. We handle COI and venue paperwork.' },
-    { label: 'Private party', cta: 'Check your date', venuePh: 'Home, hall or venue', note: 'Birthdays, anniversaries, reunions, backyard blowouts. Tell us the headcount and space.' },
-    { label: 'Bar / venue', cta: 'Send open dates', venuePh: 'Venue name + town', note: 'Talent buyers and bar owners: send your open dates and we’ll send our draw history and rider.' },
-    { label: 'Something else', cta: 'Get in touch', venuePh: 'Where is it?', note: 'Fundraisers, festivals, town events. If there’s a dance floor, we’re interested.' }
-  ];
+  // Shared page state so event-specific links (Events section) can preselect
+  // it. Only those links and the radio buttons below change it.
+  const eventType = useState('contact-event-type', () => 'Wedding');
+  const current = computed(() => eventTypes.find(e => e.label === eventType.value) || eventTypes[0]);
 
-  const formState = ref({
-    eventType: 'Wedding',
-    date: '',
-    venue: '',
-    name: '',
-    email: '',
-    phone: '',
-    message: ''
-  });
-  const current = computed(
-    () => eventTypes.find((e) => e.label === formState.value.eventType) || eventTypes[0]
-  );
+  const blank = () => ({ date: '', venue: '', name: '', email: '', phone: '', message: '' });
+  const formState = reactive(blank());
+  const botField = ref(''); // honeypot: people never see it, bots fill it
 
-  // idle → sending → sent | error. `preview` = validated but not sent,
-  // because this build isn't the production site.
+  // A half-typed date reports an empty value but sets validity.badInput.
+  const dateIncomplete = ref(false);
+
+  // ---------------------------------------------------------------------------
+  // Validation: computed live from the shared rules. What's *shown* is gated:
+  //  - nothing on load;
+  //  - a field shows its error once it has been left (blurred) or on submit;
+  //  - while someone types into a field that had no error, nothing new flashes;
+  //  - an error already showing updates live, so it clears the moment it's fixed.
+  // ---------------------------------------------------------------------------
+  const data = computed(() => ({ eventType: eventType.value, ...formState }));
+  const result = computed(() => validateBooking(data.value, { today: isoToday(), dateIncomplete: dateIncomplete.value }));
+
+  const touched = reactive({});
+  const focused = ref(null);
+  const errorWhenFocused = ref(false);
+
+  const errorFor = name => result.value.errors[name] || '';
+  const showError = name =>
+    !!touched[name] && !!errorFor(name) && (focused.value !== name || errorWhenFocused.value);
+
+  const onFocus = name => {
+    focused.value = name;
+    errorWhenFocused.value = showError(name) || (!!touched[name] && !!errorFor(name));
+  };
+  const onBlur = name => {
+    focused.value = null;
+    touched[name] = true;
+  };
+  const onDateInput = e => (dateIncomplete.value = e.target.validity.badInput);
+
+  const describedBy = name => (showError(name) ? `cf-${name}-error` : undefined);
+
+  // The date picker starts at today. Set after mount so server and browser
+  // render the same HTML.
+  const minDate = ref('');
+  onMounted(() => (minDate.value = isoToday()));
+
+  // "Check your date" only when there is a date to check.
+  const ctaLabel = computed(() => (formState.date ? 'Check your date' : 'Send inquiry'));
+
+  // ---------------------------------------------------------------------------
+  // Submit
+  // idle → sending → sent | error. `preview`: valid, but not sent, because
+  // this build isn't the production site.
+  // ---------------------------------------------------------------------------
   const status = ref('idle');
   const { deployContext } = useRuntimeConfig().public;
   const isPreview = deployContext !== 'production';
 
-  const rules = {
-    name: { required: helpers.withMessage('Please enter your name', required) },
-    email: {
-      required: helpers.withMessage('Please enter your email address', required),
-      email: helpers.withMessage('Please enter a valid email address', email)
-    },
-    phone: {
-      isPhoneNumberValid: helpers.withMessage(
-        'Please enter a valid phone number',
-        (v) => !v || phoneNumberRegex.test(v)
-      )
+  const announcement = ref(''); // read out once by screen readers on a failed submit
+  const successHeading = ref(null);
+
+  const focusField = name =>
+    (name === 'eventType'
+      ? document.querySelector('#contact input[name="eventType"]')
+      : document.getElementById(`cf-${name}`)
+    )?.focus();
+
+  // Set synchronously on the first click, so rapid repeat clicks can't each
+  // pass the check while the first is still in progress.
+  let busy = false;
+  const handleSubmit = async () => {
+    if (busy) return;
+    busy = true;
+    try {
+      await submitOnce();
+    } finally {
+      busy = false;
     }
   };
 
-  const v$ = useVuelidate(rules, formState);
+  const submitOnce = async () => {
+    status.value = 'idle'; // clear an earlier failure or preview notice
+    FIELD_ORDER.forEach(name => (touched[name] = true));
+    focused.value = null;
 
-  const handleValidation = async (event) => {
-    event.preventDefault();
-    if (status.value === 'sending') return;
-    await v$.value.$validate();
-    if (v$.value.$error) {
-      // Send keyboard and screen-reader users straight to the first problem.
-      const first = contactFields.find(f => v$.value[f.name].$error);
-      if (first) document.getElementById(`cf-${first.name}`)?.focus();
+    const { valid, errors } = result.value;
+    if (!valid) {
+      const bad = FIELD_ORDER.filter(name => errors[name]);
+      announcement.value = '';
+      await nextTick();
+      announcement.value = `${bad.length === 1 ? 'One field needs' : `${bad.length} fields need`} attention.`;
+      focusField(bad[0]);
       return;
     }
 
@@ -68,38 +128,54 @@
 
     status.value = 'sending';
     try {
+      // Sent from the validated, trimmed values rather than raw DOM values.
+      const body = new URLSearchParams({
+        'form-name': 'contact-form',
+        'bot-field': botField.value,
+        ...normalizeBooking(data.value)
+      });
       const res = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(new FormData(event.target)).toString()
+        body: body.toString()
       });
+      // Success only once Netlify confirms it stored the inquiry.
       if (!res.ok) throw new Error(`Form POST failed: ${res.status}`);
       status.value = 'sent';
+      Object.assign(formState, blank());
+      Object.keys(touched).forEach(k => delete touched[k]);
+      await nextTick();
+      successHeading.value?.focus();
     } catch (error) {
       console.error(error);
-      // Keep the form and everything typed into it so they can retry.
+      // Keep everything typed so they can retry.
       status.value = 'error';
     }
   };
 
+  // ---------------------------------------------------------------------------
+  // Fields and classes
+  // ---------------------------------------------------------------------------
   const contactFields = [
-    { name: 'name', label: 'Your name', type: 'text', autocomplete: 'name', placeholder: 'First and last name', required: true },
-    { name: 'email', label: 'Email', type: 'email', autocomplete: 'email', inputmode: 'email', placeholder: 'you@example.com', required: true },
-    { name: 'phone', label: 'Phone', type: 'tel', autocomplete: 'tel', inputmode: 'tel', placeholder: 'Best number to reach you' }
+    { name: 'name', label: 'Your name', type: 'text', autocomplete: 'name', placeholder: 'First and last name', required: true, maxlength: LIMITS.name },
+    { name: 'email', label: 'Email', type: 'email', autocomplete: 'email', inputmode: 'email', placeholder: 'you@example.com', required: true, maxlength: LIMITS.email },
+    { name: 'phone', label: 'Phone', type: 'tel', autocomplete: 'tel', inputmode: 'tel', placeholder: 'Best number to reach you', maxlength: LIMITS.phone }
   ];
 
-  const labelClass =
-    'block px-5 pb-1.5 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-muted [text-shadow:0_0_2px_#17161C,0_0_8px_#17161C,0_0_14px_#17161C]';
-
+  const shadow = '[text-shadow:0_0_2px_#17161C,0_0_8px_#17161C,0_0_14px_#17161C]';
+  const labelClass = `block px-5 pb-1.5 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-muted ${shadow}`;
+  const optionalClass = 'normal-case tracking-normal text-muted2';
+  const errorClass = `mt-1.5 px-5 text-left text-xs font-semibold text-pink ${shadow}`;
+  // scroll-mt keeps a focused field clear of the fixed header.
   const field =
-    'w-full rounded-full px-5 h-[52px] bg-ivory text-ink placeholder-stone border-0 outline-none focus:ring-2 focus:ring-pink';
+    'w-full scroll-mt-[120px] rounded-full px-5 h-[52px] bg-ivory text-ink placeholder-stone border-0 outline-none focus:ring-2 focus:ring-pink';
+  const invalid = 'ring-2 ring-pink';
 </script>
 
 <template>
   <div class="w-full max-w-[760px]">
     <form
       v-if="status !== 'sent'"
-      @submit="handleValidation"
       action="/"
       method="POST"
       name="contact-form"
@@ -107,98 +183,149 @@
       netlify-honeypot="bot-field"
       novalidate
       class="flex flex-col items-center gap-5"
+      :aria-busy="status === 'sending' ? 'true' : undefined"
+      @submit.prevent="handleSubmit"
     >
-      <input name="bot-field" type="hidden" />
       <input type="hidden" name="form-name" value="contact-form" />
-      <input type="hidden" name="eventType" :value="formState.eventType" />
-
-      <div class="flex flex-wrap justify-center gap-2 md:gap-2.5" role="radiogroup" aria-label="Event type">
-        <button
-          v-for="e in eventTypes"
-          :key="e.label"
-          type="button"
-          role="radio"
-          :aria-checked="formState.eventType === e.label"
-          @click="formState.eventType = e.label"
-          class="min-h-[44px] md:min-h-[46px] px-[18px] md:px-[22px] rounded-full border text-sm md:text-[15px] font-semibold transition-colors"
-          :class="
-            formState.eventType === e.label
-              ? 'bg-pink border-pink text-ink'
-              : 'border-ivory/30 text-ivory hover:border-pink'
-          "
-        >
-          {{ e.label }}
-        </button>
+      <!-- Honeypot: off-screen, out of the tab order and hidden from assistive tech -->
+      <div class="absolute -left-[9999px] size-px overflow-hidden" aria-hidden="true">
+        <label>Leave this empty <input v-model="botField" name="bot-field" tabindex="-1" autocomplete="off" /></label>
       </div>
 
+      <!-- Event type: native radios (arrow keys move between them) styled as pills -->
+      <fieldset :aria-describedby="describedBy('eventType')">
+        <legend class="sr-only">Event type</legend>
+        <div class="flex flex-wrap justify-center gap-2 md:gap-2.5">
+          <label v-for="e in eventTypes" :key="e.label" class="relative cursor-pointer">
+            <input
+              v-model="eventType"
+              type="radio"
+              name="eventType"
+              :value="e.label"
+              class="peer absolute inset-0 size-full cursor-pointer opacity-0 scroll-mt-[120px]"
+            />
+            <span
+              class="flex min-h-[44px] items-center rounded-full border px-[18px] text-sm font-semibold transition-colors md:min-h-[46px] md:px-[22px] md:text-[15px] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ivory"
+              :class="eventType === e.label ? 'border-pink bg-pink text-ink' : 'border-ivory/45 text-ivory hover:border-pink'"
+              >{{ e.label }}</span
+            >
+          </label>
+        </div>
+        <p v-if="showError('eventType')" id="cf-eventType-error" :class="errorClass" class="text-center">
+          {{ errorFor('eventType') }}
+        </p>
+      </fieldset>
+
+      <p class="-mt-1 text-sm text-ivory">{{ current.note }} Fields marked * are required.</p>
+
       <div class="grid w-full gap-x-2.5 gap-y-4 md:grid-cols-2">
+        <!-- Event date: the browser's own date picker -->
         <div>
-          <label for="cf-date" :class="labelClass">Event date</label>
-          <input id="cf-date" name="date" type="text" v-model="formState.date" :class="field" placeholder="Pick a date" onfocus="this.type='date'" />
+          <label for="cf-date" :class="labelClass">
+            Event date <span :class="optionalClass">(optional)</span>
+          </label>
+          <input
+            id="cf-date"
+            v-model="formState.date"
+            name="date"
+            type="date"
+            :min="minDate || undefined"
+            :class="[field, '[&::-webkit-date-and-time-value]:text-left', showError('date') && invalid]"
+            :aria-invalid="showError('date') ? 'true' : undefined"
+            :aria-describedby="describedBy('date')"
+            @input="onDateInput"
+            @change="onDateInput"
+            @focus="onFocus('date')"
+            @blur="onDateInput($event), onBlur('date')"
+          />
+          <p v-if="showError('date')" id="cf-date-error" :class="errorClass">{{ errorFor('date') }}</p>
         </div>
+
         <div>
-          <label for="cf-venue" :class="labelClass">Venue</label>
-          <input id="cf-venue" name="venue" type="text" v-model="formState.venue" :class="field" :placeholder="current.venuePh" />
+          <label for="cf-venue" :class="labelClass">
+            Venue or town <span :class="optionalClass">(optional)</span>
+          </label>
+          <input
+            id="cf-venue"
+            v-model="formState.venue"
+            name="venue"
+            type="text"
+            :maxlength="LIMITS.venue"
+            :class="[field, showError('venue') && invalid]"
+            :placeholder="current.venuePh"
+            :aria-invalid="showError('venue') ? 'true' : undefined"
+            :aria-describedby="describedBy('venue')"
+            @focus="onFocus('venue')"
+            @blur="onBlur('venue')"
+          />
+          <p v-if="showError('venue')" id="cf-venue-error" :class="errorClass">{{ errorFor('venue') }}</p>
         </div>
-        <div
-          v-for="f in contactFields"
-          :key="f.name"
-          :class="f.name === 'phone' && 'md:col-span-2'"
-        >
+
+        <div v-for="f in contactFields" :key="f.name" :class="f.name === 'phone' && 'md:col-span-2'">
           <label :for="`cf-${f.name}`" :class="labelClass">
             {{ f.label }}<span v-if="f.required" class="text-pink" aria-hidden="true"> *</span>
-            <span v-else class="normal-case tracking-normal text-muted2/80"> (optional)</span>
+            <span v-else :class="optionalClass"> (optional)</span>
           </label>
           <input
             :id="`cf-${f.name}`"
+            v-model="formState[f.name]"
             :name="f.name"
             :type="f.type"
             :autocomplete="f.autocomplete"
             :inputmode="f.inputmode"
-            v-model="formState[f.name]"
-            :class="field"
+            :maxlength="f.maxlength"
+            :class="[field, showError(f.name) && invalid]"
             :placeholder="f.placeholder"
             :aria-required="f.required ? 'true' : undefined"
-            :aria-invalid="v$[f.name].$error ? 'true' : undefined"
-            :aria-describedby="v$[f.name].$error ? `cf-${f.name}-error` : undefined"
+            :aria-invalid="showError(f.name) ? 'true' : undefined"
+            :aria-describedby="describedBy(f.name)"
+            @focus="onFocus(f.name)"
+            @blur="onBlur(f.name)"
           />
-          <p
-            v-if="v$[f.name].$error"
-            :id="`cf-${f.name}-error`"
-            class="mt-1.5 px-5 text-left text-xs font-semibold text-pink [text-shadow:0_0_2px_#17161C,0_0_8px_#17161C,0_0_14px_#17161C]"
-          >
-            {{ v$[f.name].$errors[0].$message }}
-          </p>
+          <p v-if="showError(f.name)" :id="`cf-${f.name}-error`" :class="errorClass">{{ errorFor(f.name) }}</p>
         </div>
+
         <div class="md:col-span-2">
-          <label for="cf-message" :class="labelClass">Anything else?</label>
+          <label for="cf-message" :class="labelClass">
+            Additional details<span class="text-pink" aria-hidden="true"> *</span>
+          </label>
           <textarea
             id="cf-message"
+            v-model="formState.message"
             name="message"
             rows="4"
-            v-model="formState.message"
-            class="w-full rounded-3xl px-5 py-4 bg-ivory text-ink placeholder-stone outline-none focus:ring-2 focus:ring-pink resize-y"
-            placeholder="Headcount, timeline, must-play songs…"
+            :maxlength="LIMITS.message"
+            class="w-full scroll-mt-[120px] resize-y rounded-3xl bg-ivory px-5 py-4 text-ink placeholder-stone outline-none focus:ring-2 focus:ring-pink"
+            :class="showError('message') && invalid"
+            placeholder="Tell us about your event, guest count, favorite songs, or anything else we should know."
+            aria-required="true"
+            :aria-invalid="showError('message') ? 'true' : undefined"
+            :aria-describedby="describedBy('message')"
+            @focus="onFocus('message')"
+            @blur="onBlur('message')"
           ></textarea>
+          <p v-if="showError('message')" id="cf-message-error" :class="errorClass">{{ errorFor('message') }}</p>
         </div>
       </div>
 
       <button
         type="submit"
         :disabled="status === 'sending'"
-        class="w-full md:w-auto px-7 h-[56px] rounded-full bg-pink text-ink text-[15px] font-bold hover:bg-ivory transition-colors disabled:cursor-wait disabled:opacity-70"
+        class="h-[56px] w-full rounded-full bg-pink px-7 text-[15px] font-bold text-ink transition-colors hover:bg-ivory focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ivory disabled:cursor-wait disabled:opacity-70 md:w-auto"
       >
-        {{ status === 'sending' ? 'Sending…' : current.cta }}
+        {{ status === 'sending' ? 'Sending…' : ctaLabel }}
       </button>
 
-      <p v-if="status === 'error'" role="alert" class="max-w-[520px] rounded-2xl bg-ink2 px-5 py-3 text-sm text-pink">
-        Sorry, that didn’t send. Your details are still here, so please try again, or
-        message us on
-        <a
-          href="https://www.instagram.com/turnitupband/"
-          target="_blank"
-          rel="noopener"
-          class="underline underline-offset-2"
+      <!-- Read out on a failed submit; focus also moves to the first problem -->
+      <p class="sr-only" aria-live="polite">{{ announcement }}</p>
+
+      <p
+        v-if="status === 'error'"
+        role="alert"
+        class="max-w-[520px] rounded-2xl bg-ink2 px-5 py-3 text-sm text-pink"
+      >
+        Something went wrong. Your message wasn’t sent. Please try again, or message us on
+        <a href="https://www.instagram.com/turnitupband/" target="_blank" rel="noopener" class="underline underline-offset-2"
           >Instagram</a
         >.
       </p>
@@ -207,15 +334,18 @@
         role="status"
         class="max-w-[520px] rounded-2xl border border-ivory/25 bg-ink2 px-5 py-3 text-sm text-ivory"
       >
-        Preview build: the form checks out, but nothing was sent. Inquiries only go
-        to the band from the live site.
+        Preview build: the form checks out, but nothing was sent. Inquiries only go to the band from the
+        live site.
       </p>
-      <p class="text-sm text-muted2 max-w-[520px]">{{ current.note }}</p>
     </form>
 
-    <div v-else role="status" class="flex flex-col items-center gap-2 py-8">
-      <h3 class="font-serif text-[32px]">Thank you!</h3>
-      <p class="text-muted">We’ll get back to you within one business day.</p>
+    <div v-else role="status" class="flex flex-col items-center gap-3 py-8">
+      <h3 ref="successHeading" tabindex="-1" class="font-serif text-[32px] outline-none md:text-[40px]">
+        You’re on our radar!
+      </h3>
+      <p class="max-w-[440px] text-muted">
+        Thanks for reaching out to Turn It Up. We received your inquiry and will be in touch.
+      </p>
     </div>
   </div>
 </template>

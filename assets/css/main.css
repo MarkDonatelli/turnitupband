@@ -17,6 +17,14 @@ a {
 :root {
   --section-y: 56px;
 }
+
+/* Motion: two curves. `--ease-out` lands things (reveals, hovers, settles);
+   `--ease-in-out` moves whole panels (the menu wipe). Ordinary reveals run
+   0.6–0.9s; only the hero intro and the two pinned scenes take longer. */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+}
 @media (min-width: 768px) {
   :root { --section-y: 88px; }
 }
@@ -55,6 +63,13 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .eq-sq { animation: none !important; opacity: 0.55; }
+}
+
+/* The contact burst holds still while someone is filling in the form,
+   and picks up again once focus leaves it. (!important: each square sets
+   its animation inline, and that shorthand includes the play state.) */
+#contact:focus-within .eq-sq {
+  animation-play-state: paused !important;
 }
 
 /* mobile menu */

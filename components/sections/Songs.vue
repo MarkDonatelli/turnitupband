@@ -23,6 +23,14 @@
   const showAll = ref(false);
 
   // Only the big titles move: each rises out of its own mask as it enters.
+  // Text rises out of a clipping mask. Once every transition inside has
+  // finished, the clip comes off so descenders (g, y, p) are never cut at rest.
+  const unclipWhenSettled = el =>
+    requestAnimationFrame(() =>
+      Promise.all(el.getAnimations({ subtree: true }).map(a => a.finished))
+        .catch(() => {})
+        .then(() => el.classList.add('is-done'))
+    );
   const root = ref(null);
   const animated = ref(false);
   let io;
@@ -34,6 +42,7 @@
         entries.forEach(e => {
           if (!e.isIntersecting) return;
           e.target.classList.add('is-in');
+          unclipWhenSettled(e.target);
           io.unobserve(e.target);
         }),
       { rootMargin: '0px 0px -10% 0px', threshold: 0.2 }
@@ -88,17 +97,19 @@
                 >
                   {{ s.note }}
                 </p>
-                <span data-reveal class="mask block">
-                  <span
-                    class="title block font-serif tracking-[-0.02em]"
-                    :class="[
-                      s.size === 'xl'
-                        ? 'text-[clamp(46px,8.4vw,132px)] leading-[0.92]'
-                        : 'text-[clamp(38px,5.6vw,84px)] leading-[0.95]',
-                      s.flip && 'italic'
-                    ]"
-                    >{{ s.title }}</span
-                  >
+                <!-- Size lives on the mask so its room for descenders scales with the title -->
+                <span
+                  data-reveal
+                  class="mask block"
+                  :class="
+                    s.size === 'xl'
+                      ? 'text-[clamp(46px,8.4vw,132px)] leading-[0.92]'
+                      : 'text-[clamp(38px,5.6vw,84px)] leading-[0.95]'
+                  "
+                >
+                  <span class="title block font-serif tracking-[-0.02em]" :class="s.flip && 'italic'">{{
+                    s.title
+                  }}</span>
                 </span>
               </div>
               <span
@@ -118,7 +129,7 @@
                 s.n
               }}</span>
               <div class="flex min-w-0 flex-col gap-1.5">
-                <span class="font-serif text-[24px] leading-[1.1] md:text-[28px] xl:text-[32px]">{{ s.title }}</span>
+                <span class="text-balance font-serif text-[24px] leading-[1.1] md:text-[28px] xl:text-[32px]">{{ s.title }}</span>
                 <span class="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em]">
                   <span class="text-ivory/85"><span class="sr-only">by </span>{{ s.artist }}</span>
                   <span :class="['normal-case tracking-[0.12em]', s.era === 'Now' ? 'text-pink' : 'text-muted2']">{{ s.era }}</span>
@@ -178,19 +189,22 @@
     }
   }
 
+  /* Room below the line for descenders; the clip only exists mid-reveal. */
   .mask {
+    padding-bottom: 0.3em;
+    margin-bottom: -0.3em;
+  }
+  .is-animated .mask:not(.is-done) {
     overflow: hidden;
-    padding-bottom: 0.22em;
-    margin-bottom: -0.22em;
   }
   .is-animated .mask .title {
-    transform: translateY(105%);
-    transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateY(calc(105% + 0.3em));
+    transition: transform 0.8s var(--ease-out);
   }
   .is-animated .mask.is-in .title {
     transform: none;
   }
   .arrow {
-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    transition-timing-function: var(--ease-out);
   }
 </style>

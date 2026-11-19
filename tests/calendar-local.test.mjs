@@ -5,9 +5,13 @@ import { createShowsHandler } from '../netlify/functions/shows.mjs';
 
 test('local mock works without credentials and uses the same publication filter', async () => {
   const shows = await loadShows({ env: { NETLIFY_DEV: 'true', CALENDAR_MOCK: 'true' } });
-  assert.equal(shows.length, 1);
-  assert.equal(shows[0].title, 'Test Show');
-  assert.ok(shows[0].location);
+  // One public show; the two confirmed private bookings arrive stripped of details.
+  const pub = shows.filter(s => !s.private);
+  assert.equal(pub.length, 1);
+  assert.equal(pub[0].title, 'Test Show');
+  assert.ok(pub[0].location);
+  assert.equal(shows.filter(s => s.private).length, 2);
+  assert.ok(shows.filter(s => s.private).every(s => !s.title && !s.venue && !s.location && !s.link));
   assert.equal(JSON.stringify(shows).includes('Mock internal note'), false);
   assert.equal(JSON.stringify(shows).includes('description'), false);
 });

@@ -74,19 +74,24 @@ export function publicShow(event, now = new Date()) {
   const end = allDay ? event.end?.date : event.end?.dateTime;
   const valid = allDay ? validDate : validDateTime;
   if (!valid(start) || !valid(end) || Date.parse(end) <= Date.parse(start)) return null;
-  const location = extractCityState(event.location);
+  // Private bookings: Google's own visibility setting, or a title that says
+  // "private" with no public link. Their title, venue, city and link never
+  // leave the server; only the date and time remain (shown as "Private event").
+  const isPrivate = ['private', 'confidential'].includes(event.visibility)
+    || (!link && /\bprivate\b/i.test(event.summary));
   // Explicit allowlist: no description, attendees, organizer, or Google event link.
   const show = {
     id: event.id,
-    title: event.summary,
-    venue: event.summary,
+    title: isPrivate ? '' : event.summary,
+    venue: isPrivate ? '' : event.summary,
     start,
     end,
     allDay,
     dateCheckString: allDay ? start : getShowDateString(new Date(start)),
     dateString: formatCalendarShowDate(start, end, allDay),
-    location,
-    link
+    location: isPrivate ? '' : extractCityState(event.location),
+    link: isPrivate ? '' : link,
+    private: isPrivate
   };
   return isUpcomingCalendarShow(show, now) ? show : null;
 }
@@ -126,7 +131,7 @@ export async function readPublicShows({ env = process.env, now = new Date(), fet
     singleEvents: 'true', showDeleted: 'false', orderBy: 'startTime',
     timeMin: now.toISOString(), timeMax: timeMax.toISOString(),
     timeZone: 'America/New_York', maxResults: '2500',
-    fields: 'nextPageToken,items(id,status,eventType,summary,description,location,start,end)'
+    fields: 'nextPageToken,items(id,status,eventType,visibility,summary,description,location,start,end)'
   });
   const shows = [];
   const pages = new Set();

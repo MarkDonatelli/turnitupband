@@ -1,17 +1,25 @@
 <script setup>
-  // Data comes from the Google Calendar Netlify Function (same logic as main);
-  // only the presentation is art-directed for the redesign.
+  // Google Calendar is the only source. Shows are read once while the page is
+  // built (the site is statically generated), so they're in the HTML for
+  // search engines and first paint. The browser reuses that data on load and
+  // refreshes from the Netlify Function only when it's more than 5 minutes old.
   import { getShowDateString } from '~/utils/shows.mjs';
   import { isUpcomingCalendarShow } from '~/utils/calendar-shows.mjs';
+  import { isPrivateShow, showEvents } from '~/utils/show-schema.mjs';
   import useScrollIntoView from '~/composables/useScrollIntoView';
 
   const { scrollToElement } = useScrollIntoView();
+  const FRESH_MS = 5 * 60 * 1000;
 
-  const shows = ref([]);
-  const loading = ref(true);
+  // Read on the server only (server/api/shows.get.ts), so the calendar code
+  // and credentials never reach the browser. null on any failure: the page
+  // still renders and the browser loads shows itself, as before.
+  const { baked, now, count } = await useBakedShows();
+
+  const shows = ref(baked.value?.shows ?? []);
+  const loading = ref(!baked.value);
   const loadError = ref(false);
-  // Serialize the initial clock to avoid server/client hydration differences.
-  const now = useState('shows-now', () => Date.now());
+  const fetchedAt = ref(baked.value?.fetchedAt ?? 0);
   const todayString = computed(() => getShowDateString(new Date(now.value)));
   let clockTimer;
   let refreshTimer;
@@ -30,23 +38,30 @@
         console.log(`[Google Calendar] ${response.shows.length} show(s) loaded:`, response);
       }
       shows.value = response.shows;
+      fetchedAt.value = Date.now();
       loadError.value = false;
     } catch (error) {
       if (request.signal.aborted) return;
       // 503 = the Netlify function failed; its terminal log has the reason code.
       console.warn('[Google Calendar] Shows failed to load:', error?.statusCode ?? '', error?.data?.error ?? error?.message);
-      shows.value = [];
-      loadError.value = true;
+      // Keep the shows from the build (past ones still drop off by the clock);
+      // only show the error when there's nothing to show.
+      if (!shows.value.length) loadError.value = true;
     } finally {
       if (!request.signal.aborted) loading.value = false;
     }
   };
+  // Coming back to the tab updates the clock; it only re-reads the calendar
+  // when the data is more than 5 minutes old.
   const refreshOnFocus = () => {
     now.value = Date.now();
-    refreshShows();
+    if (Date.now() - fetchedAt.value > FRESH_MS) refreshShows();
   };
   onMounted(() => {
-    refreshOnFocus();
+    // Hydration used the build's clock; switch to the visitor's now, which
+    // drops any show that has ended since the build.
+    now.value = Date.now();
+    if (Date.now() - fetchedAt.value > FRESH_MS) refreshShows();
     // A minute is plenty to flip "Tonight" and expire finished shows.
     clockTimer = window.setInterval(() => { now.value = Date.now(); }, 60000);
     refreshTimer = window.setInterval(refreshShows, 300000);
@@ -68,9 +83,8 @@
   const remaining = computed(() => upcoming.value.length - displayCount.value);
   const loadMore = () => (displayCount.value += PAGE);
 
-  // A confirmed show with no venue website is still public; only a title
-  // that says "private" is treated as a booking people can't attend.
-  const isPrivate = s => !s.link && /\bprivate\b/i.test(s.venue || '');
+  // Private bookings are marked (and stripped of details) by the server.
+  const isPrivate = isPrivateShow;
   const nextPublic = computed(() => upcoming.value.find(s => !isPrivate(s)));
 
   // Everything the template needs, computed once per change (not per render).
@@ -91,9 +105,20 @@
   }));
 
   // Feeds the masthead's "N upcoming dates": null loading, -1 error.
-  const count = useState('shows-count', () => null);
   watchEffect(() => {
     count.value = loading.value ? null : loadError.value ? -1 : upcoming.value.length;
+  });
+
+  // schema.org MusicEvent for each upcoming public show with a verified venue
+  // and city. Private bookings and incomplete entries are left out.
+  const { siteUrl } = useRuntimeConfig().public;
+  useHead(() => {
+    const events = showEvents(upcoming.value, { bandId: `${siteUrl}/#band` });
+    return {
+      script: events.length
+        ? [{ type: 'application/ld+json', key: 'ld-shows', innerHTML: JSON.stringify(events) }]
+        : []
+    };
   });
 </script>
 
@@ -171,12 +196,12 @@
           <span class="row-start-1 flex items-start gap-2.5 md:row-start-auto md:gap-3.5">
             <span
               class="date-num font-serif text-[46px] leading-[0.8] tracking-[-0.03em] transition-colors duration-300 md:text-[64px] xl:text-[76px]"
-              :class="row.label ? 'text-pink' : row.priv ? 'text-ivory/35' : 'text-ivory'"
+              :class="row.label ? 'text-pink' : row.priv ? 'text-ivory/40' : 'text-ivory'"
               aria-hidden="true"
               >{{ row.day }}</span
             >
             <span class="flex flex-col gap-1 pt-0.5 text-[11px] font-semibold uppercase leading-none tracking-[0.2em] md:pt-1 md:text-[12px]" aria-hidden="true">
-              <span :class="row.priv ? 'text-ivory/40' : 'text-ivory'">{{ row.month }}</span>
+              <span :class="row.priv ? 'text-ivory/50' : 'text-ivory'">{{ row.month }}</span>
               <span class="text-muted2">{{ row.dow }}</span>
             </span>
             <span class="sr-only">{{ row.longDate }}</span>
@@ -238,7 +263,7 @@
 
 <style scoped>
   .row {
-    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease: var(--ease-out);
   }
   .venue,
   .arrow,

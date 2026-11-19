@@ -41,7 +41,7 @@
     <div class="container grid gap-10 md:gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
       <!-- Intro column: sticks beside the list on desktop -->
       <div class="flex flex-col gap-5 md:gap-6 lg:sticky lg:top-[120px] lg:self-start">
-        <h2 class="font-serif text-[48px] leading-[0.95] tracking-[-0.01em] md:text-[72px] xl:text-[84px]">
+        <h2 class="font-serif text-[36px] leading-[0.98] tracking-[-0.01em] md:text-[44px] xl:text-[52px]">
           Planner<br />
           questions.
         </h2>
@@ -121,7 +121,7 @@
   /* Plus → minus */
   .bar-v {
     transform: rotate(90deg);
-    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition: transform 0.4s var(--ease-out);
   }
   .is-open .bar-v {
     transform: rotate(0deg);
@@ -136,14 +136,14 @@
     grid-template-rows: 0fr;
     visibility: hidden;
     transition:
-      grid-template-rows 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+      grid-template-rows 0.45s var(--ease-out),
       visibility 0s linear 0.45s;
   }
   .is-open .answer {
     grid-template-rows: 1fr;
     visibility: visible;
     transition:
-      grid-template-rows 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+      grid-template-rows 0.45s var(--ease-out),
       visibility 0s;
   }
   .answer p {
@@ -151,7 +151,7 @@
     transform: translateY(-6px);
     transition:
       opacity 0.3s ease,
-      transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+      transform 0.45s var(--ease-out);
   }
   .is-open .answer p {
     opacity: 1;

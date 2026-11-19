@@ -92,6 +92,31 @@ minutes for an already-open tab to reflect an edit (CDN cache plus polling).
 Ordinary Calendar edits do not require a Netlify rebuild. Credential/code changes
 do require redeployment.
 
+### Shows in the page HTML (search engines)
+
+The site is statically generated, so upcoming shows are also read once during
+each build (`server/api/shows.get.ts`, same loader and filters as the function)
+and written into the HTML with `MusicEvent` structured data for public shows.
+Visitors' browsers reuse that data on load and only call the function when it is
+more than five minutes old, so the visible list stays current without a rebuild.
+
+- **Build access to credentials.** The three `GOOGLE_*` variables must be
+  available to **Builds** as well as Functions (Site configuration →
+  Environment variables → each variable's scopes). Without build access, the
+  build still succeeds: it logs `calendar_build_failure` with the reason code and
+  the page falls back to loading shows in the browser, as before.
+- **Private bookings.** An event is private if its Google visibility is Private
+  or Confidential, or its title says "private" and it has no public link. The
+  server removes its title, venue, city and link before anything is published;
+  only its date and time remain (shown as "Private event"), and it never gets
+  structured data.
+- **Keeping the HTML current (optional).** `netlify/functions/rebuild-shows.mjs`
+  triggers one rebuild a day (09:00 UTC) so the HTML search engines see drops
+  finished shows and adds new ones. It does nothing until
+  `SHOWS_REBUILD_HOOK_URL` is set to a Netlify build hook (Site configuration →
+  Build & deploy → Build hooks). Scheduled functions only run on the published
+  production deploy.
+
 ## Local development
 
 Use the project-local Netlify CLI installed by `npm install`:

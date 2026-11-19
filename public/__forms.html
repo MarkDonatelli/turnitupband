@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Forms</title>
+  </head>
+  <body>
+    <!--
+      Netlify registers a form's fields by reading the deployed HTML, and it
+      drops any submitted field it didn't register. The real booking form is
+      rendered by Vue (components/ContactForm.vue), so this static copy makes
+      sure every field is registered however the site is built.
+      Keep these names in sync with ContactForm.vue.
+    -->
+    <form name="contact-form" netlify netlify-honeypot="bot-field" hidden>
+      <input name="bot-field" />
+      <input name="eventType" />
+      <input name="date" />
+      <input name="venue" />
+      <input name="name" />
+      <input name="email" />
+      <input name="phone" />
+      <textarea name="message"></textarea>
+    </form>
+  </body>
+</html>
