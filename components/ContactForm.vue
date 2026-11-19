@@ -221,7 +221,9 @@
       <div class="grid w-full gap-x-2.5 gap-y-4 md:grid-cols-2">
         <!-- Event date: the browser's own date picker. iOS Safari gives date
              inputs an intrinsic min-width that ignores w-full, so the input
-             drops native appearance and both it and its grid cell may shrink. -->
+             drops native appearance and both it and its grid cell may shrink.
+             iOS also puts its own margins on the picked value; m-0 and a line
+             height equal to the field height keep it centered like the others. -->
         <div class="min-w-0">
           <label for="cf-date" :class="labelClass">
             Event date <span :class="optionalClass">(optional)</span>
@@ -232,7 +234,7 @@
             name="date"
             type="date"
             :min="minDate || undefined"
-            :class="[field, 'block min-w-0 max-w-full appearance-none [&::-webkit-date-and-time-value]:text-left', showError('date') && invalid]"
+            :class="[field, 'block min-w-0 max-w-full appearance-none leading-[52px] [&::-webkit-date-and-time-value]:m-0 [&::-webkit-date-and-time-value]:text-left', showError('date') && invalid]"
             :aria-invalid="showError('date') ? 'true' : undefined"
             :aria-describedby="describedBy('date')"
             @input="onDateInput"
